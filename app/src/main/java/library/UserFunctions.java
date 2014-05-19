@@ -1,7 +1,11 @@
-package library.JSONParser;
+package library;
+
+/**
+ * Created by lucamarconcini on 16/05/14.
+ */
+
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -11,19 +15,21 @@ import android.content.Context;
 
 public class UserFunctions {
 
-    private JSONParser jsonParser;
+    private PARSER jsonParser;
 
     // Testing in localhost using wamp or xampp
     // use http://10.0.2.2/ to connect to your localhost ie http://localhost/
-    private static String loginURL = "http://wakeappcall.altervista.org/ah_login_api/";
-    private static String registerURL = "http://wakeappcall.altervista.org/ah_login_api/";
+    private static String loginURL = "http://wakeappcall.net63.net/index.php";
+    private static String registerURL = "http://wakeappcall.net63.net/index.php";
+
+
 
     private static String login_tag = "login";
     private static String register_tag = "register";
 
     // constructor
     public UserFunctions(){
-        jsonParser = new JSONParser();
+        jsonParser = new PARSER();
     }
 
     /**
@@ -33,11 +39,12 @@ public class UserFunctions {
      * */
     public JSONObject loginUser(String email, String password){
         // Building Parameters
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
         params.add(new BasicNameValuePair("tag", login_tag));
         params.add(new BasicNameValuePair("email", email));
         params.add(new BasicNameValuePair("password", password));
-        JSONObject json = jsonParser.getJSONFromUrl(loginURL, params);
+        PARSER JP = new PARSER();
+        JSONObject json =JP.getJSONFromUrl(loginURL, params);
         // return json
         // Log.e("JSON", json.toString());
         return json;
@@ -51,7 +58,7 @@ public class UserFunctions {
      * */
     public JSONObject registerUser(String name, String email, String password){
         // Building Parameters
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", register_tag));
         params.add(new BasicNameValuePair("name", name));
         params.add(new BasicNameValuePair("email", email));
