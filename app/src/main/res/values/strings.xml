@@ -6,5 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_calendar_view">CalendarView</string>
     <string name="title_activity_login2">Login2</string>
+    <string name="textButton1">Wake me up!</string>
+    <string name="textButton2">Wake someone up!</string>
 
 </resources>
