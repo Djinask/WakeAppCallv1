@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,8 @@ public class DashboardActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // this.getActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         /**
          * Dashboard Screen for the application
@@ -49,8 +52,16 @@ public class DashboardActivity extends Activity {
         int base=Menu.FIRST;
         MenuItem item1=menu.add(base,1,1,"Log out");
         MenuItem item2=menu.add(base,2,2,"Prova");
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_custom, menu);
+        return super.onCreateOptionsMenu(menu);
+
     }
+
+
+
+
+
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId()==1){
