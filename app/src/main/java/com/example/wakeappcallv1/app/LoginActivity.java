@@ -2,11 +2,11 @@ package com.example.wakeappcallv1.app;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,14 +25,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import library.DatabaseHandler;
+import library.UserFunctions;
 
 
 /**
  * A login screen that offers login via email/password.
 
  */
+
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
     /**
@@ -52,6 +60,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    TextView loginErrorMsg;
+
+
+    private static String KEY_SUCCESS = "success";
+    private static String KEY_ERROR = "error";
+    private static String KEY_ERROR_MSG = "error_msg";
+    private static String KEY_UID = "uid";
+    private static String KEY_NAME = "name";
+    private static String KEY_EMAIL = "email";
+    private static String KEY_CREATED_AT = "created_at";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +79,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        loginErrorMsg = (TextView) findViewById(R.id.login_error);
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -112,8 +131,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -145,8 +164,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
+
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+
+
+
+
+
+
+
+
         }
     }
     private boolean isEmailValid(String email) {
@@ -162,7 +191,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+
     public void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -283,33 +312,102 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        String mEmail;
+        String mPassword;
 
-        private final String mEmail;
-        private final String mPassword;
+        @Override
+        public boolean equals(Object o) {
+            return super.equals(o);
+        }
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
+
+              mEmail = email;
             mPassword = password;
+
+
+
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+
+            final UserFunctions userFunction = new UserFunctions();
+
+
+//            Thread thread1 = new Thread(new Runnable(){
+//
+//                @Override
+//                public void run() {
+                    try {
+
+                        final JSONObject json;
+
+
+                        json = userFunction.loginUser(mEmail, mPassword);
+
+                     //   loginErrorMsg.post(
+//                                new Runnable() {
+//                                    @Override
+//                                    public void run() {
+
+                                        //  check for login response
+                                        try {
+                                            if (json.getString(KEY_SUCCESS) != null) {
+                                                loginErrorMsg.setText("");
+                                                String res = json.getString(KEY_SUCCESS);
+                                                if(Integer.parseInt(res) == 1){
+                                                    // user successfully logged in
+                                                    // Store user details in SQLite Database
+                                                    DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                                                    JSONObject json_user = json.getJSONObject("user");
+
+                                                    // Clear all previous data in database
+                                                    userFunction.logoutUser(getApplicationContext());
+                                                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+
+                                                    // Launch Dashboard Screen
+                                                    Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+
+                                                    // Close all views before launching Dashboard
+                                                    dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    startActivity(dashboard);
+
+                                                    // Close Login Screen
+                                                    finish();
+                                                }else{
+                                                    // Error in login
+                                                    loginErrorMsg.setText("Incorrect username/password");
+                                                }
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+
+
+
+//                                    }
+//                                }
+                       // );
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+//                }
+//            });
+//
+//            thread1.start();
+
+
+
+
+
+
 
             // TODO: register the new account here.
             return true;

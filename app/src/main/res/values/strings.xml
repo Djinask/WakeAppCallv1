@@ -14,5 +14,7 @@
     <string name="country">Country</string>
     <string name="register">Register</string>
     <string name="password">Password</string>
+    <string name="textButton1">Wake me up!</string>
+    <string name="textButton2">Wake someone up!</string>
 
 </resources>

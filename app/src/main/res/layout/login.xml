@@ -73,6 +73,7 @@
             android:text="I don&apos;t have account. Register Me!"
             android:textColor="#21dbd4"
             android:textStyle="bold" />
+
     </LinearLayout>
 
 </ScrollView>

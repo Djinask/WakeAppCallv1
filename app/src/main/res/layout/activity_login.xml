@@ -99,6 +99,13 @@
                         android:singleLine="true"
                         android:textColor="@color/common_signin_btn_dark_text_default"/>
                     />
+                    <!--  Error message -->
+                    <TextView android:id="@+id/login_error"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#e30000"
+                        android:padding="10dip"
+                        android:textStyle="bold"/>
                 </LinearLayout>
 
                 <Button
