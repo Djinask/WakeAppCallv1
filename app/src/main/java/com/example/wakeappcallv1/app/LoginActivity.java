@@ -131,8 +131,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -164,8 +164,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+
+
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+
+
+
+
+
+
+
+
         }
     }
     private boolean isEmailValid(String email) {
@@ -302,33 +312,47 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        String mEmail;
+        String mPassword;
 
-        private final String mEmail;
-        private final String mPassword;
+        @Override
+        public boolean equals(Object o) {
+            return super.equals(o);
+        }
 
         UserLoginTask(String email, String password) {
-            mEmail = email;
+
+              mEmail = email;
             mPassword = password;
+
+
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
 
 
             final UserFunctions userFunction = new UserFunctions();
 
 
-            Thread thread1 = new Thread(new Runnable(){
-                @Override
-                public void run() {
+//            Thread thread1 = new Thread(new Runnable(){
+//
+//                @Override
+//                public void run() {
                     try {
-                        final String email = mEmail;
-                        final String password = mPassword;
+
                         final JSONObject json;
 
 
-                        json = userFunction.loginUser(email, password);
+                        json = userFunction.loginUser(mEmail, mPassword);
 
-                        loginErrorMsg.post(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
+                     //   loginErrorMsg.post(
+//                                new Runnable() {
+//                                    @Override
+//                                    public void run() {
 
                                         //  check for login response
                                         try {
@@ -366,39 +390,24 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 
 
-                                    }
-                                }
-                        );
+//                                    }
+//                                }
+                       // );
 
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-            });
-
-            thread1.start();
-
-
+//                }
+//            });
+//
+//            thread1.start();
 
 
 
 
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
 
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
 
             // TODO: register the new account here.
             return true;

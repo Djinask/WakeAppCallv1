@@ -2,7 +2,8 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <!-- contains the 3 buttons: notifications, profile, friends -->
     <LinearLayout
@@ -10,13 +11,15 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="90"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        >
 
         <LinearLayout
             android:id="@+id/ll1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <ImageButton
                 android:layout_width="fill_parent"
@@ -24,6 +27,7 @@
                 android:id="@+id/imageButton1"
                 android:src="@drawable/notif"
                 android:scaleType="fitCenter"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -66,7 +70,8 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/abc_search_url_text_pressed">
 
         <Button
             android:layout_width="fill_parent"
@@ -74,7 +79,12 @@
             android:layout_weight="1"
             android:id="@+id/wakeMe"
             android:text="@string/textButton1"
-            android:textSize="30dp"/>
+            android:textSize="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/background_light"/>
 
         <Button
             android:layout_width="fill_parent"
@@ -82,7 +92,12 @@
             android:layout_weight="1"
             android:id="@+id/wakeSo"
             android:text="@string/textButton2"
-            android:textSize="30dp"/>
+            android:textSize="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@android:color/background_light"/>
 
         </LinearLayout>
 
