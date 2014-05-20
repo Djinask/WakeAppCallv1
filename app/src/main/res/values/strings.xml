@@ -6,5 +6,13 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_calendar_view">CalendarView</string>
     <string name="title_activity_login2">Login2</string>
+    <string name="title_activity_register_activity2">RegisterActivity2</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="name">Name</string>
+    <string name="phone_no">Phone number</string>
+    <string name="city">City</string>
+    <string name="country">Country</string>
+    <string name="register">Register</string>
+    <string name="password">Password</string>
 
 </resources>
