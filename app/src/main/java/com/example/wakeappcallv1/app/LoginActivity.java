@@ -172,10 +172,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 
 
-
-
-
-
         }
     }
     private boolean isEmailValid(String email) {
@@ -357,7 +353,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                         //  check for login response
                                         try {
                                             if (json.getString(KEY_SUCCESS) != null) {
-                                                loginErrorMsg.setText("");
+                                                //loginErrorMsg.setText("");
                                                 String res = json.getString(KEY_SUCCESS);
                                                 if(Integer.parseInt(res) == 1){
                                                     // user successfully logged in
@@ -369,10 +365,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                                     userFunction.logoutUser(getApplicationContext());
                                                     db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
 
-                                                    // Launch Dashboard Screen
+                                                    // Launch dashboard Screen
                                                     Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
 
-                                                    // Close all views before launching Dashboard
+                                                    // Close all views before launching tabView
                                                     dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     startActivity(dashboard);
 
