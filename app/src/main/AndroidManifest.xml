@@ -52,9 +52,7 @@
         <activity
             android:name="com.example.wakeappcallv1.app.RegisterActivity"
             android:label="Register New Account" />
-        <activity
-            android:name="com.example.wakeappcallv1.app.Receiving_call"
-            android:label="@string/title_activity_receiving_call" />
+
 
         <activity
             android:name="com.example.wakeappcallv1.app.ProfileActivity"
