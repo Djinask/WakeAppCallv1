@@ -22,23 +22,26 @@
 
         <activity
             android:label="@string/app_name"
-            android:name="com.example.wakeappcallv1.app.DashboardActivity" >
-
+            android:name=".DashboardActivity" >
 
             <meta-data android:name="android.support.UI_OPTIONS"
                 android:resource="@menu/menu_custom" />
 
-            <intent-filter>
+            <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
         <!--  Register Activity -->
         <activity
             android:label="Register New Account"
             android:name="com.example.wakeappcallv1.app.RegisterActivity">
         </activity>
+
+
 
     </application>
 
