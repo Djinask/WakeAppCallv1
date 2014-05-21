@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/icona_utente" />
+    <item android:drawable="@drawable/cornice_corretta" />
+
+
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="rectangle">
+        <gradient android:startColor="#ffffff" android:endColor="#ffffff"
+            android:angle="270"/>
+
+        <corners android:bottomRightRadius="10dp" android:bottomLeftRadius="10dp"
+            android:topLeftRadius="10dp" android:topRightRadius="10dp"/>
+    </shape>
+</layer-list>
+
+
+
