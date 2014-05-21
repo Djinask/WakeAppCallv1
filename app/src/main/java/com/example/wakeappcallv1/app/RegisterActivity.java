@@ -114,7 +114,7 @@ public class RegisterActivity extends Activity {
 
                                                         db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
                                                         // Launch Dashboard Screen
-                                                        Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+                                                        Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
                                                         // Close all views before launching Dashboard
                                                         dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                         startActivity(dashboard);

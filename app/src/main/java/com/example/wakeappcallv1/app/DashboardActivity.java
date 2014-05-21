@@ -1,41 +1,42 @@
 package com.example.wakeappcallv1.app;
 
 /**
- * Created by lucamarconcini on 16/05/14.
+ * Created by Andrea on 21/05/2014.
  */
-
-
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import library.UserFunctions;
 
-public class DashboardActivity extends Activity {
+public class DashboardActivity extends FragmentActivity implements ActionBar.TabListener {
+
+    private ViewPager viewPager;
+    private TabsPagerAdapter mAdapter;
+    private ActionBar actionBar;
+
     UserFunctions userFunctions;
-    Button btnLogout;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // this.getActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        /**
-         * Dashboard Screen for the application
-         * */
         // Check login status in database
         userFunctions = new UserFunctions();
-        if(userFunctions.isUserLoggedIn(getApplicationContext())){
-            // user already logged in show databoard
-            setContentView(R.layout.activity_home);
 
+        // user already logged in show databoard
+        setContentView(R.layout.activity_dashboard);
 
-        }else{
+        if (!userFunctions.isUserLoggedIn(getApplicationContext())) {
             // user is not logged in show login screen
             Intent login = new Intent(getApplicationContext(), LoginActivity.class);
             login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -43,34 +44,78 @@ public class DashboardActivity extends Activity {
             // Closing dashboard screen
             finish();
         }
+
+        // Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        actionBar = getActionBar();
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Adding Tabs
+        actionBar.addTab(actionBar.newTab().setIcon(R.drawable.home).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setIcon(R.drawable.notify).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setIcon(R.drawable.profile).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setIcon(R.drawable.friends).setTabListener(this));
+
+        /**
+         * on swiping the viewpager make respective tab selected
+         * */
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+                // on changing the page
+                // make respected tab selected
+                actionBar.setSelectedNavigationItem(position);
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+        });
     }
 
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    }
 
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // on tab selected
+        // show respected fragment view
+        viewPager.setCurrentItem(tab.getPosition());
+    }
 
-    public boolean onCreateOptionsMenu(Menu menu){
-        super.onCreateOptionsMenu(menu);
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
         int base=Menu.FIRST;
         MenuItem item1=menu.add(base,1,1,"Log out");
         MenuItem item2=menu.add(base,2,2,"Prova");
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_custom, menu);
         return super.onCreateOptionsMenu(menu);
-
     }
-
-
-
-
 
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId()==1){
             userFunctions.logoutUser(getApplicationContext());
-                    Intent login = new Intent(getApplicationContext(), LoginActivity.class);
-                    login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(login);
-                    // Closing dashboard screen
-                    finish();
+            Intent login = new Intent(getApplicationContext(), LoginActivity.class);
+            login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(login);
+            // Closing dashboard screen
+            finish();
         }
         else if (item.getItemId()==2){}
         else return super.onOptionsItemSelected(item);
@@ -78,6 +123,39 @@ public class DashboardActivity extends Activity {
         return true;
     }
 
+    public class TabsPagerAdapter extends FragmentPagerAdapter {
 
+        public TabsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int index) {
+
+            switch (index) {
+                case 0:
+                    return new HomeActivity();
+                case 1:
+                    return new NotificationActivity();
+                case 2:
+                    return new ProfileActivity();
+                case 3:
+                    return new FriendsActivity();
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            // get item count - equal to number of tabs
+            return 4;
+        }
+    }
 
 }
+
+
+
+
+

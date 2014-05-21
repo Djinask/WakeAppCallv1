@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wakeappcallv1.app" >
 
-
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo_md"
@@ -18,7 +15,6 @@
 
         </activity>
 
-
         <activity
             android:name="com.example.wakeappcallv1.app.CalendarView"
             android:label="@string/title_activity_calendar_view" >
@@ -30,23 +26,33 @@
 
             <meta-data android:name="android.support.UI_OPTIONS"
                 android:resource="@menu/menu_custom" />
+
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
+        <activity
+            android:label="@string/app_name"
+            android:name="com.example.wakeappcallv1.app.DashboardActivity" >
 
+
+            <meta-data android:name="android.support.UI_OPTIONS"
+                android:resource="@menu/menu_custom" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <!--  Register Activity -->
         <activity
-            android:name="com.example.wakeappcallv1.app.RegisterActivity"
-            android:label="Register New Account">
-
-
-            </activity>
+            android:label="Register New Account"
+            android:name="com.example.wakeappcallv1.app.RegisterActivity">
+        </activity>
 
 
         <activity
