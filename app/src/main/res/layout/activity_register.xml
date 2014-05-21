@@ -47,7 +47,7 @@
             android:id="@+id/editText"
             android:layout_weight="1"
             android:text="@string/name"
-            android:textColor="@color/common_signin_btn_dark_text_focused"/>
+            android:textColor="@color/common_signin_btn_dark_text_default"/>
     </LinearLayout>
 
     <LinearLayout
