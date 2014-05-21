@@ -90,8 +90,6 @@ public class RegisterActivity extends Activity {
                             final String city = inputCity.getText().toString();
 
 
-
-
                             json = userFunction.registerUser(name, email, password, phone, birthDate, country, city);
 
                             registerErrorMsg.post(
