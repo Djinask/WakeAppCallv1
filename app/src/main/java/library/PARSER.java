@@ -59,9 +59,6 @@ public class PARSER {
 
 
 
-
-
-
            HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
 
