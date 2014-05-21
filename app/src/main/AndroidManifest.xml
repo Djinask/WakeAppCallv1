@@ -19,7 +19,7 @@
         <activity
             android:name="com.example.wakeappcallv1.app.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:windowSoftInputMode="adjustResize|stateHidden" >
 
         </activity>
 
@@ -35,23 +35,23 @@
 
             <meta-data android:name="android.support.UI_OPTIONS"
                 android:resource="@menu/menu_custom" />
-
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
-        <!--  Login Activity -->
-        <activity
-            android:label="Login Account"
-            android:name=".LoginActivity2"></activity>
+
 
         <!--  Register Activity -->
         <activity
             android:name="com.example.wakeappcallv1.app.RegisterActivity"
-            android:label="Register New Account" />
+            android:label="Register New Account">
+
+
+            </activity>
 
 
         <activity

@@ -25,7 +25,8 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="cac">
+
+        android:scrollbars="none">
 
 
 
@@ -148,16 +149,15 @@
 
 
 
-                <TextView
+                <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/action_register"
                     android:textColor="@color/common_signin_btn_dark_text_focused"
                     android:id="@+id/register"
-                    android:layout_gravity="right|end|bottom"
-                    android:onClick=""
-                    android:clickable="true"
+                    android:layout_gravity="center"
+
                      />
 
             </LinearLayout>

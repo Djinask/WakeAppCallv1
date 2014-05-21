@@ -26,32 +26,47 @@ import android.widget.TextView;
 
 public class RegisterActivity extends Activity {
     Button btnRegister;
-    Button btnLinkToLogin;
+    //Button btnLinkToLogin;
     EditText inputFullName;
     EditText inputEmail;
+    EditText inputPhone;
     EditText inputPassword;
+    EditText inputBirthDate;
+    EditText inputCountry;
+    EditText inputCity;
+
     TextView registerErrorMsg;
 
     // JSON Response node names
     private static String KEY_SUCCESS = "success";
     private static String KEY_ERROR = "error";
     private static String KEY_ERROR_MSG = "error_msg";
-    private static String KEY_UID = "uid";
-    private static String KEY_NAME = "name";
-    private static String KEY_EMAIL = "email";
-    private static String KEY_CREATED_AT = "created_at";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PHONE = "phone";
+    private static final String KEY_BIRTHDATE = "birth_date";
+    private static final String KEY_COUNTRY = "country";
+    private static final String KEY_CITY = "city";
+    private static final String KEY_UID = "uid";
+    private static final String KEY_CREATED_AT = "created_at";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.register);
+        setContentView(R.layout.activity_register);
+        this.getActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Importing all assets like buttons, text fields
         inputFullName = (EditText) findViewById(R.id.registerName);
         inputEmail = (EditText) findViewById(R.id.registerEmail);
+        inputPhone = (EditText) findViewById(R.id.registerPhone);
         inputPassword = (EditText) findViewById(R.id.registerPassword);
-        btnRegister = (Button) findViewById(R.id.btnRegister);
-        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
+        inputBirthDate =  (EditText) findViewById(R.id.registerBirthDate);
+        inputCountry = (EditText) findViewById(R.id.registerCountry);
+        inputCity =  (EditText) findViewById(R.id.registerCity);
+
+        btnRegister = (Button) findViewById(R.id.button);
+        //btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
         registerErrorMsg = (TextView) findViewById(R.id.register_error);
 
 
@@ -69,10 +84,15 @@ public class RegisterActivity extends Activity {
                             final String email = inputEmail.getText().toString();
                             final String password = inputPassword.getText().toString();
                             final String name = inputFullName.getText().toString();
+                            final String phone = inputPhone.getText().toString();
+                            final String birthDate = inputBirthDate.getText().toString();
+                            final String country = inputCountry.getText().toString();
+                            final String city = inputCity.getText().toString();
 
 
 
-                            json = userFunction.registerUser(name, email, password);
+
+                            json = userFunction.registerUser(name, email, password, phone, birthDate, country, city);
 
                             registerErrorMsg.post(
                                     new Runnable() {
@@ -92,7 +112,9 @@ public class RegisterActivity extends Activity {
 
                                                         // Clear all previous data in database
                                                         userFunction.logoutUser(getApplicationContext());
-                                                        db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+
+
+                                                        db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json.getString(KEY_PHONE),json.getString(KEY_BIRTHDATE),json.getString(KEY_COUNTRY),json.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
                                                         // Launch Dashboard Screen
                                                         Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
                                                         // Close all views before launching Dashboard
@@ -132,16 +154,6 @@ public class RegisterActivity extends Activity {
             }
         });
 
-        // Link to Login Screen
-        btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),
-                        LoginActivity.class);
-                startActivity(i);
-                // Close Registration View
-                finish();
-            }
-        });
     }
 }
