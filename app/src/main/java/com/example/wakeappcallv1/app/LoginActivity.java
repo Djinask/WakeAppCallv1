@@ -25,6 +25,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -342,11 +343,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             // TODO: attempt authentication against a network service.
 
             final UserFunctions userFunction = new UserFunctions();
-                    try {
-                        final JSONObject json;
-                        json = userFunction.loginUser(mEmail, mPassword);
-                                        //  check for login response
+
+
                                         try {
+                                            final JSONObject json;
+                                            json = userFunction.loginUser(mEmail, mPassword);
+                                            //  check for login response
+
                                             if (json.getString(KEY_SUCCESS) != null) {
                                                 String res = json.getString(KEY_SUCCESS);
                                                 if(Integer.parseInt(res) == 1){
@@ -368,20 +371,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
                                                     // Close Login Screen
                                                     finish();
-                                                }else{
+                                                }else {
                                                     // Error in login
-                                                    //TOAST
+                                                //    Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
-                                        }
+                                        }catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
 
 
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+
 
 
 
