@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,6 +77,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private static final String KEY_CITY = "city";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -397,6 +401,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             showProgress(false);
+            Log.e("onPost", "onpost");
 
             if (success) {
                 finish();

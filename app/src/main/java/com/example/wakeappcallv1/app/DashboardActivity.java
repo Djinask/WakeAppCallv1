@@ -26,6 +26,14 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
 
     UserFunctions userFunctions;
 
+
+    @Override
+    public void onBackPressed() {
+        //NOT GO BACK FROM DASHBOARD
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +61,8 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+
 
         // Adding Tabs
         actionBar.addTab(actionBar.newTab().setIcon(R.drawable.home).setTabListener(this));

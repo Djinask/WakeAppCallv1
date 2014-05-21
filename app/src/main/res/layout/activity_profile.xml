@@ -23,8 +23,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp">
             <ImageView
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
                 android:src="@drawable/profile"
                 android:contentDescription="profile_image" />
             <EditText
@@ -35,12 +35,11 @@
                 android:layout_gravity="bottom"
                 android:ems="10"
                 android:maxLines="1"
-                android:id="@+id/editText"
+                android:id="@+id/profilename"
                 android:layout_weight="1"
-                android:text="@string/name"
                 android:textColor="@color/common_signin_btn_dark_text_focused"/>
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:layout_gravity="bottom"
@@ -68,11 +67,11 @@
                 android:hint="@string/prompt_email"
                 android:maxLines="1"
                 android:ems="10"
-                android:id="@+id/editText7"
+                android:id="@+id/email"
                 android:layout_weight="1" />
 
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="@null"/>
@@ -99,10 +98,10 @@
                 android:hint="@string/phone_no"
                 android:maxLines="1"
                 android:ems="10"
-                android:id="@+id/editText2"
+                android:id="@+id/phone"
                 android:layout_weight="1" />
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="@null"/>
@@ -127,11 +126,11 @@
                 android:inputType="textPassword"
                 android:ems="10"
                 android:maxLines="1"
-                android:id="@+id/editText3"
+                android:id="@+id/password"
                 android:hint="@string/password"
                 android:layout_weight="1" />
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="@null"/>
@@ -156,11 +155,11 @@
                 android:inputType="date"
                 android:ems="10"
                 android:maxLines="1"
-                android:id="@+id/editText4"
+                android:id="@+id/birthDate"
                 android:layout_weight="1"
                 android:hint="@string/date_of_birth"/>
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="@null"/>
@@ -183,12 +182,12 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText5"
+                android:id="@+id/country"
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:hint="Country"/>
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="@null"/>
@@ -211,12 +210,12 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText6"
+                android:id="@+id/city"
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:hint="@string/city"/>
             <ImageButton
-                android:layout_width="7pt"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_edit"
                 android:background="@null"/>
