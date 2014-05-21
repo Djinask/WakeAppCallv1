@@ -26,12 +26,11 @@
     <string name="action_register">Register</string>
     <string name="action_tutorial">Tutorial</string>
     <string name="action_sign_in_Facebook">Sign in with Facebook</string>
+
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="title_activity_receiving_call">receiving_call</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>
