@@ -29,6 +29,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_PHONE = "phone";
+    private static final String KEY_BIRTHDATE = "birth_date";
+    private static final String KEY_COUNTRY = "country";
+    private static final String KEY_CITY = "city";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
 
@@ -43,6 +47,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NAME + " TEXT,"
                 + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_PHONE + " TEXT,"
+                + KEY_BIRTHDATE + " TEXT,"
+                + KEY_COUNTRY + " TEXT,"
+                + KEY_CITY + " TEXT,"
                 + KEY_UID + " TEXT,"
                 + KEY_CREATED_AT + " TEXT" + ")";
         db.execSQL(CREATE_LOGIN_TABLE);
@@ -61,12 +69,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String name, String email, String uid, String created_at) {
+    public void addUser(String name, String email,String phone, String birthdate, String country, String city, String uid, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, name); // Name
         values.put(KEY_EMAIL, email); // Email
+        values.put(KEY_PHONE, phone); // Phone
+        values.put(KEY_BIRTHDATE, birthdate); // BirthDate
+        values.put(KEY_COUNTRY, country); // country
+        values.put(KEY_CITY, city); // City
         values.put(KEY_UID, uid); // Email
         values.put(KEY_CREATED_AT, created_at); // Created At
 
@@ -89,8 +101,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor.getCount() > 0){
             user.put("name", cursor.getString(1));
             user.put("email", cursor.getString(2));
-            user.put("uid", cursor.getString(3));
-            user.put("created_at", cursor.getString(4));
+            user.put("phone", cursor.getString(3));
+            user.put("birthdate", cursor.getString(4));
+            user.put("country", cursor.getString(5));
+            user.put("city", cursor.getString(6));
+            user.put("uid", cursor.getString(7));
+            user.put("created_at", cursor.getString(8));
         }
         cursor.close();
         db.close();

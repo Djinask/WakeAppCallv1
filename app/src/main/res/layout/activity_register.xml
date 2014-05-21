@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -19,9 +18,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
+
+        android:layout_marginTop="10dp"
 
         >
 
@@ -44,10 +42,10 @@
             android:hint="@string/name"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/editText"
+            android:id="@+id/registerName"
             android:layout_weight="1"
-            android:text="@string/name"
-            android:textColor="@color/common_signin_btn_dark_text_default"/>
+            android:textColor="@android:color/white"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -63,14 +61,14 @@
             android:layout_height="30dp"
             android:src="@android:drawable/sym_action_email" />
         <AutoCompleteTextView
-            android:id="@+id/email"
+            android:id="@+id/registerEmail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/prompt_email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColor="@color/common_signin_btn_dark_text_default"/>
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <LinearLayout
@@ -93,8 +91,11 @@
             android:inputType="phone"
             android:hint="@string/phone_no"
             android:ems="10"
-            android:id="@+id/editText2"
-            android:layout_weight="1" />
+            android:id="@+id/registerPhone"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+
+            />
 
     </LinearLayout>
     <LinearLayout
@@ -116,9 +117,11 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/editText3"
+            android:id="@+id/registerPassword"
             android:hint="@string/password"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -134,14 +137,18 @@
             android:src="@drawable/birthday"
             />
 
+
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="date"
             android:ems="10"
-            android:id="@+id/editText4"
+            android:id="@+id/registerBirthDate"
             android:layout_weight="1"
-            android:hint="@string/date_of_birth"/>
+            android:hint="@string/date_of_birth"
+            android:textColor="@android:color/white"
+            />
 
     </LinearLayout>
     <LinearLayout
@@ -161,9 +168,12 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText5"
+            android:id="@+id/registerCountry"
             android:layout_weight="1"
-            android:hint="Country"/>
+            android:hint="Country"
+
+            android:textColor="@android:color/white"
+            />
 
     </LinearLayout>
     <LinearLayout
@@ -183,11 +193,21 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText6"
+            android:id="@+id/registerCity"
             android:layout_weight="1"
-            android:hint="@string/city"/>
+            android:hint="@string/city"
+            android:textColor="@android:color/white"
+            />
+
 
     </LinearLayout>
+        <!--  Error message -->
+        <TextView android:id="@+id/register_error"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#e30000"
+
+            android:textStyle="bold"/>
 
     <Button
         android:layout_width="wrap_content"

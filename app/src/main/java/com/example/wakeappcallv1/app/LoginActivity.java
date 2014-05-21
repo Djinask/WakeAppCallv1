@@ -66,10 +66,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private static String KEY_SUCCESS = "success";
     private static String KEY_ERROR = "error";
     private static String KEY_ERROR_MSG = "error_msg";
-    private static String KEY_UID = "uid";
-    private static String KEY_NAME = "name";
-    private static String KEY_EMAIL = "email";
-    private static String KEY_CREATED_AT = "created_at";
+
+    private static final String KEY_NAME = "name";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PHONE = "phone";
+    private static final String KEY_BIRTHDATE = "birth_date";
+    private static final String KEY_COUNTRY = "country";
+    private static final String KEY_CITY = "city";
+    private static final String KEY_UID = "uid";
+    private static final String KEY_CREATED_AT = "created_at";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         });
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button register = (Button) findViewById(R.id.register);
+
+        register.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent register = new Intent(getApplicationContext(), RegisterActivity.class);
+                register.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(register);
+
+                // Close Login Screen
+                finish();
+            }
+        });
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,9 +186,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
-
-
-
 
         }
     }
@@ -320,40 +335,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
               mEmail = email;
             mPassword = password;
-
-
-
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-
-
             final UserFunctions userFunction = new UserFunctions();
-
-
-//            Thread thread1 = new Thread(new Runnable(){
-//
-//                @Override
-//                public void run() {
                     try {
-
                         final JSONObject json;
-
-
                         json = userFunction.loginUser(mEmail, mPassword);
-
-                     //   loginErrorMsg.post(
-//                                new Runnable() {
-//                                    @Override
-//                                    public void run() {
-
                                         //  check for login response
                                         try {
                                             if (json.getString(KEY_SUCCESS) != null) {
-                                                //loginErrorMsg.setText("");
                                                 String res = json.getString(KEY_SUCCESS);
                                                 if(Integer.parseInt(res) == 1){
                                                     // user successfully logged in
@@ -363,12 +357,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
                                                     // Clear all previous data in database
                                                     userFunction.logoutUser(getApplicationContext());
-                                                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL), json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+                                                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
 
-                                                    // Launch dashboard Screen
+                                                    // Launch Dashboard Screen
                                                     Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
 
-                                                    // Close all views before launching tabView
+                                                    // Close all views before launching Dashboard
                                                     dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                     startActivity(dashboard);
 
@@ -376,7 +370,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                                     finish();
                                                 }else{
                                                     // Error in login
-                                                    loginErrorMsg.setText("Incorrect username/password");
+                                                    //TOAST
                                                 }
                                             }
                                         } catch (JSONException e) {
@@ -385,22 +379,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 
 
-
-//                                    }
-//                                }
-                       // );
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-//                }
-//            });
-//
-//            thread1.start();
-
-
-
 
 
 
