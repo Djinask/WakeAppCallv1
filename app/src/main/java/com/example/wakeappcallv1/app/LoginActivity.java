@@ -370,7 +370,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                                     startActivity(dashboard);
 
                                                     // Close Login Screen
-                                                    finish();
+                                                    //finish();
                                                 }else {
                                                     // Error in login
                                                 //    Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
@@ -401,8 +401,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
+
             }
         }
 

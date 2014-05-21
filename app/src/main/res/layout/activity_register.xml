@@ -44,6 +44,7 @@
             android:ems="10"
             android:id="@+id/registerName"
             android:layout_weight="1"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             />
     </LinearLayout>
@@ -93,6 +94,7 @@
             android:ems="10"
             android:id="@+id/registerPhone"
             android:layout_weight="1"
+            android:maxLines="1"
             android:textColor="@android:color/white"
 
             />
@@ -120,6 +122,7 @@
             android:id="@+id/registerPassword"
             android:hint="@string/password"
             android:layout_weight="1"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             />
     </LinearLayout>
@@ -147,6 +150,7 @@
             android:id="@+id/registerBirthDate"
             android:layout_weight="1"
             android:hint="@string/date_of_birth"
+            android:maxLines="1"
             android:textColor="@android:color/white"
             />
 
@@ -171,7 +175,7 @@
             android:id="@+id/registerCountry"
             android:layout_weight="1"
             android:hint="Country"
-
+            android:maxLines="1"
             android:textColor="@android:color/white"
             />
 
@@ -195,6 +199,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/registerCity"
             android:layout_weight="1"
+            android:maxLines="1"
             android:hint="@string/city"
             android:textColor="@android:color/white"
             />
