@@ -23,7 +23,11 @@
                 android:name="android.support.UI_OPTIONS"
                 android:resource="@menu/menu_custom" />
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <!-- Register Activity -->
@@ -34,15 +38,22 @@
         <activity
             android:name="com.example.wakeappcallv1.app.ReceivingCall"
             android:label="@string/title_activity_receiving_call" >
-
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-
+        </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.AlarmListActivity"
+            android:label="@string/title_alarm_list" >
+        </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.AlarmDetailActivity"
+            android:label="@string/title_alarm_detail"
+            android:parentActivityName="com.example.wakeappcallv1.app.AlarmListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.wakeappcallv1.app.AlarmListActivity" />
+        </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.CreateAlarm"
+            android:label="@string/title_activity_create_alarm" >
         </activity>
     </application>
 
@@ -53,6 +64,5 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
 
 </manifest>

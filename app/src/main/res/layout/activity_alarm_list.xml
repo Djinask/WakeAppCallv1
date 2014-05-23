@@ -1,0 +1,25 @@
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:textSize="30dp"
+        android:text="+ Create Alarm"
+        android:id="@+id/footerBtn"/>
+
+<fragment
+    android:id="@+id/alarm_list"
+    android:name="com.example.wakeappcallv1.app.AlarmListFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    tools:context="com.example.wakeappcallv1.app.AlarmListActivity"
+    tools:layout="@android:layout/list_content"
+    android:layout_above="@id/footerBtn"/>
+
+</RelativeLayout>
