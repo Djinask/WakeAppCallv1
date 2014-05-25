@@ -341,7 +341,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
               mEmail = email;
             mPassword = password;
         }
-
+        JSONObject json;
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -350,13 +350,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 
                                         try {
-                                            final JSONObject json;
+
                                             json = userFunction.loginUser(mEmail, mPassword);
                                             //  check for login response
-
+                                            Log.e("JSON", json.getString(KEY_SUCCESS));
                                             if (json.getString(KEY_SUCCESS) != null) {
                                                 String res = json.getString(KEY_SUCCESS);
                                                 if(Integer.parseInt(res) == 1){
+                                                    Log.e("SUCCESS:", res);
                                                     // user successfully logged in
                                                     // Store user details in SQLite Database
                                                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
@@ -377,7 +378,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                                     //finish();
                                                 }else {
                                                     // Error in login
-                                                //    Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
+                                                    Log.e("FAIL:", res);
+                                                    //Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         } catch (JSONException e) {
@@ -403,12 +405,17 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             showProgress(false);
             Log.e("onPost", "onpost");
 
-            if (success) {
-                finish();
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
+//            if (success) {
+//
+//            } else {
+            try {
 
+
+                Toast.makeText(getApplicationContext(), json.getString(KEY_ERROR_MSG), Toast.LENGTH_LONG).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+//            }
         }
 
         @Override

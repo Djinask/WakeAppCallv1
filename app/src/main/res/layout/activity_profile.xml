@@ -36,12 +36,29 @@
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 >
-            <com.example.wakeappcallv1.app.Classes.RoundedImageView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:src="@drawable/icona_utente"
-                android:id="@+id/icona_utente"
-                android:contentDescription="profile_image" />
+
+                <RelativeLayout
+                    android:id="@+id/icona"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    >
+
+                    <com.example.wakeappcallv1.app.Classes.RoundedImageView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:src="@drawable/icona_utente"
+                        android:layout_centerInParent="true"
+                        android:id="@+id/icona_utente"
+                        android:contentDescription="profile_image" />
+                    <ImageView
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/cornice_utente"
+                        android:id="@+id/e"
+                        android:contentDescription="profile_image" />
+                </RelativeLayout>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
