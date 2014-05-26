@@ -1,0 +1,85 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <!-- contains the 2 main buttons: wake me up, wake someone up -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="10"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:background="@color/abc_search_url_text_pressed">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Be woken up by..."
+                android:textSize="30dp"
+                android:textAlignment="@integer/abc_max_action_buttons"
+                android:id="@+id/alarm_choice_text"
+                android:textColor="@android:color/background_light"/>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/random"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="20dp"
+                android:text="Random!"
+                android:textSize="25dp"
+                android:textColor="@android:color/background_light"
+                android:drawableLeft="@drawable/random"
+                />
+
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/friends"
+                android:text="One of Your Friends!"
+                android:textSize="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/background_light"
+                android:drawableLeft="@drawable/friends"
+                android:padding="20dp"
+                />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:id="@+id/special"
+                android:text="Someone Special"
+                android:textSize="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/background_light"
+                android:drawableLeft="@android:drawable/btn_star"
+                android:padding="20dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
