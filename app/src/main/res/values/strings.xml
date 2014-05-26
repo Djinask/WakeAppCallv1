@@ -41,5 +41,6 @@
     <string name="title_alarm_list">Alarms</string>
     <string name="title_alarm_detail">Alarm Detail</string>
     <string name="title_activity_create_alarm">CreateAlarm</string>
+    <string name="title_activity_alarm_choice">AlarmChoiceActivity</string>
 
 </resources>

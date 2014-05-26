@@ -59,6 +59,10 @@
             android:name="com.example.wakeappcallv1.app.CreateAlarm"
             android:label="@string/title_activity_create_alarm" >
         </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.AlarmChoiceActivity"
+            android:label="@string/title_activity_alarm_choice" >
+        </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
