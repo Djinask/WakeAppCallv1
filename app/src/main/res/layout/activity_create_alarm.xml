@@ -1,0 +1,249 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.wakeappcallv1.app.CreateAlarm"
+    android:background="@android:color/background_dark"
+>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:scrollbars="none"
+        android:layout_above="@+id/NextBtn"
+        >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AlarmName"
+        android:textColor="@android:color/white"
+        android:layout_gravity="center_horizontal"
+        android:hint="Name"
+        android:textSize="30dp"/>
+
+    <!--<TextClock-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/textClock"-->
+        <!--android:textColor="@android:color/white"/>-->
+
+    <TimePicker
+
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:textColor="@android:color/white"
+        android:layout_height="wrap_content" />
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:background="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Ripetizione Settimanale"
+            android:textColor="@android:color/white"
+            android:id="@+id/textView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        >
+
+
+        <ToggleButton
+
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textSize="25dp"
+            android:textOn="D"
+            android:textOff="D"
+            android:text="D"
+            android:textColor="@android:color/holo_red_dark"
+            android:id="@+id/Domenica" />
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textSize="25dp"
+            android:textOn="L"
+            android:textOff="L"
+            android:text="L"
+            android:id="@+id/Lunedi" />
+
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textSize="25dp"
+            android:textOn="M"
+            android:textOff="M"
+            android:text="M"
+            android:id="@+id/Martedi" />
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textSize="25dp"
+            android:textOn="M"
+            android:textOff="M"
+            android:id="@+id/Merconledi" />
+        <ToggleButton
+            android:layout_width="40dp"
+            android:textSize="25dp"
+            android:layout_height="40dp"
+            android:textOn="G"
+            android:textOff="G"
+            android:text="G"
+            android:id="@+id/Giovedi" />
+
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textOn="V"
+            android:textOff="V"
+            android:text="V"
+            android:textSize="25dp"
+            android:id="@+id/Venerdi" />
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textOn="S"
+            android:textOff="S"
+            android:textSize="25dp"
+            android:text="S"
+            android:id="@+id/Sabato" />
+
+
+
+    </LinearLayout>
+
+<LinearLayout
+    android:layout_marginTop="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+        <TextView
+
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Ripetizione Settimanale"
+             />
+    <CheckBox
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+
+        android:gravity="right"/>
+</LinearLayout>
+</LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="4dp"
+        android:background="@android:color/darker_gray"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:textColor="@android:color/holo_blue_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text=" Ring Default Alarm"
+                />
+            <CheckBox
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+
+                android:gravity="right"/>
+
+
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:textColor="@android:color/holo_blue_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text=" After"
+                />
+            <CheckBox
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+
+                android:gravity="right"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editText"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:progress="50"/>
+
+        </LinearLayout>
+
+
+
+        </LinearLayout>
+
+</ScrollView>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:textSize="30dp"
+        android:text="Next >"
+        android:id="@+id/NextBtn"
+        />
+
+</RelativeLayout>
+

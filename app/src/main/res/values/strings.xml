@@ -16,7 +16,10 @@
     <string name="password">Password</string>
     <string name="textButton1">Wake me up!</string>
     <string name="textButton2">Wake someone up!</string>
+    <string name="addFriendsButton1">Search by name</string>
+    <string name="addFriendsButton2">Add from Facebook</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_add_friends">Add Friends</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -26,7 +29,6 @@
     <string name="action_register">Register</string>
     <string name="action_tutorial">Tutorial</string>
     <string name="action_sign_in_Facebook">Sign in with Facebook</string>
-
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -34,5 +36,10 @@
     <string name="error_login">Login error</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_receiving_call">Receiving Call</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_alarm_list">Alarms</string>
+    <string name="title_alarm_detail">Alarm Detail</string>
+    <string name="title_activity_create_alarm">CreateAlarm</string>
 
 </resources>

@@ -12,9 +12,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import library.UserFunctions;
 
@@ -23,8 +28,18 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
+    private Button wakeMe;
+    private Fragment fragment;
 
     UserFunctions userFunctions;
+
+
+    @Override
+    public void onBackPressed() {
+        //NOT GO BACK FROM DASHBOARD
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +47,15 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
 
         // Check login status in database
         userFunctions = new UserFunctions();
+        wakeMe = (Button)findViewById(R.id.wakeMe);
+
+
+//        EditText ET = (EditText)getView().findViewById(R.id.profilename);
+//        String userName = ET.toString();
+//        Log.e("USerNAme:", userName);
+
+
+
 
         // user already logged in show databoard
         setContentView(R.layout.activity_dashboard);
@@ -53,6 +77,8 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+
 
         // Adding Tabs
         actionBar.addTab(actionBar.newTab().setIcon(R.drawable.home).setTabListener(this));
@@ -100,7 +126,7 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
     public boolean onCreateOptionsMenu(Menu menu) {
         int base=Menu.FIRST;
         MenuItem item1=menu.add(base,1,1,"Log out");
-        MenuItem item2=menu.add(base,2,2,"Prova");
+
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_custom, menu);
