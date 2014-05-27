@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:orientation="vertical" android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#3C599B">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/friendlistView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="20">
+    </ListView>
+
+    <Button
+        android:id="@+id/addFriendButton"
+        android:layout_width="fill_parent"
+        android:layout_height="70dip"
+        android:text="@string/add_friend_button_text"
+        android:textColor="@android:color/background_light"/>
 
 </LinearLayout>
