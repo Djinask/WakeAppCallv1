@@ -1,16 +1,11 @@
 package com.example.wakeappcallv1.app;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-
-import com.example.wakeappcallv1.app.dummy.DummyContent;
 
 /**
  * A fragment representing a single Alarm detail screen.
@@ -28,7 +23,6 @@ public class AlarmDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -42,12 +36,12 @@ public class AlarmDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-        }
+//        if (getArguments().containsKey(ARG_ITEM_ID)) {
+//            // Load the dummy content specified by the fragment
+//            // arguments. In a real-world scenario, use a Loader
+//            // to load content from a content provider.
+//            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+//        }
     }
 
     @Override
@@ -55,10 +49,10 @@ public class AlarmDetailFragment extends Fragment {
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_alarm_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.alarm_detail)).setText(mItem.content);
-        }
+//        // Show the dummy content as text in a TextView.
+//        if (mItem != null) {
+//            ((TextView) rootView.findViewById(R.id.alarm_detail)).setText(mItem.content);
+//        }
 
         return rootView;
     }

@@ -12,16 +12,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import library.UserFunctions;
+import com.example.wakeappcallv1.app.library.UserFunctions;
 
 public class DashboardActivity extends FragmentActivity implements ActionBar.TabListener {
 

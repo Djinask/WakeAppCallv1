@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.wakeappcallv1.app.R;
+
 /**
  * Created by Andrea on 21/05/2014.
  */
