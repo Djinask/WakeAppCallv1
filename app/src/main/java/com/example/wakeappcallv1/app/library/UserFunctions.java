@@ -30,6 +30,9 @@ public class UserFunctions {
     private static String register_tag = "register";
     private static String add_alarm_tag = "new_alarm";
     private static String get_alarm_tag = "get_alarms";
+    private static String add_friend = "add_friend";
+
+
 
     // constructor
     public UserFunctions(){

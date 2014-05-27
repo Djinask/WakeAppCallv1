@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.example.wakeappcallv1.app.R;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 public class CreateAlarm extends Activity {
@@ -27,27 +29,26 @@ public class CreateAlarm extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_alarm);
-        final int timeH;  //get hour
-        final int timeM; // get minute
-        int timeD; // get Day
-        int timeW; // get Week
-        int timeY; // get year
-        Time time = new Time();
-        Calendar calendar = Calendar.getInstance();
 
-
-
-
-        TimePicker myTimePicker = (TimePicker) findViewById(R.id.timePicker);
-        myTimePicker.setIs24HourView(true);
-//        myTimePicker.setCurrentHour(calendar.);
-
-
-        timeH=myTimePicker.getCurrentHour();
-        timeM=myTimePicker.getCurrentMinute();
-
+        final TimePicker myTimePicker  = (TimePicker) findViewById(R.id.timePicker);
+        final EditText name = (EditText)findViewById(R.id.AlarmName);
 
         Button nextButton = (Button) findViewById(R.id.NextBtn);
+
+        final HashMap<String,String> alarm= new HashMap<String,String>();
+
+
+
+
+
+
+
+        myTimePicker.setIs24HourView(true);
+
+
+
+
+
 
 
 
@@ -62,15 +63,18 @@ public class CreateAlarm extends Activity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent AlarmChoice = new Intent(getApplicationContext(), AlarmChoiceActivity.class);
-//                getIntent().putExtra();
-//                register.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(AlarmChoice);
+
+                alarm.put("alarm_name", name.getText().toString());
+                alarm.put("alarm_setted_time", name.getText().toString());
+                Intent AlarmChoice = new Intent(getApplicationContext(), AlarmChoiceActivity.class);
+                AlarmChoice.putExtra("extra", alarm);
+
+                AlarmChoice.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(AlarmChoice);
 
                 // Close Login Screen
-//                finish();
+                finish();
 
-                Toast.makeText(getApplicationContext(), timeH+" "+timeM, Toast.LENGTH_LONG).show();
 
 
             }

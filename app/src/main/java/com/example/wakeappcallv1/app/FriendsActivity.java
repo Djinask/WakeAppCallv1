@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.wakeappcallv1.app.R;
+
 /**
  * Created by Andrea on 21/05/2014.
  */

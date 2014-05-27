@@ -18,7 +18,15 @@
             android:layout_height="fill_parent"
             android:orientation="vertical"
             android:background="@color/abc_search_url_text_pressed">
-
+            <ProgressBar
+                android:id="@+id/login_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:indeterminate="true"
+                android:indeterminateBehavior="cycle"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
