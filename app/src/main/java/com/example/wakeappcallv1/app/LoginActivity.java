@@ -1,5 +1,7 @@
 package com.example.wakeappcallv1.app;
 
+import java.util.Arrays;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
@@ -37,6 +39,9 @@ import java.util.List;
 
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
+import com.facebook.*;
+import com.facebook.model.*;
+import com.facebook.widget.LoginButton;
 
 
 /**
@@ -53,6 +58,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+
+    //Facebook login management
+    private UiLifecycleHelper uiHelper;
+
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -79,13 +88,42 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
 
-
+    //Facebook Login
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        @Override
+        public void call(Session session, SessionState state, Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (session != null && session.isOpened()) {
+            Log.d("DEBUG", "facebook session is open ");
+            // make request to the /me API
+            Request.newMeRequest(session, new Request.GraphUserCallback() {
+                // callback after Graph API response with user object
+                @Override
+                public void onCompleted(GraphUser user, Response response) {
+                    if (user != null) {
+                        Log.d("DEBUG", "email: " + user.asMap().get("email").toString());
+                    }
+                }
+            }).executeAsync();
+        }
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //FB helper
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+        LoginButton fbbutton = (LoginButton) findViewById(R.id.facebook);
+        fbbutton.setReadPermissions(Arrays.asList("basic_info","email"));
+
+
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView)findViewById(R.id.email);
