@@ -43,5 +43,6 @@
     <string name="title_alarm_detail">Alarm Detail</string>
     <string name="title_activity_create_alarm">CreateAlarm</string>
     <string name="title_activity_alarm_choice">AlarmChoiceActivity</string>
+    <string name="app_id">536632193113487</string>   <!-- for the Facebook SDK-->
 
 </resources>
