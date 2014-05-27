@@ -21,6 +21,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_friends">Add Friends</string>
     <string name="add_friend_button_text">Add new friends!</string>
+    <string name="searchFriendMail">Friend e-mail</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

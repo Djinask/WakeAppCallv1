@@ -37,7 +37,7 @@ public class FriendsActivity extends Fragment {
         // example array
         String [] array = {"Antonio","Giovanni","Michele","Giuseppe", "Leonardo", "Alessandro"};
         ArrayAdapter<String> arrayAdapter =
-                new ArrayAdapter<String>(owner, R.layout.friend_list_row, R.id.textViewList, array);
+                new ArrayAdapter<String>(owner, R.layout.friend_list_row, R.id.textViewFriendName, array);
         listView.setAdapter(arrayAdapter);
 
         // click on the list item

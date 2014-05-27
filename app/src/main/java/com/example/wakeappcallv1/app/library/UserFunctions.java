@@ -30,6 +30,8 @@ public class UserFunctions {
     private static String register_tag = "register";
     private static String add_alarm_tag = "new_alarm";
     private static String get_alarm_tag = "get_alarms";
+    private static String add_friends_tag = "add_friends";
+    private static String search_friends_tag = "search_friend";
 
     // constructor
     public UserFunctions(){
@@ -147,6 +149,43 @@ public class UserFunctions {
         return js;
     }
 
+
+
+    public JSONObject searchFriend(String email, String searched_mail) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", search_friends_tag));
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("searched_mail", searched_mail));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
+    public JSONObject addFriend(String email, String friendship_owner, String friendship_to) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", add_friends_tag));
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("friendship_owner", friendship_owner));
+        params.add(new BasicNameValuePair("friendship_to", friendship_to));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
+
+
+
+
+
+
+
+
     /**
      * Function get Login status
      * */
@@ -169,5 +208,7 @@ public class UserFunctions {
         db.resetTables();
         return true;
     }
+
+
 
 }
