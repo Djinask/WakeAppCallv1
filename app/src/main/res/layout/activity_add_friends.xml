@@ -6,6 +6,26 @@
     android:orientation="vertical"
     android:background="@color/abc_search_url_text_pressed">
 
+    <ProgressBar
+        android:id="@+id/searchProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:indeterminateBehavior="cycle"
+        android:indeterminate="true"
+        android:visibility="visible"/>
+
+    <EditText
+            android:id="@+id/friendMail"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="@string/searchFriendMail"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textColor="@android:color/background_light"/>
+
         <Button
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
