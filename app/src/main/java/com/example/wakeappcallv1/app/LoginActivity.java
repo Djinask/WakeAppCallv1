@@ -28,14 +28,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import library.DatabaseHandler;
-import library.UserFunctions;
+import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.UserFunctions;
 
 
 /**
@@ -342,6 +343,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             mPassword = password;
         }
         JSONObject json;
+        JSONArray jsonAlarms;
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -352,12 +354,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                         try {
 
                                             json = userFunction.loginUser(mEmail, mPassword);
+
+
                                             //  check for login response
                                             Log.e("JSON", json.getString(KEY_SUCCESS));
                                             if (json.getString(KEY_SUCCESS) != null) {
+
+
                                                 String res = json.getString(KEY_SUCCESS);
                                                 if(Integer.parseInt(res) == 1){
+
+                                                    jsonAlarms = userFunction.getAlarms(mEmail,json.getString("uid"));
+
                                                     Log.e("SUCCESS:", res);
+                                                    Log.e("JSONARRAY:", ""+jsonAlarms.getJSONObject(0).getString("alarm_name"));
                                                     // user successfully logged in
                                                     // Store user details in SQLite Database
                                                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
@@ -366,6 +376,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                                     // Clear all previous data in database
                                                     userFunction.logoutUser(getApplicationContext());
                                                     db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+                                                    db.addAlarmLocal(jsonAlarms);
+                                                    //db.addFriendsLocal();
 
                                                     // Launch Dashboard Screen
                                                     Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);

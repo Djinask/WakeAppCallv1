@@ -10,20 +10,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import library.DatabaseHandler;
-import library.UserFunctions;
+import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.UserFunctions;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 
 
 public class RegisterActivity extends Activity {

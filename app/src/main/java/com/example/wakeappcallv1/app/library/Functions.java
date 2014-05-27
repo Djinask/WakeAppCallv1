@@ -1,4 +1,4 @@
-package library;
+package com.example.wakeappcallv1.app.library;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

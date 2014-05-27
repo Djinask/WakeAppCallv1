@@ -1,4 +1,4 @@
-package library;
+package com.example.wakeappcallv1.app.library;
 
 /**
  * Created by lucamarconcini on 16/05/14.
@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -26,6 +28,8 @@ public class UserFunctions {
 
     private static String login_tag = "login";
     private static String register_tag = "register";
+    private static String add_alarm_tag = "new_alarm";
+    private static String get_alarm_tag = "get_alarms";
 
     // constructor
     public UserFunctions(){
@@ -45,8 +49,7 @@ public class UserFunctions {
         params.add(new BasicNameValuePair("password", password));
         PARSER JP = new PARSER();
         JSONObject json =JP.getJSONFromUrl(loginURL, params);
-        // return json
-        // Log.e("JSON", json.toString());
+
         return json;
     }
 
@@ -55,6 +58,10 @@ public class UserFunctions {
      * @param name
      * @param email
      * @param password
+     * @param phone
+     * @param birthDate
+     * @param country
+     * @param city
      * */
     public JSONObject registerUser(String name, String email, String password, String phone, String birthDate, String country, String city){
         // Building Parameters
@@ -72,6 +79,72 @@ public class UserFunctions {
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
         // return json
         return json;
+    }
+    /**
+     * function Add an Alarm
+     * @param alarm_name
+     * @param alarm_owner
+     * @param alarm_setted_time
+     * @param alarm_mode
+     * @param alarm_status
+     * @param alarm_special
+     * @param alarm_list
+     * @param alarm_repeat
+     * @param alarm_play_after
+     * @param alarm_volume
+     * @param alarm_ring_default
+     * */
+    public JSONObject addAlarm(String alarm_name, String alarm_owner, String alarm_setted_time, String alarm_mode, String alarm_status, String alarm_special, String alarm_list, String alarm_repeat, String alarm_play_after, String alarm_volume, String alarm_ring_default){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", add_alarm_tag));
+        params.add(new BasicNameValuePair("alarm_name", alarm_name));
+        params.add(new BasicNameValuePair("alarm_owner", alarm_owner));
+        params.add(new BasicNameValuePair("alarm_setted_time", alarm_setted_time));
+        params.add(new BasicNameValuePair("alarm_mode", alarm_mode));
+        params.add(new BasicNameValuePair("alarm_status", alarm_status));
+        params.add(new BasicNameValuePair("alarm_special", alarm_special));
+        params.add(new BasicNameValuePair("alarm_list", alarm_list));
+        params.add(new BasicNameValuePair("alarm_repeat", alarm_repeat));
+        params.add(new BasicNameValuePair("alarm_play_after", alarm_play_after));
+        params.add(new BasicNameValuePair("alarm_volume", alarm_volume));
+        params.add(new BasicNameValuePair("alarm_ring_default", alarm_ring_default));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
+    /**
+     * function Get all Alarms
+
+     * @param alarm_owner
+
+     * */
+    public JSONArray getAlarms(String email, String alarm_owner){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", get_alarm_tag));
+
+        params.add(new BasicNameValuePair("alarm_owner", alarm_owner));
+        params.add(new BasicNameValuePair("email", email));
+
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        JSONArray js=new JSONArray();
+
+        try {
+            js = json.getJSONArray("alarm");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        // return json
+        return js;
     }
 
     /**

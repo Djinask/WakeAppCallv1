@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.wakeappcallv1.app.R;
+
 /**
  * Created by Andrea on 26/05/14.
  */
