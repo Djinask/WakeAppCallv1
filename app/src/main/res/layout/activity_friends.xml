@@ -10,14 +10,15 @@
     <ListView
         android:id="@+id/friendlistView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="20">
+        android:layout_height="fill_parent"
+        android:layout_weight="15">
     </ListView>
 
     <Button
         android:id="@+id/addFriendButton"
         android:layout_width="fill_parent"
-        android:layout_height="70dip"
+        android:layout_height="fill_parent"
+        android:layout_weight="85"
         android:text="@string/add_friend_button_text"
         android:textColor="@android:color/background_light"/>
 
