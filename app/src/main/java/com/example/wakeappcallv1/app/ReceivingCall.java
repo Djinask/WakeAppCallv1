@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.example.wakeappcallv1.app.R;
+
 
 public class ReceivingCall extends Activity {
     private SeekBar sb;
