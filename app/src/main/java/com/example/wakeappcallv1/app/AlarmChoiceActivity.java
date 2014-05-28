@@ -45,6 +45,7 @@ public class AlarmChoiceActivity extends Activity {
         mProgressView = findViewById(R.id.login_progress);
         alarm = (HashMap<String, String>) intent.getSerializableExtra("extra");
 
+
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
         String owner=db.getUserDetails().get("uid");
 
@@ -127,6 +128,7 @@ public class AddAlarmTask extends AsyncTask<Void, Void, Boolean> {
     }
 
     JSONObject json;
+    JSONArray jsonAlarms;
 
 
     @Override
@@ -151,33 +153,24 @@ public class AddAlarmTask extends AsyncTask<Void, Void, Boolean> {
                     alarm.get("alarm_play_after"),
                     alarm.get("alarm_volume"),
                     alarm.get("alarm_ring_default"));
-
+//            jsonAlarms = userFunction.getAlarms(mEmail,json.getString("uid"));
 
             //  check for add response
-            Log.e("JSON", json.getString(KEY_SUCCESS));
+            Log.e("JSONAC", json.toString());
             if (json.getString(KEY_SUCCESS) != null) {
 
 
                 String res = json.getString(KEY_SUCCESS);
                 if(Integer.parseInt(res) == 1){
+//                    addAlarmLocal
 
 
-
-                    // user successfully logged in
-                    // Store user details in SQLite Database
                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-                    JSONObject json_user = json.getJSONObject("user");
+                    // Allarm added on the dataBase
+                    // Store user details in SQLite Database
 
-                    // Clear all previous data in database
-                    userFunction.logoutUser(getApplicationContext());
-                    //db.addFriendsLocal();
 
-                    // Launch Dashboard Screen
-                    Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-
-                    // Close all views before launching Dashboard
-                    dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(dashboard);
+                    Log.e("JSObj TO UPDATE", json.toString());
 
                     // Close Login Screen
                     //finish();
@@ -208,6 +201,13 @@ public class AddAlarmTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(final Boolean success) {
         mAddTask = null;
         showProgress(false);
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+        try {
+            Log.e("alarm_name_:",json.getJSONObject("alarm").getString("alarm_name"));
+            db.addOneAlarmLocal(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         Intent AlarmList = new Intent(getApplicationContext(), AlarmListActivity.class);
         AlarmList.putExtra("extra", "added");

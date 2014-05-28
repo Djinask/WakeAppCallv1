@@ -363,11 +363,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
                                                 String res = json.getString(KEY_SUCCESS);
                                                 if(Integer.parseInt(res) == 1){
+                                                    try {
 
-                                                    jsonAlarms = userFunction.getAlarms(mEmail,json.getString("uid"));
+
+                                                        jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
+                                                    }catch (JSONException e){
+                                                        e.printStackTrace();
+                                                    }
 
                                                     Log.e("SUCCESS:", res);
-                                                    Log.e("JSONARRAY:", ""+jsonAlarms.getJSONObject(0).getString("alarm_name"));
                                                     // user successfully logged in
                                                     // Store user details in SQLite Database
                                                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());

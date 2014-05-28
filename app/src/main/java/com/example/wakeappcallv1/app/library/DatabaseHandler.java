@@ -13,9 +13,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
@@ -134,7 +136,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BIRTHDATE, birthdate); // BirthDate
         values.put(KEY_COUNTRY, country); // country
         values.put(KEY_CITY, city); // City
-        values.put(KEY_UID, uid); // Email
+        values.put(KEY_UID, uid); // Unique id
         values.put(KEY_CREATED_AT, created_at); // Created At
 
         // Inserting Row
@@ -145,7 +147,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     /**
-     * Storing alarm details in database
+     * Storing alarms details in database
      * */
     public void addAlarmLocal(JSONArray jsonArray) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -159,7 +161,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_ALARM_NAME, jsonArray.getJSONObject(i).getString(KEY_ALARM_NAME)); // Name
                 values.put(KEY_ALARM_UID, jsonArray.getJSONObject(i).getString(KEY_ALARM_UID)); // id
 
-                values.put(KEY_ALARM_ID, jsonArray.getJSONObject(i).getString(KEY_ALARM_ID)); // id
         values.put(KEY_ALARM_OWNER, jsonArray.getJSONObject(i).getString(KEY_ALARM_OWNER)); // owner
         values.put(KEY_ALARM_SETTED_TIME, jsonArray.getJSONObject(i).getString(KEY_ALARM_SETTED_TIME)); // time
         values.put(KEY_ALARM_MODE, jsonArray.getJSONObject(i).getString(KEY_ALARM_MODE)); // mode
@@ -181,6 +182,50 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         }}catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        db.close(); // Closing database connection
+    }
+    /**
+     * Storing  1 alarm details in database
+     * */
+    public void addOneAlarmLocal(JSONObject jo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+
+        try {
+
+
+
+                ContentValues values = new ContentValues();
+                values.put(KEY_ALARM_NAME, jo.getJSONObject("alarm").getString(KEY_ALARM_NAME)); // Name
+                values.put(KEY_ALARM_UID, jo.getString(KEY_ALARM_UID)); // id
+
+                values.put(KEY_ALARM_OWNER, jo.getJSONObject("alarm").getString(KEY_ALARM_OWNER)); // owner
+                values.put(KEY_ALARM_SETTED_TIME, jo.getJSONObject("alarm").getString(KEY_ALARM_SETTED_TIME)); // time
+                values.put(KEY_ALARM_MODE, jo.getJSONObject("alarm").getString(KEY_ALARM_MODE)); // mode
+                values.put(KEY_ALARM_STATUS, jo.getJSONObject("alarm").getString(KEY_ALARM_STATUS)); // status
+                values.put(KEY_ALARM_ACTIVE, jo.getJSONObject("alarm").getString(KEY_ALARM_ACTIVE)); //active
+                values.put(KEY_ALARM_SPECIAL, jo.getJSONObject("alarm").getString(KEY_ALARM_SPECIAL)); // special
+                values.put(KEY_ALARM_LIST, jo.getJSONObject("alarm").getString(KEY_ALARM_LIST)); //  list
+                values.put(KEY_ALARM_REPEAT, jo.getJSONObject("alarm").getString(KEY_ALARM_REPEAT)); // repeat
+                values.put(KEY_ALARM_PLAY_AFTER, jo.getJSONObject("alarm").getString(KEY_ALARM_PLAY_AFTER)); // play_after
+                values.put(KEY_ALARM_VOLUME, jo.getJSONObject("alarm").getString(KEY_ALARM_VOLUME)); // Volume
+                values.put(KEY_ALARM_RING_DEFAULT, jo.getJSONObject("alarm").getString(KEY_ALARM_RING_DEFAULT)); // default ring
+                values.put(KEY_ALARM_CREATED_AT, jo.getJSONObject("alarm").getString(KEY_ALARM_CREATED_AT)); // Created At
+                values.put(KEY_ALARM_UPDATED_AT, jo.getJSONObject("alarm").getString(KEY_ALARM_UPDATED_AT)); // Updated At
+
+                // Inserting Row
+                db.insert(TABLE_ALARM, null, values);
+
+
+
+
+            }catch(android.database.sqlite.SQLiteException ex){
             ex.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -220,35 +265,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Getting alarms data from database
      * */
-    public ArrayList<HashMap<String,String>> getAlarmsDetails(){
+    public ArrayList<HashMap<String,String>> getAlarmsDetails(String owner){
         ArrayList<HashMap<String,String>> alarms = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT  * FROM " + TABLE_ALARM;
+        String selectQuery = "SELECT  * FROM " + TABLE_ALARM + " WHERE "+ KEY_ALARM_OWNER + " LIKE '"+owner+"'" ;
+        Log.e("owner", owner);
+        Log.e("query", selectQuery);
+
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // Move to first row
-        while (cursor.moveToNext()){
-            HashMap<String,String> HM = new HashMap<String, String>();
-            HM.put(KEY_ALARM_UID,cursor.getString(cursor.getColumnIndex(KEY_ALARM_UID)));
-            HM.put(KEY_ALARM_ID,cursor.getString(cursor.getColumnIndex(KEY_ALARM_ID)));
-            HM.put(KEY_ALARM_NAME,cursor.getString(cursor.getColumnIndex(KEY_ALARM_NAME)));
-            HM.put(KEY_ALARM_OWNER,cursor.getString(cursor.getColumnIndex(KEY_ALARM_OWNER)));
-            HM.put(KEY_ALARM_SETTED_TIME,cursor.getString(cursor.getColumnIndex(KEY_ALARM_SETTED_TIME)));
-            HM.put(KEY_ALARM_MODE,cursor.getString(cursor.getColumnIndex(KEY_ALARM_MODE)));
-            HM.put(KEY_ALARM_STATUS,cursor.getString(cursor.getColumnIndex(KEY_ALARM_STATUS)));
-            HM.put(KEY_ALARM_ACTIVE,cursor.getString(cursor.getColumnIndex(KEY_ALARM_ACTIVE)));
-            HM.put(KEY_ALARM_SPECIAL,cursor.getString(cursor.getColumnIndex(KEY_ALARM_SPECIAL)));
-            HM.put(KEY_ALARM_LIST,cursor.getString(cursor.getColumnIndex(KEY_ALARM_LIST)));
-            HM.put(KEY_ALARM_REPEAT,cursor.getString(cursor.getColumnIndex(KEY_ALARM_REPEAT)));
-            HM.put(KEY_ALARM_PLAY_AFTER,cursor.getString(cursor.getColumnIndex(KEY_ALARM_PLAY_AFTER)));
-            HM.put(KEY_ALARM_VOLUME,cursor.getString(cursor.getColumnIndex(KEY_ALARM_VOLUME)));
-            HM.put(KEY_ALARM_RING_DEFAULT,cursor.getString(cursor.getColumnIndex(KEY_ALARM_RING_DEFAULT)));
-            HM.put(KEY_ALARM_CREATED_AT,cursor.getString(cursor.getColumnIndex(KEY_ALARM_CREATED_AT)));
-            HM.put(KEY_ALARM_UPDATED_AT,cursor.getString(cursor.getColumnIndex(KEY_ALARM_UPDATED_AT)));
-            alarms.add(HM);
+        try {
+
+
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            // Move to first row
+            while (cursor.moveToNext()) {
+                HashMap<String, String> HM = new HashMap<String, String>();
+                HM.put(KEY_ALARM_UID, cursor.getString(cursor.getColumnIndex(KEY_ALARM_UID)));
+                HM.put(KEY_ALARM_ID, cursor.getString(cursor.getColumnIndex(KEY_ALARM_ID)));
+                HM.put(KEY_ALARM_NAME, cursor.getString(cursor.getColumnIndex(KEY_ALARM_NAME)));
+                HM.put(KEY_ALARM_OWNER, cursor.getString(cursor.getColumnIndex(KEY_ALARM_OWNER)));
+                HM.put(KEY_ALARM_SETTED_TIME, cursor.getString(cursor.getColumnIndex(KEY_ALARM_SETTED_TIME)));
+                HM.put(KEY_ALARM_MODE, cursor.getString(cursor.getColumnIndex(KEY_ALARM_MODE)));
+                HM.put(KEY_ALARM_STATUS, cursor.getString(cursor.getColumnIndex(KEY_ALARM_STATUS)));
+                HM.put(KEY_ALARM_ACTIVE, cursor.getString(cursor.getColumnIndex(KEY_ALARM_ACTIVE)));
+                HM.put(KEY_ALARM_SPECIAL, cursor.getString(cursor.getColumnIndex(KEY_ALARM_SPECIAL)));
+                HM.put(KEY_ALARM_LIST, cursor.getString(cursor.getColumnIndex(KEY_ALARM_LIST)));
+                HM.put(KEY_ALARM_REPEAT, cursor.getString(cursor.getColumnIndex(KEY_ALARM_REPEAT)));
+                HM.put(KEY_ALARM_PLAY_AFTER, cursor.getString(cursor.getColumnIndex(KEY_ALARM_PLAY_AFTER)));
+                HM.put(KEY_ALARM_VOLUME, cursor.getString(cursor.getColumnIndex(KEY_ALARM_VOLUME)));
+                HM.put(KEY_ALARM_RING_DEFAULT, cursor.getString(cursor.getColumnIndex(KEY_ALARM_RING_DEFAULT)));
+                HM.put(KEY_ALARM_CREATED_AT, cursor.getString(cursor.getColumnIndex(KEY_ALARM_CREATED_AT)));
+                HM.put(KEY_ALARM_UPDATED_AT, cursor.getString(cursor.getColumnIndex(KEY_ALARM_UPDATED_AT)));
+                alarms.add(HM);
+            }
+
+            db.close();
+        }catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
         }
 
-        db.close();
         // return user
         return alarms;
     }

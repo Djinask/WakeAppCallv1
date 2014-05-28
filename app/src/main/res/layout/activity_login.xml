@@ -132,13 +132,13 @@
                     android:layout_gravity="center_horizontal" />
 
                 >
-                <com.facebook.widget.LoginButton
-                    android:id="@+id/facebook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30dp"
-                    />
+                <!--<com.facebook.widget.LoginButton-->
+                    <!--android:id="@+id/facebook"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:layout_marginTop="30dp"-->
+                    <!--/>-->
                 <!--<Button
                     android:id="@+id/facebookold"
 
