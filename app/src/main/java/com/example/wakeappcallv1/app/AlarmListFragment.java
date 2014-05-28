@@ -27,6 +27,8 @@ import com.example.wakeappcallv1.app.library.DatabaseHandler;
 public class AlarmListFragment extends ListFragment {
 
     DatabaseHandler db;
+    ArrayList<HashMap<String, String>> alarms;
+    ArrayList<String> names;
     /**
      * The serialization (saved instance state) Bundle key representing the
      * activated item position. Only used on tablets.
@@ -78,22 +80,42 @@ public class AlarmListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         db = new DatabaseHandler(getActivity().getApplicationContext());
-        ArrayList<HashMap<String, String>> alarms = db.getAlarmsDetails();
-        HashMap<String,String> map;
+        alarms = db.getAlarmsDetails(db.getUserDetails().get("uid"));
+        names=new ArrayList<String>(alarms.size());
 
-        ArrayAdapter<HashMap<String,String>> mListAdapter = new ArrayAdapter<HashMap<String,String>>(
+//        while (alarms.iterator().hasNext()) Names.add(alarms.iterator().next().get("alarm_name"));
+        for(int i=0;i<alarms.size();i++) {
+            names.add(alarms.get(i).get("alarm_name"));
+        }
+
+        ArrayAdapter<String> mListAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
-                alarms);
+                names);
 
 
         setListAdapter(mListAdapter);
-
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        db = new DatabaseHandler(getActivity().getApplicationContext());
+        alarms = db.getAlarmsDetails(db.getUserDetails().get("uid"));
+        names=new ArrayList<String>(alarms.size());
+
+//        while (alarms.iterator().hasNext()) Names.add(alarms.iterator().next().get("alarm_name"));
+        for(int i=0;i<alarms.size();i++) {
+            names.add(alarms.get(i).get("alarm_name"));
+        }
+
+        ArrayAdapter<String> mListAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                names);
+
+
+        setListAdapter(mListAdapter);
 
         // Restore the previously serialized activated item position.
         if (savedInstanceState != null
@@ -105,6 +127,22 @@ public class AlarmListFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        db = new DatabaseHandler(getActivity().getApplicationContext());
+        alarms = db.getAlarmsDetails(db.getUserDetails().get("uid"));
+        names=new ArrayList<String>(alarms.size());
+
+//        while (alarms.iterator().hasNext()) Names.add(alarms.iterator().next().get("alarm_name"));
+        for(int i=0;i<alarms.size();i++) {
+            names.add(alarms.get(i).get("alarm_name"));
+        }
+
+        ArrayAdapter<String> mListAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_list_item_activated_1,
+                names);
+
+
+        setListAdapter(mListAdapter);
 
         // Activities containing this fragment must implement its callbacks.
         if (!(activity instanceof Callbacks)) {

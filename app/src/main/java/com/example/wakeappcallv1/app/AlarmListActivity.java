@@ -51,16 +51,11 @@ public class AlarmListActivity extends Activity
             @Override
             public void onClick(View v) {
 
-
-
-
-
-
                 Intent AlarmActivity = new Intent(getApplicationContext(), CreateAlarm.class);
                 AlarmActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(AlarmActivity);
 
-
+                finish();
 
 
 
