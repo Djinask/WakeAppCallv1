@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 public class UserFunctions {
 
@@ -32,6 +33,7 @@ public class UserFunctions {
     private static String get_alarm_tag = "get_alarms";
     private static String add_friends_tag = "add_friends";
     private static String search_friends_tag = "search_friend";
+    private static String get_friends_tag = "get_friends";
 
     // constructor
     public UserFunctions(){
@@ -151,12 +153,12 @@ public class UserFunctions {
 
 
 
-    public JSONObject searchFriend(String email, String searched_mail) {
+    public JSONObject searchFriend(String email, String search_mail) {
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", search_friends_tag));
         params.add(new BasicNameValuePair("email", email));
-        params.add(new BasicNameValuePair("searched_mail", searched_mail));
+        params.add(new BasicNameValuePair("searched_mail", search_mail));
 
         // getting JSON Object
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
@@ -164,13 +166,13 @@ public class UserFunctions {
         return json;
     }
 
-    public JSONObject addFriend(String email, String friendship_owner, String friendship_to) {
+    public JSONObject addFriend(String email, String friend_owner, String friend_to) {
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", add_friends_tag));
         params.add(new BasicNameValuePair("email", email));
-        params.add(new BasicNameValuePair("friendship_owner", friendship_owner));
-        params.add(new BasicNameValuePair("friendship_to", friendship_to));
+        params.add(new BasicNameValuePair("friendship_owner", friend_owner));
+        params.add(new BasicNameValuePair("friendship_to", friend_to));
 
         // getting JSON Object
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
@@ -178,7 +180,28 @@ public class UserFunctions {
         return json;
     }
 
-    // commento per push
+
+     public JSONArray getFriends(String email, String friend_owner){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", get_friends_tag));
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("friendship_owner", friend_owner));
+
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        JSONArray jsArr = new JSONArray();
+
+        try {
+            jsArr = json.getJSONArray("friendship");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsArr;
+    }
 
 
     /**

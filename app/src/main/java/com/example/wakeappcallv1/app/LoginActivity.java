@@ -382,6 +382,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         }
         JSONObject json;
         JSONArray jsonAlarms;
+        JSONArray jsonFriends;
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -405,6 +406,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 
                                                         jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
+
+                                                        jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
+
                                                     }catch (JSONException e){
                                                         e.printStackTrace();
                                                     }
@@ -419,7 +423,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                                     userFunction.logoutUser(getApplicationContext());
                                                     db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
                                                     db.addAlarmLocal(jsonAlarms);
-                                                    //db.addFriendsLocal();
+                                                    db.addFriendsLocal(jsonFriends);
 
                                                     // Launch Dashboard Screen
                                                     Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);

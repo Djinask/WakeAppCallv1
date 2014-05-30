@@ -32,6 +32,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_LOGIN = "login";
     // Alarm table name
     private static final String TABLE_ALARM = "alarm";
+    // Friendship table name
+    private static final String TABLE_FRIENDSHIP = "friendship";
 
     // Login Table Columns names
     private static final String KEY_ID = "id";
@@ -63,6 +65,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ALARM_RING_DEFAULT = "alarm_ring_default";
     private static final String KEY_ALARM_CREATED_AT = "created_at";
     private static final String KEY_ALARM_UPDATED_AT = "updated_at";
+
+    // Friendship Table Columns names
+    private static final String KEY_FRIENDSHIP_UID = "friendship_uid";
+    private static final String KEY_FRIENDSHIP_ID = "friendship_id";
+    private static final String KEY_FRIENDSHIP_OWNER = "friendship_owner";
+    private static final String KEY_FRIENDSHIP_TO = "friendship_to";
+    private static final String KEY_FRIENDSHIP_ACCEPTED = "friendship_accepted";
+    private static final String KEY_FRIENDSHIP_ACTIVE = "friendship_active";
+    private static final String KEY_FRIENDSHIP_CREATED_AT = "created_at";
+    private static final String KEY_FRIENDSHIP_UPDATED_AT = "updated_at";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -102,10 +114,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ALARM_CREATED_AT + " TEXT,"
                 + KEY_ALARM_UPDATED_AT + " TEXT" + ")";
 
+        String CREATE_FRIENDSHIP_TABLE = "CREATE TABLE " + TABLE_FRIENDSHIP + "("
+                + KEY_FRIENDSHIP_ID + " INTEGER PRIMARY KEY,"
+                + KEY_FRIENDSHIP_UID + " TEXT,"
+                + KEY_FRIENDSHIP_OWNER + " TEXT,"
+                + KEY_FRIENDSHIP_TO + " TEXT,"
+                + KEY_FRIENDSHIP_ACCEPTED + " INTEGER,"
+                + KEY_FRIENDSHIP_ACTIVE + " INTEGER,"
+                + KEY_FRIENDSHIP_CREATED_AT + " TEXT,"
+                + KEY_FRIENDSHIP_UPDATED_AT + " TEXT" + ")";
+
 
         try {
             db.execSQL(CREATE_LOGIN_TABLE);
             db.execSQL(CREATE_ALARM_TABLE);
+            db.execSQL(CREATE_FRIENDSHIP_TABLE);
 
         }catch(android.database.sqlite.SQLiteException ex){
         ex.printStackTrace();
@@ -118,6 +141,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALARM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDSHIP);
 
         // Create tables again
         onCreate(db);
@@ -244,6 +268,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+
         // Move to first row
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
@@ -334,5 +359,75 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_LOGIN, null, null);
         db.close();
     }
+
+
+    /**
+     * Storing friends details in database
+     * */
+    public void addFriendsLocal(JSONArray jsonFriendsArray) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            for (int i=0;i<jsonFriendsArray.length();i++){
+                ContentValues values = new ContentValues();
+                values.put(KEY_FRIENDSHIP_UID, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_UID));
+                values.put(KEY_FRIENDSHIP_OWNER, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_OWNER));
+                values.put(KEY_FRIENDSHIP_TO, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_TO));
+                values.put(KEY_FRIENDSHIP_ACCEPTED, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_ACCEPTED));
+                values.put(KEY_FRIENDSHIP_ACTIVE, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_ACTIVE));
+                values.put(KEY_FRIENDSHIP_CREATED_AT, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_CREATED_AT));
+                values.put(KEY_FRIENDSHIP_UPDATED_AT, jsonFriendsArray.getJSONObject(i).getString(KEY_FRIENDSHIP_UPDATED_AT));
+
+                // Inserting Row
+                db.insert(TABLE_FRIENDSHIP, null, values);
+
+            }}catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        db.close(); // Closing database connection
+    }
+
+    /**
+     * Getting alarms data from database
+     * */
+    public ArrayList<HashMap<String,String>> getFriendsDetails(String owner){
+        ArrayList<HashMap<String,String>> friendship = new ArrayList<HashMap<String, String>>();
+        String selectQuery = "SELECT  * FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"'" ;
+        Log.e("owner", owner);
+        Log.e("query", selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            // Move to first row
+            while (cursor.moveToNext()) {
+                HashMap<String, String> HM = new HashMap<String, String>();
+                HM.put(KEY_FRIENDSHIP_UID, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_UID)));
+                HM.put(KEY_FRIENDSHIP_ID, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_ID)));
+                HM.put(KEY_FRIENDSHIP_OWNER, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_OWNER)));
+                HM.put(KEY_FRIENDSHIP_TO, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_TO)));
+                HM.put(KEY_FRIENDSHIP_ACCEPTED, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_ACCEPTED)));
+                HM.put(KEY_FRIENDSHIP_ACTIVE, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_ACTIVE)));
+                HM.put(KEY_FRIENDSHIP_CREATED_AT, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_CREATED_AT)));
+                HM.put(KEY_FRIENDSHIP_UPDATED_AT, cursor.getString(cursor.getColumnIndex(KEY_FRIENDSHIP_UPDATED_AT)));
+                friendship.add(HM);
+            }
+
+            db.close();
+        }catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        }
+
+        return friendship;
+    }
+
+
+
+
 
 }
