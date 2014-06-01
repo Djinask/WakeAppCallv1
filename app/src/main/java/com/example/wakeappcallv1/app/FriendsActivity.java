@@ -1,6 +1,7 @@
 package com.example.wakeappcallv1.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,12 +48,14 @@ public class FriendsActivity extends Fragment {
         final Button addFriend = (Button) owner.findViewById(R.id.addFriendButton);
 
         db = new DatabaseHandler(getActivity().getApplicationContext());
-        friends = db.getFriendsDetails(db.getUserDetails().get("uid")); // owner
+
+        // read friendship from local DB, given the owner uid
+        friends = db.getFriendsDetails(db.getUserDetails().get("uid"));
+        // array with friendship, will be used with adapter
         names = new ArrayList<String>(friends.size());
 
         for(int i=0;i<friends.size();i++) {
             names.add(friends.get(i).get("friendship_to"));
-            Log.e("------------------------------>FRIENDS = ", friends.get(i).toString());
         }
 
         ArrayAdapter<String> arrayAdapter =

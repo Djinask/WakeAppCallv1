@@ -22,6 +22,8 @@
     <string name="title_activity_add_friends">Add Friends</string>
     <string name="add_friend_button_text">Add new friends!</string>
     <string name="searchFriendMail">Friend e-mail</string>
+    <string name="title_activity_friends">Friends</string>
+    <string name="action_search_short">Search</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -44,6 +46,9 @@
     <string name="title_alarm_detail">Alarm Detail</string>
     <string name="title_activity_create_alarm">CreateAlarm</string>
     <string name="title_activity_alarm_choice">AlarmChoiceActivity</string>
-    <string name="app_id">536632193113487</string>   <!-- for the Facebook SDK-->
+    <string name="app_id">536632193113487</string> <!-- for the Facebook SDK -->
+
+    <string name="title_friend_list">Friends</string>
+    <string name="title_friend_detail">Friend Detail</string>
 
 </resources>

@@ -2,16 +2,22 @@ package com.example.wakeappcallv1.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.R;
@@ -56,6 +62,26 @@ public class AddFriendsActivity extends Activity {
             }
         });
 
+        // pressed search button on keyboard
+        mail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.search || id == EditorInfo.IME_NULL) {
+
+                    attemptSearch();
+                    bar.setVisibility(View.VISIBLE);
+
+                    // hide keyboard
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(mail.getWindowToken(), 0);
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // pressed search button
         addName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +90,10 @@ public class AddFriendsActivity extends Activity {
                 {
                     attemptSearch();
                     bar.setVisibility(View.VISIBLE);
+
+                    // hide keyboard
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(mail.getWindowToken(), 0);
                 }
                 catch (Exception e)
                 {
@@ -140,7 +170,7 @@ public class AddFriendsActivity extends Activity {
 
             if(succ == 1)
             {
-                new AlertDialog.Builder(AddFriendsActivity.this)
+                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
                     .setTitle("Search result")
                     .setMessage("Are you sure you want to add\n\t\t"+name+"\n\t\t"+email+"\nto your friends?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -159,7 +189,7 @@ public class AddFriendsActivity extends Activity {
             }
             else
             {
-                new AlertDialog.Builder(AddFriendsActivity.this)
+                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
                         .setTitle("Search result")
                         .setMessage("Not found!")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -219,7 +249,13 @@ public class AddFriendsActivity extends Activity {
 
             try
             {
+                // add friendship to the online DB
                 jsonAdd = userFunction.addFriend(mMyEmail, ownUid, toUid);
+
+                // add the new friendship to the local DB
+                // (it has to be confirmed)
+                DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                db.addOneFriendLocal(jsonAdd);
             }
             catch (Exception e)
             {
@@ -246,29 +282,41 @@ public class AddFriendsActivity extends Activity {
 
             if(succ == 1)
             {
-                new AlertDialog.Builder(AddFriendsActivity.this)
+                Toast.makeText(getApplicationContext(), "Friend request correctly sent!", Toast.LENGTH_LONG).show();
+                startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
+                finish();
+                /*
+                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
                         .setTitle("Friend request")
                         .setMessage("Friend request correctly sent!")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // add friendship entry in DB
+                                startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
+                                finish();
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
+                */
             }
             else
             {
-                new AlertDialog.Builder(AddFriendsActivity.this)
+                Toast.makeText(getApplicationContext(), "Unable to send request!", Toast.LENGTH_LONG).show();
+                startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
+                finish();
+                /*
+                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
                         .setTitle("Friend request")
                         .setMessage("Unable to send request!")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                // add friendship entry in DB
+                                startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
+                                finish();
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
+                */
             }
         }
 

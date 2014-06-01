@@ -179,6 +179,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         try {
 
+            db.execSQL("delete from " + TABLE_ALARM);
+
 
             for (int i=0;i<jsonArray.length();i++){
                 ContentValues values = new ContentValues();
@@ -362,12 +364,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     /**
+     * Storing one friend details in database
+     * */
+    public void addOneFriendLocal(JSONObject jo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_FRIENDSHIP_UID, jo.getString(KEY_FRIENDSHIP_UID));
+            values.put(KEY_FRIENDSHIP_ID, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_ID));
+            values.put(KEY_FRIENDSHIP_OWNER, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_OWNER));
+            values.put(KEY_FRIENDSHIP_TO, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_TO));
+            values.put(KEY_FRIENDSHIP_ACCEPTED, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_ACCEPTED));
+            values.put(KEY_FRIENDSHIP_ACTIVE, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_ACTIVE));
+            values.put(KEY_FRIENDSHIP_CREATED_AT, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_CREATED_AT));
+            values.put(KEY_FRIENDSHIP_UPDATED_AT, jo.getJSONObject("friendship").getString(KEY_FRIENDSHIP_UPDATED_AT));
+
+            // Inserting Row
+            db.insert(TABLE_FRIENDSHIP, null, values);
+
+        }catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        db.close(); // Closing database connection
+    }
+
+    /**
      * Storing friends details in database
      * */
     public void addFriendsLocal(JSONArray jsonFriendsArray) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
+
+            db.execSQL("delete from " + TABLE_FRIENDSHIP);
 
             for (int i=0;i<jsonFriendsArray.length();i++){
                 ContentValues values = new ContentValues();
@@ -402,7 +435,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         try {
-
             Cursor cursor = db.rawQuery(selectQuery, null);
             // Move to first row
             while (cursor.moveToNext()) {

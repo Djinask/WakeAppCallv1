@@ -6,12 +6,14 @@ package com.example.wakeappcallv1.app;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,14 +47,6 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
         userFunctions = new UserFunctions();
         wakeMe = (Button)findViewById(R.id.wakeMe);
 
-
-//        EditText ET = (EditText)getView().findViewById(R.id.profilename);
-//        String userName = ET.toString();
-//        Log.e("USerNAme:", userName);
-
-
-
-
         // user already logged in show databoard
         setContentView(R.layout.activity_dashboard);
 
@@ -74,13 +68,20 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-
-
         // Adding Tabs
         actionBar.addTab(actionBar.newTab().setIcon(R.drawable.home).setTabListener(this));
         actionBar.addTab(actionBar.newTab().setIcon(R.drawable.notify).setTabListener(this));
         actionBar.addTab(actionBar.newTab().setIcon(R.drawable.profile).setTabListener(this));
         actionBar.addTab(actionBar.newTab().setIcon(R.drawable.friends).setTabListener(this));
+
+        // if the Dashboard is called by the AddFriendsActivity,
+        // it sets the Friends tab
+        try {
+            if(getCallingActivity().getClassName().equals("com.example.wakeappcallv1.app.AddFriendsActivity"))
+            {
+                actionBar.selectTab(actionBar.getTabAt(3));
+            }
+        }catch(NullPointerException e){}
 
         /**
          * on swiping the viewpager make respective tab selected

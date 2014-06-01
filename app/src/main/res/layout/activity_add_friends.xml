@@ -16,20 +16,26 @@
         android:indeterminate="true"
         android:visibility="visible"/>
 
-    <EditText
+        <AutoCompleteTextView
             android:id="@+id/friendMail"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:text="@string/searchFriendMail"
+            android:layout_weight="4"
+            android:hint="@string/prompt_email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textAlignment="center"
             android:textSize="25dp"
-            android:textColor="@android:color/background_light"/>
+            android:textColor="@android:color/background_light"
+            android:imeActionId="@+id/search"
+            android:imeActionLabel="@string/action_search_short"
+            android:imeOptions="actionUnspecified"/>
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:id="@+id/addFriendByName"
             android:text="@string/addFriendsButton1"
             android:textSize="30dp"
@@ -42,7 +48,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:id="@+id/addFriendFromFb"
             android:text="@string/addFriendsButton2"
             android:textSize="30dp"
