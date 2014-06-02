@@ -461,7 +461,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteFriendLocal(String owner, String to) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String delQuery = "DELETE FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " AND "+ KEY_FRIENDSHIP_TO + " LIKE '"+to+"'" ;
+        String delQuery = "DELETE FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"' AND "+ KEY_FRIENDSHIP_TO + " LIKE '"+to+"'" ;
         Log.e("owner, to ", owner+" "+to);
         Log.e("query", delQuery);
 
