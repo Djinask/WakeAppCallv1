@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <!-- height of each rows of the listView -->
+    <dimen name="rowHeight">80dp</dimen>
+
     </resources>

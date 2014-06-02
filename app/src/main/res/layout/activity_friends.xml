@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_dark"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:descendantFocusability="blocksDescendants">
 
     <ListView
         android:id="@+id/friendlistView"
@@ -20,6 +21,7 @@
         android:layout_height="fill_parent"
         android:layout_weight="85"
         android:text="@string/add_friend_button_text"
-        android:textColor="@android:color/background_light"/>
+        android:textColor="@android:color/background_light"
+        android:focusable="false"/>
 
 </LinearLayout>
