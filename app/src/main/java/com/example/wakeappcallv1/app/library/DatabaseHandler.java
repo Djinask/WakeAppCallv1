@@ -458,6 +458,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return friendship;
     }
 
+    public void deleteFriendLocal(String owner, String to) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String delQuery = "DELETE FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " AND "+ KEY_FRIENDSHIP_TO + " LIKE '"+to+"'" ;
+        Log.e("owner, to ", owner+" "+to);
+        Log.e("query", delQuery);
+
+        try {
+
+            Cursor cursor = db.rawQuery(delQuery, null);
+            Log.e("CURSOR = ",cursor.toString());
+
+            }
+        catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        }
+
+        db.close(); // Closing database connection
+    }
+
+
+
 
 
 

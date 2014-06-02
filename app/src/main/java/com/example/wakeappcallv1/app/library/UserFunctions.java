@@ -34,6 +34,7 @@ public class UserFunctions {
     private static String add_friends_tag = "add_friends";
     private static String search_friends_tag = "search_friend";
     private static String get_friends_tag = "get_friends";
+    private static String delete_friends_tag = "delete_friends";
 
     // constructor
     public UserFunctions(){
@@ -201,6 +202,21 @@ public class UserFunctions {
         }
 
         return jsArr;
+    }
+
+
+    public JSONObject deleteFriend(String email, String friend_owner, String friend_to) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", delete_friends_tag));
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("friendship_owner", friend_owner));
+        params.add(new BasicNameValuePair("friendship_to", friend_to));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
     }
 
 
