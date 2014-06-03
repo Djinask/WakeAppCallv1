@@ -467,8 +467,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         try {
 
-            Cursor cursor = db.rawQuery(delQuery, null);
-            Log.e("CURSOR = ",cursor.toString());
+            db.execSQL(delQuery);
 
             }
         catch(android.database.sqlite.SQLiteException ex){

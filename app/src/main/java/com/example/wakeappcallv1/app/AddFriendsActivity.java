@@ -88,12 +88,18 @@ public class AddFriendsActivity extends Activity {
 
                 try
                 {
-                    attemptSearch();
-                    bar.setVisibility(View.VISIBLE);
-
                     // hide keyboard
                     InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputManager.hideSoftInputFromWindow(mail.getWindowToken(), 0);
+
+                    // if mail field is empty, don't start searching
+                    if(mail.getText().toString().equals("")) {
+                        Toast.makeText(getApplicationContext(), "Email can't be empty!", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        attemptSearch();
+                        bar.setVisibility(View.VISIBLE);
+                    }
                 }
                 catch (Exception e)
                 {
