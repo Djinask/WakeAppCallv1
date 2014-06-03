@@ -38,6 +38,7 @@ public class FriendsActivity extends Fragment {
     Activity owner;
     DatabaseHandler db;
     ArrayList<HashMap<String, String>> friends;
+    ArrayList<String> UIDs;
     ArrayList<String> names;
     ArrayAdapter<String> arrayAdapter;
 
@@ -64,13 +65,16 @@ public class FriendsActivity extends Fragment {
 
         db = new DatabaseHandler(getActivity().getApplicationContext());
 
-        // read friendship from local DB, given the owner uid
-        friends = db.getFriendsDetails(db.getUserDetails().get("uid"));
+        // read details of friends from local DB (all row in the table are friends of current user)
+        friends = db.getFriendsDetails();
+
         // array with friendship, will be used with adapter
         names = new ArrayList<String>(friends.size());
+        UIDs = new ArrayList<String>(friends.size());
 
         for(int i=0;i<friends.size();i++) {
-            names.add(friends.get(i).get("friendship_to"));
+            names.add(friends.get(i).get("name"));
+            UIDs.add(friends.get(i).get("uid"));
         }
 
         arrayAdapter = new ArrayAdapter<String>(owner, R.layout.friend_list_row, R.id.friendTextView, names);
@@ -100,10 +104,7 @@ public class FriendsActivity extends Fragment {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        friendUid = arrayAdapter.getItem(info.position);
-
-        //friendName = get from somewhere
-        String friendName = friendUid;
+        String friendName = arrayAdapter.getItem(info.position);
 
         menu.setHeaderTitle(friendName);
         menu.add(0, v.getId(), 0, "Delete");
@@ -113,10 +114,9 @@ public class FriendsActivity extends Fragment {
         if(item.getTitle()=="Delete") {
             // delete selected friend
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            friendUid = arrayAdapter.getItem(info.position);
+            String friendName = arrayAdapter.getItem(info.position);
 
-            //friendName = get from somewhere
-            String friendName = friendUid;
+            friendUid = UIDs.get(info.position);
 
             askConfirm("Confirm deletion","Are you sure you want to delete "+friendName+" from your friends?");
         }
@@ -229,7 +229,8 @@ public class FriendsActivity extends Fragment {
             {
                 Toast.makeText(getActivity().getApplicationContext(), "Friend correctly deleted!", Toast.LENGTH_SHORT).show();
                 // remove from adapter the deleted friend
-                arrayAdapter.remove(arrayAdapter.getItem(arrayAdapter.getPosition(mFriendUid)));
+                // arrayAdapter has names, UIDs has uids, indexes coincide
+                arrayAdapter.remove(arrayAdapter.getItem(UIDs.indexOf(mFriendUid)));
             }
             else
             {

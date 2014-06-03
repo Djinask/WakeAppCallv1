@@ -34,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_ALARM = "alarm";
     // Friendship table name
     private static final String TABLE_FRIENDSHIP = "friendship";
+    private static final String TABLE_FRIENDS_DETAILS = "friends_details";
 
     // Login Table Columns names
     private static final String KEY_ID = "id";
@@ -124,11 +125,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_FRIENDSHIP_CREATED_AT + " TEXT,"
                 + KEY_FRIENDSHIP_UPDATED_AT + " TEXT" + ")";
 
+        String CREATE_FRIENDS_DETAILS_TABLE = "CREATE TABLE " + TABLE_FRIENDS_DETAILS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NAME + " TEXT,"
+                + KEY_EMAIL + " TEXT UNIQUE,"
+                + KEY_PHONE + " TEXT,"
+                + KEY_BIRTHDATE + " TEXT,"
+                + KEY_COUNTRY + " TEXT,"
+                + KEY_CITY + " TEXT,"
+                + KEY_UID + " TEXT,"
+                + KEY_UPDATED_AT + " TEXT,"
+                + KEY_CREATED_AT + " TEXT" + ")";
+
 
         try {
             db.execSQL(CREATE_LOGIN_TABLE);
             db.execSQL(CREATE_ALARM_TABLE);
             db.execSQL(CREATE_FRIENDSHIP_TABLE);
+            db.execSQL(CREATE_FRIENDS_DETAILS_TABLE);
 
         }catch(android.database.sqlite.SQLiteException ex){
         ex.printStackTrace();
@@ -142,6 +156,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGIN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALARM);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDSHIP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS_DETAILS);
 
         // Create tables again
         onCreate(db);
@@ -425,9 +440,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Getting alarms data from database
+     * Getting friendship data from database
      * */
-    public ArrayList<HashMap<String,String>> getFriendsDetails(String owner){
+    public ArrayList<HashMap<String,String>> getFriendshipDetails(String owner){
         ArrayList<HashMap<String,String>> friendship = new ArrayList<HashMap<String, String>>();
         String selectQuery = "SELECT  * FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"'" ;
         Log.e("owner", owner);
@@ -461,6 +476,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteFriendLocal(String owner, String to) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // delete friendship
         String delQuery = "DELETE FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"' AND "+ KEY_FRIENDSHIP_TO + " LIKE '"+to+"'" ;
         Log.e("owner, to ", owner+" "+to);
         Log.e("query", delQuery);
@@ -474,7 +490,114 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             ex.printStackTrace();
         }
 
+        // delete friends detail
+        delQuery = "DELETE FROM " + TABLE_FRIENDS_DETAILS + " WHERE "+ KEY_UID + " LIKE '"+to+"'" ;
+        Log.e("owner, to ", owner+" "+to);
+        Log.e("query", delQuery);
+
+        try {
+
+            db.execSQL(delQuery);
+
+        }
+        catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        }
+
         db.close(); // Closing database connection
+    }
+
+    /**
+     * Storing friends details in database
+     * */
+    public void addFriendsDetailsLocal(JSONArray jsonFriendsDetailsArray) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            db.execSQL("delete from " + TABLE_FRIENDS_DETAILS);
+
+            for (int i=0;i<jsonFriendsDetailsArray.length();i++){
+                ContentValues values = new ContentValues();
+                values.put(KEY_UID, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_UID));
+                values.put(KEY_NAME, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_NAME));
+                values.put(KEY_EMAIL, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_EMAIL));
+                values.put(KEY_PHONE, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_PHONE));
+                values.put(KEY_BIRTHDATE, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_BIRTHDATE));
+                values.put(KEY_COUNTRY, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_COUNTRY));
+                values.put(KEY_CITY, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_CITY));
+                values.put(KEY_CREATED_AT, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_CREATED_AT));
+                values.put(KEY_UPDATED_AT, jsonFriendsDetailsArray.getJSONObject(i).getString(KEY_UPDATED_AT));
+
+                // Inserting Row
+                db.insert(TABLE_FRIENDS_DETAILS, null, values);
+
+            }}catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        db.close(); // Closing database connection
+    }
+
+    public void addOneFriendDetailsLocal(JSONObject jo) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_UID, jo.getString(KEY_UID));
+            values.put(KEY_NAME, jo.getJSONObject("friends_details").getString(KEY_NAME));
+            values.put(KEY_EMAIL, jo.getJSONObject("friends_details").getString(KEY_EMAIL));
+            values.put(KEY_PHONE, jo.getJSONObject("friends_details").getString(KEY_PHONE));
+            values.put(KEY_BIRTHDATE, jo.getJSONObject("friends_details").getString(KEY_BIRTHDATE));
+            values.put(KEY_COUNTRY, jo.getJSONObject("friends_details").getString(KEY_COUNTRY));
+            values.put(KEY_CITY, jo.getJSONObject("friends_details").getString(KEY_CITY));
+            values.put(KEY_CREATED_AT, jo.getJSONObject("friends_details").getString(KEY_CREATED_AT));
+            values.put(KEY_UPDATED_AT, jo.getJSONObject("friends_details").getString(KEY_UPDATED_AT));
+
+            // Inserting Row
+            db.insert(TABLE_FRIENDS_DETAILS, null, values);
+
+        }catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        db.close(); // Closing database connection
+    }
+
+    public ArrayList<HashMap<String,String>> getFriendsDetails(){
+        ArrayList<HashMap<String,String>> friendsDetails = new ArrayList<HashMap<String, String>>();
+        // all rows in the table are actual friends of the current user (no need of owner uid)
+        String selectQuery = "SELECT * FROM " + TABLE_FRIENDS_DETAILS;
+        Log.e("query", selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            // Move to first row
+            while (cursor.moveToNext()) {
+                HashMap<String, String> HM = new HashMap<String, String>();
+                HM.put(KEY_UID, cursor.getString(cursor.getColumnIndex(KEY_UID)));
+                HM.put(KEY_NAME, cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+                HM.put(KEY_EMAIL, cursor.getString(cursor.getColumnIndex(KEY_EMAIL)));
+                HM.put(KEY_PHONE, cursor.getString(cursor.getColumnIndex(KEY_PHONE)));
+                HM.put(KEY_BIRTHDATE, cursor.getString(cursor.getColumnIndex(KEY_BIRTHDATE)));
+                HM.put(KEY_COUNTRY, cursor.getString(cursor.getColumnIndex(KEY_COUNTRY)));
+                HM.put(KEY_CITY, cursor.getString(cursor.getColumnIndex(KEY_CITY)));
+                HM.put(KEY_CREATED_AT, cursor.getString(cursor.getColumnIndex(KEY_CREATED_AT)));
+                HM.put(KEY_UPDATED_AT, cursor.getString(cursor.getColumnIndex(KEY_UPDATED_AT)));
+                friendsDetails.add(HM);
+            }
+
+            db.close();
+        }catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        }
+
+        return friendsDetails;
     }
 
 
