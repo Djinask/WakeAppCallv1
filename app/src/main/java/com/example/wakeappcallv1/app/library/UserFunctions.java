@@ -153,8 +153,6 @@ public class UserFunctions {
         return js;
     }
 
-
-
     public JSONObject searchFriend(String email, String search_mail) {
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();

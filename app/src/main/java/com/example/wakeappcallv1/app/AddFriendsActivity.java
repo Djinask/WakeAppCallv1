@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -31,10 +32,16 @@ import org.json.JSONObject;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Andrea on 26/05/14.
  */
 public class AddFriendsActivity extends Activity {
+
+    Map<String, String> user;
 
     SearchFriendTask mSearchTask;
     AddFriendTask mAddTask;
@@ -48,6 +55,9 @@ public class AddFriendsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
 
+        // array with user details
+        user = new HashMap<String, String>();
+
         Button addFb = (Button) findViewById(R.id.addFriendFromFb);
         Button addName = (Button) findViewById(R.id.addFriendByName);
 
@@ -55,12 +65,6 @@ public class AddFriendsActivity extends Activity {
         bar.setVisibility(View.INVISIBLE);
 
         mail = (EditText) findViewById(R.id.friendMail);
-        mail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mail.setText("");
-            }
-        });
 
         // pressed search button on keyboard
         mail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -168,6 +172,17 @@ public class AddFriendsActivity extends Activity {
                 name = jsonSearch.getString("name");
                 email = jsonSearch.getString("email");
                 friendUid = jsonSearch.getString("unique_id");
+
+                user.put("uid",friendUid);
+                user.put("name",name);
+                user.put("email",email);
+                user.put("phone",jsonSearch.getString("phone"));
+                user.put("birthdate",jsonSearch.getString("birthdate"));
+                user.put("country",jsonSearch.getString("country"));
+                user.put("city",jsonSearch.getString("city"));
+                user.put("created_at",jsonSearch.getString("created_at"));
+                user.put("updated_at",jsonSearch.getString("updated_at"));
+
             }
             catch (JSONException err)
             {
@@ -176,7 +191,7 @@ public class AddFriendsActivity extends Activity {
 
             if(succ == 1)
             {
-                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
+                new AlertDialog.Builder(new ContextThemeWrapper(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
                     .setTitle("Search result")
                     .setMessage("Are you sure you want to add\n\t\t"+name+"\n\t\t"+email+"\nto your friends?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -195,7 +210,7 @@ public class AddFriendsActivity extends Activity {
             }
             else
             {
-                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
+                new AlertDialog.Builder(new ContextThemeWrapper(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
                         .setTitle("Search result")
                         .setMessage("Not found!")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -261,7 +276,10 @@ public class AddFriendsActivity extends Activity {
                 // add the new friendship to the local DB
                 // (it has to be confirmed)
                 DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                // adds friendship relationship
                 db.addOneFriendLocal(jsonAdd);
+                // adds friend details
+                db.addOneFriendDetailsLocal(user);
             }
             catch (Exception e)
             {

@@ -42,6 +42,8 @@ public class FriendsActivity extends Fragment {
     ArrayList<String> names;
     ArrayAdapter<String> arrayAdapter;
 
+    FriendListAdapter adapter;
+
     ProgressBar bar = null;
 
     String friendUid = null;
@@ -77,16 +79,19 @@ public class FriendsActivity extends Fragment {
             UIDs.add(friends.get(i).get("uid"));
         }
 
-        arrayAdapter = new ArrayAdapter<String>(owner, R.layout.friend_list_row, R.id.friendTextView, names);
+        adapter = new FriendListAdapter(getActivity(), names);
+
+        /*arrayAdapter = new ArrayAdapter<String>(owner, R.layout.friend_list_row, R.id.friendTextView, names);
         listView.setAdapter(arrayAdapter);
 
-        registerForContextMenu(listView);
+        registerForContextMenu(listView);*/
 
         // click on the list item
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // selected item
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                //Toast.makeText(getActivity().getApplicationContext(), names.get(position), Toast.LENGTH_SHORT).show();
+                // finestra con i dettagli
             }
         });
 
@@ -97,9 +102,11 @@ public class FriendsActivity extends Fragment {
                 startActivity(new Intent(owner, AddFriendsActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
+
+        listView.setAdapter(adapter);
     }
 
-    @Override
+    /*@Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -124,37 +131,12 @@ public class FriendsActivity extends Fragment {
             return false;
         }
         return true;
-    }
+    }*/
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         owner = activity;
-    }
-
-
-    public void askConfirm(String title, String message)
-    {
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        alert.setTitle(title);
-        alert.setMessage(message);
-
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // start thread to delete friend
-                attemptDelete();
-                bar.setVisibility(View.VISIBLE);
-            }
-        });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // do nothing
-            }
-        });
-
-        alert.show();
     }
 
 
@@ -230,7 +212,7 @@ public class FriendsActivity extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), "Friend correctly deleted!", Toast.LENGTH_SHORT).show();
                 // remove from adapter the deleted friend
                 // arrayAdapter has names, UIDs has uids, indexes coincide
-                arrayAdapter.remove(arrayAdapter.getItem(UIDs.indexOf(mFriendUid)));
+                //adapter.remove(arrayAdapter.getItem(UIDs.indexOf(mFriendUid)));
             }
             else
             {

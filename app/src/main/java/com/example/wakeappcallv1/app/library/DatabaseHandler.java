@@ -7,6 +7,7 @@ package com.example.wakeappcallv1.app.library;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -541,28 +542,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public void addOneFriendDetailsLocal(JSONObject jo) {
+    public void addOneFriendDetailsLocal(Map<String,String> user) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             ContentValues values = new ContentValues();
-            values.put(KEY_UID, jo.getString(KEY_UID));
-            values.put(KEY_NAME, jo.getJSONObject("friends_details").getString(KEY_NAME));
-            values.put(KEY_EMAIL, jo.getJSONObject("friends_details").getString(KEY_EMAIL));
-            values.put(KEY_PHONE, jo.getJSONObject("friends_details").getString(KEY_PHONE));
-            values.put(KEY_BIRTHDATE, jo.getJSONObject("friends_details").getString(KEY_BIRTHDATE));
-            values.put(KEY_COUNTRY, jo.getJSONObject("friends_details").getString(KEY_COUNTRY));
-            values.put(KEY_CITY, jo.getJSONObject("friends_details").getString(KEY_CITY));
-            values.put(KEY_CREATED_AT, jo.getJSONObject("friends_details").getString(KEY_CREATED_AT));
-            values.put(KEY_UPDATED_AT, jo.getJSONObject("friends_details").getString(KEY_UPDATED_AT));
+            values.put(KEY_UID, user.get("uid"));
+            values.put(KEY_NAME, user.get("name"));
+            values.put(KEY_EMAIL, user.get("email"));
+            values.put(KEY_PHONE, user.get("phone"));
+            values.put(KEY_BIRTHDATE, user.get("birthdate"));
+            values.put(KEY_COUNTRY, user.get("country"));
+            values.put(KEY_CITY, user.get("city"));
+            values.put(KEY_CREATED_AT, user.get("created_at"));
+            values.put(KEY_UPDATED_AT, user.get("updated_at"));
 
             // Inserting Row
             db.insert(TABLE_FRIENDS_DETAILS, null, values);
 
         }catch(android.database.sqlite.SQLiteException ex){
             ex.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
         db.close(); // Closing database connection
