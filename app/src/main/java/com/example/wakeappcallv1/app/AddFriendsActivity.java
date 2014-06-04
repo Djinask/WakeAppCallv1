@@ -177,7 +177,7 @@ public class AddFriendsActivity extends Activity {
                 user.put("name",name);
                 user.put("email",email);
                 user.put("phone",jsonSearch.getString("phone"));
-                user.put("birthdate",jsonSearch.getString("birthdate"));
+                user.put("birth_date",jsonSearch.getString("birth_date"));
                 user.put("country",jsonSearch.getString("country"));
                 user.put("city",jsonSearch.getString("city"));
                 user.put("created_at",jsonSearch.getString("created_at"));
@@ -309,38 +309,12 @@ public class AddFriendsActivity extends Activity {
                 Toast.makeText(getApplicationContext(), "Friend request correctly sent!", Toast.LENGTH_LONG).show();
                 startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
                 finish();
-                /*
-                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
-                        .setTitle("Friend request")
-                        .setMessage("Friend request correctly sent!")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
-                                finish();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-                */
             }
             else
             {
                 Toast.makeText(getApplicationContext(), "Unable to send request!", Toast.LENGTH_LONG).show();
                 startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
                 finish();
-                /*
-                new AlertDialog.Builder(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog)
-                        .setTitle("Friend request")
-                        .setMessage("Unable to send request!")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
-                                finish();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-                */
             }
         }
 

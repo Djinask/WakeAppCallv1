@@ -547,15 +547,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         try {
             ContentValues values = new ContentValues();
-            values.put(KEY_UID, user.get("uid"));
-            values.put(KEY_NAME, user.get("name"));
-            values.put(KEY_EMAIL, user.get("email"));
-            values.put(KEY_PHONE, user.get("phone"));
-            values.put(KEY_BIRTHDATE, user.get("birthdate"));
-            values.put(KEY_COUNTRY, user.get("country"));
-            values.put(KEY_CITY, user.get("city"));
-            values.put(KEY_CREATED_AT, user.get("created_at"));
-            values.put(KEY_UPDATED_AT, user.get("updated_at"));
+            values.put(KEY_UID, user.get(KEY_UID));
+            values.put(KEY_NAME, user.get(KEY_NAME));
+            values.put(KEY_EMAIL, user.get(KEY_EMAIL));
+            values.put(KEY_PHONE, user.get(KEY_PHONE));
+            values.put(KEY_BIRTHDATE, user.get(KEY_BIRTHDATE));
+            values.put(KEY_COUNTRY, user.get(KEY_COUNTRY));
+            values.put(KEY_CITY, user.get(KEY_CITY));
+            values.put(KEY_CREATED_AT, user.get(KEY_CREATED_AT));
+            values.put(KEY_UPDATED_AT, user.get(KEY_UPDATED_AT));
 
             // Inserting Row
             db.insert(TABLE_FRIENDS_DETAILS, null, values);

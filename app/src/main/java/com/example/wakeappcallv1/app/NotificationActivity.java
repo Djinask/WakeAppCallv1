@@ -24,4 +24,11 @@ public class NotificationActivity extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_notifications, container, false);
         return rootView;
     }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+
+    }
 }
