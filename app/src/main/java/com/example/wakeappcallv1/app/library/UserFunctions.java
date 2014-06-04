@@ -218,6 +218,7 @@ public class UserFunctions {
         return json;
     }
 
+    // given the friendship_owner, return all the details about his/her friends
     public JSONArray getFriendsDetails(String email, String friend_owner){
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
