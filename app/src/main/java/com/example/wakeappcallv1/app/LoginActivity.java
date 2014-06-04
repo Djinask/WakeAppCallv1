@@ -124,6 +124,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                 public void onCompleted(GraphUser user,Response response) {
                                     if (user != null) {
 
+
                                         attemptLoginFb(user.asMap().get("email").toString());
                                     }
                                 }
