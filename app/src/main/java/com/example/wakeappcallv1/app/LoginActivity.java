@@ -123,9 +123,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                 @Override
                                 public void onCompleted(GraphUser user,Response response) {
                                     if (user != null) {
+                                        Log.i("DEBUG","User ID "+ user.getId());
+                                        Log.i("DEBUG","Email "+ user.asMap().get("email"));
+//                                        lblEmail.setText(user.asMap().get("email").toString());
+                                        attemptLoginFb(user);
 
 
-                                        attemptLoginFb(user.asMap().get("email").toString());
                                     }
                                 }
                             });
@@ -254,29 +257,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         }
     }
-    public void attemptLoginFb(String mail) {
+    public boolean attemptLoginFb(GraphUser u) {
         if (mAuthTask != null) {
-            return;
+            return true;
         }
 
 
-
-        // Store values at the time of the login attempt.
-        final String email = mail;
-
-
-
-
-
-
-
+        GraphUser user=u;
 
 
             showProgress(true);
 
 
-            FbAuthTask = new UserLoginTaskFB(email);
+            FbAuthTask = new UserLoginTaskFB(user);
             FbAuthTask.execute((Void) null);
+        return true;
 
 
     }
@@ -546,6 +541,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
 public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
     String mEmail;
+    String mId;
+    GraphUser utente;
 
 
     @Override
@@ -553,9 +550,12 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
         return super.equals(o);
     }
 
-    UserLoginTaskFB(String email) {
+    UserLoginTaskFB(GraphUser user) {
 
-        mEmail = email;
+        utente = user;
+
+        mEmail = utente.asMap().get("email").toString();
+        mId = utente.getId();
 
     }
     JSONObject json;
@@ -603,7 +603,7 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
 
                     // Clear all previous data in database
                     userFunction.logoutUser(getApplicationContext());
-                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,mId, json_user.getString(KEY_CREATED_AT));
                     db.addAlarmLocal(jsonAlarms);
                     db.addFriendsLocal(jsonFriends);
                     db.addFriendsDetailsLocal(jsonFriendsDetails);
@@ -615,16 +615,37 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
                     dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(dashboard);
 
-                    // Close Login Screen
-                    //finish();
+//                    Close Login Screen
+                    finish();
                 }else {
                     // Error in login
                     Log.e("FAIL:", res);
-                    //Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
-                }
-            }else{
 
-                // TODO: register the new account here.
+                    json = userFunction.registerUser(utente.getName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
+                    Log.e("name",utente.getName());
+                    Log.e("email", utente.asMap().get("email").toString());
+                    Log.e("pass id", utente.getId());
+
+
+                    Log.e("REGISTERED:", json.getString(KEY_SUCCESS));
+                    if(json.getString(KEY_SUCCESS).equals("1")){
+                        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                        Log.e("JSON TO STRING", json.toString());
+
+                        db.addUser(json.getString(KEY_NAME), json.getString(KEY_EMAIL),json.getString(KEY_PHONE),json.getString(KEY_BIRTHDATE),json.getString(KEY_COUNTRY),json.getString(KEY_CITY) ,mId, json.getString(KEY_CREATED_AT));
+                        Log.e("REGISTERED:", json.toString());
+                        // Launch Dashboard Screen
+                        Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+
+                        // Close all views before launching Dashboard
+                        dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(dashboard);
+
+
+
+
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -646,16 +667,15 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(final Boolean success) {
         FbAuthTask = null;
-        showProgress(false);
-        Log.e("onPost", "onpost");
 
-//            if (success) {
-//
-//            } else {
+
+
+
         try {
 
 
             Toast.makeText(getApplicationContext(), json.getString(KEY_ERROR_MSG), Toast.LENGTH_LONG).show();
+            showProgress(false);
         } catch (JSONException e) {
             e.printStackTrace();
         }
