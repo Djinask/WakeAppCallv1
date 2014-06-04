@@ -621,7 +621,7 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
                     // Error in login
                     Log.e("FAIL:", res);
 
-                    json = userFunction.registerUser(utente.getFirstName()+"_"+utente.getLastName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
+                    json = userFunction.registerUser(utente.getName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
                     Log.e("name",utente.getName());
                     Log.e("email", utente.asMap().get("email").toString());
                     Log.e("pass id", utente.getId());
@@ -631,8 +631,9 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
                     if(json.getString(KEY_SUCCESS).equals("1")){
                         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                         Log.e("JSON TO STRING", json.toString());
+                        JSONObject json_user = json.getJSONObject("user");
 
-                        db.addUser(json.getString(KEY_NAME), json.getString(KEY_EMAIL),json.getString(KEY_PHONE),json.getString(KEY_BIRTHDATE),json.getString(KEY_COUNTRY),json.getString(KEY_CITY) ,mId, json.getString(KEY_CREATED_AT));
+                        db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,utente.getId(), json_user.getString(KEY_CREATED_AT));
                         Log.e("REGISTERED:", json.toString());
                         // Launch Dashboard Screen
                         Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -669,17 +670,6 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
         FbAuthTask = null;
 
 
-
-
-        try {
-
-
-            Toast.makeText(getApplicationContext(), json.getString(KEY_ERROR_MSG), Toast.LENGTH_LONG).show();
-            showProgress(false);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-//            }
     }
 
     @Override
