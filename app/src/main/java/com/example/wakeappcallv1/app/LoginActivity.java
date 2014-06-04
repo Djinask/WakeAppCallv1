@@ -621,7 +621,7 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
                     // Error in login
                     Log.e("FAIL:", res);
 
-                    json = userFunction.registerUser(utente.getName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
+                    json = userFunction.registerUser(utente.getFirstName()+"_"+utente.getLastName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
                     Log.e("name",utente.getName());
                     Log.e("email", utente.asMap().get("email").toString());
                     Log.e("pass id", utente.getId());
