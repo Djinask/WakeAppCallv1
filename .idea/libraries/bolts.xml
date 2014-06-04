@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="bolts">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/facebook/libs/bolts.jar!/" />
+      <root url="jar://$PROJECT_DIR$/app/build/exploded-aar/WakeAppCallv1.libs/facebook/unspecified/libs/bolts.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
