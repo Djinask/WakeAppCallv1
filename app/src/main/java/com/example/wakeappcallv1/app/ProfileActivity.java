@@ -3,16 +3,27 @@ package com.example.wakeappcallv1.app;
 import android.app.Activity;
 import com.example.wakeappcallv1.app.Classes.MyImageButton;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.Classes.RoundedImageView;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
@@ -23,11 +34,15 @@ public class ProfileActivity extends Fragment {
     Activity owner;
     DatabaseHandler db;
 
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_profile, container, false);
+
+
+
 
 
 
@@ -65,6 +80,7 @@ public class ProfileActivity extends Fragment {
         final EditText birthdate = (EditText) owner.findViewById(R.id.birthDate);
         final EditText country = (EditText) owner.findViewById(R.id.country);
         final EditText city = (EditText) owner.findViewById(R.id.city);
+        final ImageView shape_button = (ImageView)owner.findViewById(R.id.shape);
         //Buttons
          final MyImageButton nameBt;
 
@@ -87,6 +103,60 @@ public class ProfileActivity extends Fragment {
         birthdate.setText(user.get("birthdate").toString());
         country.setText(user.get("country").toString());
         city.setText(user.get("city").toString());
+
+        shape_button.setClickable(true);
+        shape_button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+
+
+                try {
+                    PackageInfo info = owner.getPackageManager().getPackageInfo(
+                            "com.example.wakeappcallv1.app",
+                            PackageManager.GET_SIGNATURES);
+                    for (Signature signature : info.signatures) {
+                        MessageDigest md = MessageDigest.getInstance("SHA");
+                        md.update(signature.toByteArray());
+                        Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+
+                } catch (NoSuchAlgorithmException e) {
+
+                }
+
+
+                new AlertDialog.Builder(new ContextThemeWrapper(owner, android.R.style.Theme_Holo_Dialog))
+                        .setTitle("Edit Image")
+                        .setMessage("Are you sure you want to edit the profile image?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                Toast.makeText(owner, "Cambio image", Toast.LENGTH_LONG).show();
+
+
+
+
+
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+
+
+                return true;
+
+            }
+        });
+
+
 
 
         nameBt.setClickable(true);
