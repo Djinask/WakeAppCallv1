@@ -89,20 +89,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
 
-    //Facebook Login
-    private Session.StatusCallback callback = new Session.StatusCallback() {
-        @Override
-        public void call(Session session, SessionState state, Exception exception) {
-            Context context = getApplicationContext();
-            CharSequence text = "FB connected";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-
-            onSessionStateChange(session, state, exception);
-        }
-    };
 
 
 
@@ -111,11 +97,41 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //FB helper
-        uiHelper = new UiLifecycleHelper(this, callback);
-        uiHelper.onCreate(savedInstanceState);
+        //FB login
         LoginButton fbbutton = (LoginButton) findViewById(R.id.facebook);
         fbbutton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
+        fbbutton.setOnErrorListener(new LoginButton.OnErrorListener() {
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.i("DEBUG", "Error " + error.getMessage());
+            }
+        });
+
+        // session state call back event
+        fbbutton.setSessionStatusCallback(new Session.StatusCallback() {
+
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+
+                if (session.isOpened()) {
+                    Log.i("DEBUG","Access Token"+ session.getAccessToken());
+                    Request.executeMeRequestAsync(session,
+                            new Request.GraphUserCallback() {
+                                @Override
+                                public void onCompleted(GraphUser user,Response response) {
+                                    if (user != null) {
+                                        Log.i("DEBUG","User ID "+ user.getId());
+                                        Log.i("DEBUG","Email "+ user.asMap().get("email"));
+//                                        lblEmail.setText(user.asMap().get("email").toString());
+                                    }
+                                }
+                            });
+                }
+
+            }
+        });
+
 
 
 
@@ -161,45 +177,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         mProgressView = findViewById(R.id.login_progress);
     }
 
-    //FB login - this part doesn't seem to work
-
-    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-        Log.e("DEBUG", "facebook session is open ");
-        if (session != null && session.isOpened()) {
-            Log.d("DEBUG", "facebook session is open ");
-
-
-            // make request to the /me API
-            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
-                // callback after Graph API response with user object
-                @Override
-                public void onCompleted(GraphUser user, Response response) {
-                    if (user != null) {
-                        CharSequence text = "FB connected";
-                        int duration = Toast.LENGTH_SHORT;
-                        Context context2 = getApplicationContext();
-                        Toast toast = Toast.makeText(context2, text, duration);
-                        toast.show();
-                        Log.d("DEBUG", "email: " + user.asMap().get("email").toString());
-                    }
-                }
-            });
-        }
-    }
 
     //FB login
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        uiHelper.onActivityResult(requestCode, resultCode, data);
+        Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
     }
 
-    //FB login
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        uiHelper.onSaveInstanceState(outState);
-    }
 
     private void populateAutoComplete() {
         if (VERSION.SDK_INT >= 14) {
