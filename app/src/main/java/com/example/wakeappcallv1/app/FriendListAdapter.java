@@ -55,9 +55,12 @@ public class FriendListAdapter extends BaseAdapter {
 
     public void remove(int position) {
         friends_details.get("names").remove(position);
-        friends_details.get("mail").remove(position);
+        friends_details.get("email").remove(position);
         friends_details.get("UIDs").remove(position);
         friends_details.get("accepted").remove(position);
+        friends_details.get("birth_date").remove(position);
+        friends_details.get("country").remove(position);
+        friends_details.get("city").remove(position);
         notifyDataSetChanged();
     }
 
@@ -71,7 +74,7 @@ public class FriendListAdapter extends BaseAdapter {
 
         this.position = position;
         final String name = friends_details.get("names").get(position);
-        final String mail = friends_details.get("mail").get(position);
+        final String mail = friends_details.get("email").get(position);
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

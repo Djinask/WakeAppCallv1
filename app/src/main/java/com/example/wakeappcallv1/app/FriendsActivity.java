@@ -42,7 +42,6 @@ public class FriendsActivity extends Fragment {
     ArrayList<HashMap<String, String>> friends;
     ArrayList<HashMap<String, String>> friendships;
     Map<String,ArrayList<String>> friends_details;
-    ArrayAdapter<String> arrayAdapter;
 
     FriendListAdapter adapter;
 
@@ -68,7 +67,7 @@ public class FriendsActivity extends Fragment {
         final Button addFriend = (Button) owner.findViewById(R.id.addFriendButton);
         bar = (ProgressBar) owner.findViewById(R.id.deleteProgress);
 
-        db = new DatabaseHandler(getActivity().getApplicationContext());
+        db = new DatabaseHandler(getActivity());
 
         // read details of friends from local DB (all row in the table are friends of current user)
         friends = db.getFriendsDetails();
@@ -78,12 +77,21 @@ public class FriendsActivity extends Fragment {
         ArrayList<String> names = new ArrayList<String>(friends.size());
         ArrayList<String> UIDs = new ArrayList<String>(friends.size());
         ArrayList<String> mail = new ArrayList<String>(friends.size());
+        final ArrayList<String> birthdate = new ArrayList<String>(friends.size());
+        final ArrayList<String> country = new ArrayList<String>(friends.size());
+        final ArrayList<String> city = new ArrayList<String>(friends.size());
         ArrayList<String> accepted = new ArrayList<String>(friendships.size());
 
         for(int i=0;i<friends.size();i++) {
             names.add(friends.get(i).get("name"));
             UIDs.add(friends.get(i).get("uid"));
             mail.add(friends.get(i).get("email"));
+            birthdate.add(friends.get(i).get("birth_date"));
+            country.add(friends.get(i).get("country"));
+            city.add(friends.get(i).get("city"));
+
+            Log.e("",names.get(i)+","+ birthdate.get(i)+","+country.get(i));
+
         }
 
         for(int i=0;i<friendships.size();i++) {
@@ -93,13 +101,13 @@ public class FriendsActivity extends Fragment {
         friends_details = new HashMap<String, ArrayList<String>>();
         friends_details.put("names",names);
         friends_details.put("UIDs",UIDs);
-        friends_details.put("mail",mail);
+        friends_details.put("email",mail);
         friends_details.put("accepted",accepted);
+        friends_details.put("birth_date",birthdate);
+        friends_details.put("country",country);
+        friends_details.put("city",city);
 
         adapter = new FriendListAdapter(getActivity(), friends_details);
-
-        /*arrayAdapter = new ArrayAdapter<String>(owner, R.layout.friend_list_row, R.id.friendTextView, names);
-        listView.setAdapter(arrayAdapter);*/
 
         registerForContextMenu(listView);
 
@@ -107,8 +115,21 @@ public class FriendsActivity extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                //Toast.makeText(getActivity().getApplicationContext(), names.get(position), Toast.LENGTH_SHORT).show();
-                // finestra con i dettagli
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Dialog));
+
+                alert.setTitle(friends_details.get("names").get(position));
+                alert.setMessage("E-MAIL: "+friends_details.get("email").get(position)+"\n"
+                                +"BIRTHDATE: "+(birthdate.get(position)==null?"n/a":birthdate.get(position))+"\n"
+                                +"COUNTRY: "+(country.get(position)==null?"n/a":country.get(position))+"\n"
+                                +"CITY: "+(city.get(position)==null?"n/a":city.get(position)));
+
+                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+                alert.show();
             }
         });
 
