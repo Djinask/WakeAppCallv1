@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -31,6 +32,8 @@ import com.example.wakeappcallv1.app.Classes.RoundedImageView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -42,6 +45,7 @@ public class ProfileActivity extends Fragment {
 
     Activity owner;
     DatabaseHandler db;
+    Bitmap profPict;
     private static final int GALLERY = 1;
     private static Bitmap image = null;
     private RoundedImageView iconaUtente;
@@ -78,6 +82,7 @@ public class ProfileActivity extends Fragment {
 
                     //Salva in locale
                     iconaUtente.setImageBitmap(rotateImage);
+
                 } else
 
                     //Salva in locale
@@ -142,8 +147,21 @@ public class ProfileActivity extends Fragment {
 
 
         HashMap user= db.getUserDetails();
+        URL image_value= null;
 
-       userName.setText(user.get("name").toString());
+        try {
+            image_value = new URL("http://graph.facebook.com/"+ db.getUserDetails().get("uid").toString()+"/picture");
+
+            Log.e("image value", image_value.toString());
+            profPict= BitmapFactory.decodeStream(image_value.openConnection().getInputStream());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        iconaUtente.setImageBitmap(profPict);
+        userName.setText(user.get("name").toString());
         email.setText(user.get("email").toString());
         phone.setText(user.get("phone").toString());
         password.setText("**********");
