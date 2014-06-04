@@ -148,6 +148,14 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
                         session.closeAndClearTokenInformation();
                         //clear your preferences if saved
                     }
+                } else {
+
+                    session = new Session(getApplicationContext());
+                    Session.setActiveSession(session);
+
+                    session.closeAndClearTokenInformation();
+                    //clear your preferences if saved
+
                 }
             Intent login = new Intent(getApplicationContext(), LoginActivity.class);
             login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
