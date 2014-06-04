@@ -126,6 +126,7 @@ public class ProfileActivity extends Fragment {
 
         iconaUtente = (ProfilePictureView)owner.findViewById(R.id.icona_utente);
         iconaUtente.setCropped(true);
+        iconaUtente.setDrawingCacheEnabled(true);
         iconaUtente.setProfileId(db.getUserDetails().get("uid"));
         final EditText userName = (EditText) owner.findViewById(R.id.profilename);
         final EditText email = (EditText) owner.findViewById(R.id.email);
