@@ -4,10 +4,17 @@ import android.app.Activity;
 import com.example.wakeappcallv1.app.Classes.MyImageButton;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Base64;
@@ -22,6 +29,8 @@ import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.Classes.RoundedImageView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -33,6 +42,10 @@ public class ProfileActivity extends Fragment {
 
     Activity owner;
     DatabaseHandler db;
+    private static final int GALLERY = 1;
+    private static Bitmap image = null;
+    private RoundedImageView iconaUtente;
+    private static Bitmap rotateImage = null;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,16 +58,37 @@ public class ProfileActivity extends Fragment {
 
 
 
-
-
-
-
-
-
         return rootView;
     }
 
+     @Override
+     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         super.onActivityResult(requestCode,resultCode,data);
 
+        if (requestCode == GALLERY && resultCode != 0) {
+            Uri mImageUri = data.getData();
+            try {
+                image = MediaStore.Images.Media.getBitmap(owner.getContentResolver(), mImageUri);
+                if (getOrientation(owner.getApplicationContext(), mImageUri) != 0) {
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(getOrientation(owner.getApplicationContext(), mImageUri));
+                    if (rotateImage != null)
+                        rotateImage.recycle();
+                    rotateImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix,true);
+
+                    //Salva in locale
+                    iconaUtente.setImageBitmap(rotateImage);
+                } else
+
+                    //Salva in locale
+                    iconaUtente.setImageBitmap(image);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -64,15 +98,27 @@ public class ProfileActivity extends Fragment {
 
 
 
-//
 
     }
+
+
+    public static int getOrientation(Context context, Uri photoUri) {
+        Cursor cursor = context.getContentResolver().query(photoUri,
+                new String[] { MediaStore.Images.ImageColumns.ORIENTATION },null, null, null);
+
+        if (cursor.getCount() != 1) {
+            return -1;
+        }
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        final RoundedImageView iconaUtente = (RoundedImageView)owner.findViewById(R.id.icona_utente);
+        iconaUtente = (RoundedImageView)owner.findViewById(R.id.icona_utente);
         final EditText userName = (EditText) owner.findViewById(R.id.profilename);
         final EditText email = (EditText) owner.findViewById(R.id.email);
         final EditText phone = (EditText) owner.findViewById(R.id.phone);
@@ -80,8 +126,9 @@ public class ProfileActivity extends Fragment {
         final EditText birthdate = (EditText) owner.findViewById(R.id.birthDate);
         final EditText country = (EditText) owner.findViewById(R.id.country);
         final EditText city = (EditText) owner.findViewById(R.id.city);
-        final ImageView shape_button = (ImageView)owner.findViewById(R.id.shape);
+
         //Buttons
+        final ImageView shape_button = (ImageView)owner.findViewById(R.id.shape);
          final MyImageButton nameBt;
 
                  nameBt =(MyImageButton)owner.findViewById(R.id.nameButton);
@@ -110,20 +157,7 @@ public class ProfileActivity extends Fragment {
             public boolean onLongClick(View view) {
 
 
-                try {
-                    PackageInfo info = owner.getPackageManager().getPackageInfo(
-                            "com.example.wakeappcallv1.app",
-                            PackageManager.GET_SIGNATURES);
-                    for (Signature signature : info.signatures) {
-                        MessageDigest md = MessageDigest.getInstance("SHA");
-                        md.update(signature.toByteArray());
-                        Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
 
-                } catch (NoSuchAlgorithmException e) {
-
-                }
 
 
                 new AlertDialog.Builder(new ContextThemeWrapper(owner, android.R.style.Theme_Holo_Dialog))
@@ -136,7 +170,13 @@ public class ProfileActivity extends Fragment {
                                 Toast.makeText(owner, "Cambio image", Toast.LENGTH_LONG).show();
 
 
-
+                                //iconaUtente.setImageBitmap(null);
+                                if (image != null)
+                                    image.recycle();
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
 
 
 
