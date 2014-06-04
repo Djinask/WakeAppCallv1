@@ -123,9 +123,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                 @Override
                                 public void onCompleted(GraphUser user,Response response) {
                                     if (user != null) {
-                                        Log.i("DEBUG","User ID "+ user.getId());
-                                        Log.i("DEBUG","Email "+ user.asMap().get("email"));
-//                                        lblEmail.setText(user.asMap().get("email").toString());
+
                                         attemptLoginFb(user.asMap().get("email").toString());
                                     }
                                 }
