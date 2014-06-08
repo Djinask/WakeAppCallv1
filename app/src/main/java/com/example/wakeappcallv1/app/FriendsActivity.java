@@ -89,9 +89,6 @@ public class FriendsActivity extends Fragment {
             birthdate.add(friends.get(i).get("birth_date"));
             country.add(friends.get(i).get("country"));
             city.add(friends.get(i).get("city"));
-
-            Log.e("",names.get(i)+","+ birthdate.get(i)+","+country.get(i));
-
         }
 
         for(int i=0;i<friendships.size();i++) {
@@ -151,7 +148,6 @@ public class FriendsActivity extends Fragment {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         position = info.position;
 
-        //String friendName = arrayAdapter.getItem(info.position);
         String friendName = friends_details.get("names").get(position);
 
         menu.setHeaderTitle(friendName);
@@ -165,7 +161,6 @@ public class FriendsActivity extends Fragment {
 
             position = info.position;
 
-            //String friendName = arrayAdapter.getItem(info.position);
             String friendName = friends_details.get("names").get(position);
 
             friendUid = friends_details.get("UIDs").get(position);

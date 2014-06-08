@@ -36,6 +36,8 @@ public class UserFunctions {
     private static String get_friends_tag = "get_friends";
     private static String delete_friends_tag = "delete_friends";
     private static String get_friends_details_tag = "get_friends_details";
+    private static String add_notification = "add_notification";
+    private static String get_notification = "get_notification";
 
     // constructor
     public UserFunctions(){
@@ -240,6 +242,41 @@ public class UserFunctions {
         return jsArr;
     }
 
+
+    public JSONObject addNotification(String notif_from, String notif_to, String type) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", add_notification));
+        params.add(new BasicNameValuePair("notif_from", notif_from));
+        params.add(new BasicNameValuePair("notif_to", notif_to));
+        params.add(new BasicNameValuePair("type", type));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
+
+    public JSONArray getNotification(String notif_to){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", get_notification));
+        params.add(new BasicNameValuePair("notif_to", notif_to));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        JSONArray jsArr = new JSONArray();
+
+        try {
+            jsArr = json.getJSONArray("notification");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsArr;
+    }
 
     /**
      * Function get Login status

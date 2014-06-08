@@ -83,6 +83,15 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
             }
         }catch(NullPointerException e){}
 
+        // if the Dashboard is called by the notification
+        // it sets the Notification tab
+        if (getIntent().getExtras() != null) {
+            Bundle b = getIntent().getExtras();
+            if(b.getBoolean("fromNotification")){
+                actionBar.selectTab(actionBar.getTabAt(1));
+            }
+        }
+
         /**
          * on swiping the viewpager make respective tab selected
          * */

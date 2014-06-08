@@ -16,7 +16,7 @@
     <string name="password">Password</string>
     <string name="textButton1">Wake me up!</string>
     <string name="textButton2">Wake someone up!</string>
-    <string name="addFriendsButton1">Search by name</string>
+    <string name="addFriendsButton1">Search by mail</string>
     <string name="addFriendsButton2">Add from Facebook</string>
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_add_friends">Add Friends</string>
