@@ -28,6 +28,8 @@ public class UserFunctions {
 
 
     private static String login_tag = "login";
+    private static String check_user= "check_user";
+    private static String loginFb_tag = "login_fb";
     private static String register_tag = "register";
     private static String add_alarm_tag = "new_alarm";
     private static String get_alarm_tag = "get_alarms";
@@ -55,6 +57,28 @@ public class UserFunctions {
         params.add(new BasicNameValuePair("tag", login_tag));
         params.add(new BasicNameValuePair("email", email));
         params.add(new BasicNameValuePair("password", password));
+        PARSER JP = new PARSER();
+        JSONObject json =JP.getJSONFromUrl(loginURL, params);
+
+        return json;
+    }
+    public JSONObject checkUser_if_exist(String email){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("tag", check_user));
+        params.add(new BasicNameValuePair("email", email));
+
+        PARSER JP = new PARSER();
+        JSONObject json =JP.getJSONFromUrl(loginURL, params);
+
+        return json;
+    }
+    public JSONObject login_fb(String email){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>(2);
+        params.add(new BasicNameValuePair("tag", loginFb_tag));
+        params.add(new BasicNameValuePair("email", email));
+
         PARSER JP = new PARSER();
         JSONObject json =JP.getJSONFromUrl(loginURL, params);
 

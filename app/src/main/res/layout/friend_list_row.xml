@@ -7,7 +7,10 @@
     android:orientation="horizontal"
     android:focusable="false">
 
-    <com.example.wakeappcallv1.app.Classes.RoundedImageView
+
+    <com.facebook.widget.ProfilePictureView
+
+        android:id="@+id/profile_pic"
         android:layout_width="@dimen/rowHeight"
         android:layout_height="@dimen/rowHeight"
         android:scaleType="fitXY"

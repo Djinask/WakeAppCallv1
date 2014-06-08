@@ -5,6 +5,7 @@ package com.example.wakeappcallv1.app;
  */
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 
 import com.example.wakeappcallv1.app.library.UserFunctions;
+import com.facebook.Session;
 
 public class DashboardActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -143,6 +145,27 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
 
         if (item.getItemId()==1){
             userFunctions.logoutUser(getApplicationContext());
+            /**
+             * Logout From Facebook
+             */
+
+
+                Session session = Session.getActiveSession();
+                if (session != null) {
+
+                    if (!session.isClosed()) {
+                        session.closeAndClearTokenInformation();
+                        //clear your preferences if saved
+                    }
+                } else {
+
+                    session = new Session(getApplicationContext());
+                    Session.setActiveSession(session);
+
+                    session.closeAndClearTokenInformation();
+                    //clear your preferences if saved
+
+                }
             Intent login = new Intent(getApplicationContext(), LoginActivity.class);
             login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(login);

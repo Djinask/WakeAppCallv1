@@ -67,6 +67,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private UserLoginTaskFB FbAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -99,6 +100,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         //FB login
         LoginButton fbbutton = (LoginButton) findViewById(R.id.facebook);
+        JSONObject json;
         fbbutton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
         fbbutton.setOnErrorListener(new LoginButton.OnErrorListener() {
 
@@ -124,6 +126,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                                         Log.i("DEBUG","User ID "+ user.getId());
                                         Log.i("DEBUG","Email "+ user.asMap().get("email"));
 //                                        lblEmail.setText(user.asMap().get("email").toString());
+                                        attemptLoginFb(user);
+
+
                                     }
                                 }
                             });
@@ -251,6 +256,24 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             mAuthTask.execute((Void) null);
 
         }
+    }
+    public boolean attemptLoginFb(GraphUser u) {
+        if (mAuthTask != null) {
+            return true;
+        }
+
+
+        GraphUser user=u;
+
+
+            showProgress(true);
+
+
+            FbAuthTask = new UserLoginTaskFB(user);
+            FbAuthTask.execute((Void) null);
+        return true;
+
+
     }
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
@@ -381,6 +404,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
         mEmailView.setAdapter(adapter);
     }
 
+
+
+
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -505,7 +532,159 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             showProgress(false);
         }
     }
+
+
+
+
+
+
+
+public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
+    String mEmail;
+    String mId;
+    GraphUser utente;
+
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    UserLoginTaskFB(GraphUser user) {
+
+        utente = user;
+
+        mEmail = utente.asMap().get("email").toString();
+        mId = utente.getId();
+
+    }
+    JSONObject json;
+    JSONArray jsonAlarms;
+    JSONArray jsonFriends;
+    JSONArray jsonFriendsDetails;
+    @Override
+    protected Boolean doInBackground(Void... params) {
+
+
+        final UserFunctions userFunction = new UserFunctions();
+
+
+        try {
+
+            json = userFunction.checkUser_if_exist(mEmail);
+
+
+            //  check for login response
+            Log.e("JSON", json.getString(KEY_SUCCESS));
+            if (json.getString(KEY_SUCCESS) != null) {
+
+
+                String res = json.getString(KEY_SUCCESS);
+                if(Integer.parseInt(res) == 1){
+                    json = userFunction.login_fb(mEmail);
+                    try {
+
+
+                        jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
+
+                        jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
+
+                        jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
+
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                    Log.e("SUCCESS:", res);
+                    // user successfully logged in
+                    // Store user details in SQLite Database
+                    DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                    JSONObject json_user = json.getJSONObject("user");
+
+                    // Clear all previous data in database
+                    userFunction.logoutUser(getApplicationContext());
+                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,mId, json_user.getString(KEY_CREATED_AT));
+                    db.addAlarmLocal(jsonAlarms);
+                    db.addFriendsLocal(jsonFriends);
+                    db.addFriendsDetailsLocal(jsonFriendsDetails);
+
+                    // Launch Dashboard Screen
+                    Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+
+                    // Close all views before launching Dashboard
+                    dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(dashboard);
+
+//                    Close Login Screen
+                    finish();
+                }else {
+                    // Error in login
+                    Log.e("FAIL:", res);
+
+                    json = userFunction.registerUser(utente.getName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
+                    Log.e("name",utente.getName());
+                    Log.e("email", utente.asMap().get("email").toString());
+                    Log.e("pass id", utente.getId());
+
+
+                    Log.e("REGISTERED:", json.getString(KEY_SUCCESS));
+                    if(json.getString(KEY_SUCCESS).equals("1")){
+                        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                        Log.e("JSON TO STRING", json.toString());
+                        JSONObject json_user = json.getJSONObject("user");
+
+                        db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,utente.getId(), json_user.getString(KEY_CREATED_AT));
+                        Log.e("REGISTERED:", json.toString());
+                        // Launch Dashboard Screen
+                        Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+
+                        // Close all views before launching Dashboard
+                        dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(dashboard);
+
+
+
+
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
+
+
+        return true;
+    }
+
+    @Override
+    protected void onPostExecute(final Boolean success) {
+        FbAuthTask = null;
+
+
+    }
+
+    @Override
+    protected void onCancelled() {
+        mAuthTask = null;
+        showProgress(false);
+    }
 }
+
+
+
+}
+
+
+
 
 
 
