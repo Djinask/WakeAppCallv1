@@ -18,6 +18,7 @@ import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,9 +38,12 @@ public class NotificationService extends Service {
 
     Messenger mClients;
 
+    private String[] IDs;
+    private String[] names;
+
     final Messenger mMessenger = new Messenger(new Handler() { // Handler of incoming messages from clients.
         public void handleMessage(Message msg) {
-            Log.e("MESSAGE WHAT",String.valueOf(msg.what));
+
             switch (msg.what) {
                 case register_client:
                     Log.e("service", "register");
@@ -67,9 +71,8 @@ public class NotificationService extends Service {
         super.onCreate();
 
         Log.e("MyService", "Service Created.");
-        //Toast.makeText(this, "Service Created ", Toast.LENGTH_LONG).show();
 
-        int delay = 5000;  // ms
+        int delay = 10000;  // ms
         // here the functions to repeat cyclically
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
@@ -92,9 +95,21 @@ public class NotificationService extends Service {
         JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
 
         if(jsonNotif!=null){
-            Log.e("JSON NOTIFY",jsonNotif.toString());
+            Log.e("JSON NOTIFY",String.valueOf(jsonNotif.length()));
+            IDs = new String[jsonNotif.length()];
+            names = new String[jsonNotif.length()];
+
+            for(int i=0; i<jsonNotif.length(); i++)
+            {
+                try {
+                    IDs[i] = jsonNotif.getJSONObject(i).getString("id_n");
+                    names[i] = jsonNotif.getJSONObject(i).getString("from_id"); // -> poi bisogna trovare il nome dall'ID (tabella dati amici?)
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
             // manda i dati alla UI
-            //sendMessageToUI("myMSG");
+            sendMessageToUI();
 
             // manda notifica
             //showNotification();
@@ -118,16 +133,15 @@ public class NotificationService extends Service {
     }
 
     // ---------------------- SEND MESSAGE FROM SERVICE TO UI ----------------------------------------
-    private void sendMessageToUI(String message) {
+    private void sendMessageToUI() {
         try {
             //Send data as a String
             Bundle b = new Bundle();
-            b.putString("str", message);
+            b.putStringArray("id", IDs);
+            b.putStringArray("names", names);
 
             Message msg = Message.obtain(null, msg_service_ui);
             msg.setData(b);
-
-            Log.e("MESS",msg.toString());
 
             mClients.send(msg);
 

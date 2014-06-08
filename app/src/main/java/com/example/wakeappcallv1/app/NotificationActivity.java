@@ -3,6 +3,7 @@ package com.example.wakeappcallv1.app;
 /**
  * Created by Andrea on 21/05/2014.
  */
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,6 +12,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,30 +43,17 @@ public class NotificationActivity extends Fragment {
     private int type_alarm_confirmation = 4;
     private int type_alarm_denial = 5;
 
-    private String FRIEND_REQUEST_TITLE = "Friend Request";
-    private String FRIEND_CONFIRM_TITLE = "Friend Confirmation";
-    private String ALARM_REQUEST_TITLE = "Alarm Request";
-    private String ALARM_CONFIRM_TITLE = "Alarm Confirmation";
-    private String ALARM_DENIAL_TITLE = "Alarm Denial";
-
     private String[] events = {" wants to add you to its friends",
-                                " is your friend now",
-                                " wants you to wake him/her up",
-                                " has confirmed to wake you up for Alarm ",
-                                " can't wake you up for Alarm "};
-
-    /*private String FRIEND_REQUEST = " wants to add you to its friends";
-    private String FRIEND_CONFIRM = " is your friend now";
-    private String ALARM_REQUEST = " wants you to wake him/her up";
-    private String ALARM_CONFIRM = " has confirmed to wake you up for Alarm ";
-    private String ALARM_DENIAL = " can't wake you up for Alarm ";*/
-
+                                " accepted your friend request",
+                                " wants you to wake him/her up for the Alarm ",
+                                " has confirmed to wake you up for the Alarm ",
+                                " can't wake you up for the Alarm "};
     /*
-    *name* wants you to wake him/her up. (confirm/reject) - for the
+    *name* wants you to wake him/her up. (confirm/reject) for the Alarm *x*
     *name* has confirmed to wake you up for Alarm *x*
     *name* can't wake you up for Alarm *x* (Choose someone else)
     *name* wants to add you to friends. (Confirm/Reject)
-    you and *name* are now friends
+    *name* is your friend now
      */
 
     Messenger mService = null;
@@ -93,27 +83,8 @@ public class NotificationActivity extends Fragment {
         // starts service
         owner.startService(new Intent(owner, NotificationService.class));
 
-        // linear layout inside scroll view
-        // here add all notifications layouts
-        LinearLayout listNotif = (LinearLayout) owner.findViewById(R.id.notifLayout);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        //listNotif.addView(view, params);
-
-        Button b = (Button) owner.findViewById(R.id.stopserv);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                owner.stopService(new Intent(owner, NotificationService.class));
-            }
-        });
-
         restoreMe(savedInstanceState);
-
         CheckIfServiceIsRunning();
-
         // bind the service
         doBindService();
     }
@@ -125,7 +96,11 @@ public class NotificationActivity extends Fragment {
             switch (msg.what) {
                 case NotificationService.msg_service_ui:
                     Log.e("activity", "msg_service_ui");
-                    String str = msg.getData().getString("str");
+                    String[] IDs = msg.getData().getStringArray("id");
+                    Log.e("IDS",IDs.toString());
+                    String[] names = msg.getData().getStringArray("names");
+                    if(IDs != null & IDs.length > 0)
+                        createGUI(IDs, names);
                     break;
                 default:
                     super.handleMessage(msg);
@@ -223,9 +198,95 @@ public class NotificationActivity extends Fragment {
         }
     }
 
+    // ---------------------- CREATE GUI FOR EACH NOTIFICATION ----------------------------------------
+    public void createGUI(String[] IDs, String[] names) {
+        // linear layout inside scroll view
+        // here add all notifications layouts
+        LinearLayout listNotif = (LinearLayout) owner.findViewById(R.id.notifLayout);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        listNotif.removeAllViews(); // clear view before adding new notifications
+
+        for(int i=0; i<IDs.length; i++) {
+            Log.e("stringaaaa",IDs[i]+","+names[i]);
+            if (IDs[i].equals("1"))
+                listNotif.addView(notif_friendRequest(names[i]), params);
+        }
+    }
+
     /* creating views for each type of notification */
-    public View notif_friendRequest() {
-        return null;
+    public View notif_friendRequest(final String name) {
+        LinearLayout layoutText = new LinearLayout(owner.getApplicationContext());
+        LinearLayout layoutButton = new LinearLayout(owner.getApplicationContext());
+        TextView sender = new TextView(owner.getApplicationContext());
+        TextView event = new TextView(owner.getApplicationContext());
+        Button ok = new Button(owner.getApplicationContext());
+        Button no = new Button(owner.getApplicationContext());
+
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        layoutText.setOrientation(LinearLayout.HORIZONTAL);
+        layoutText.setPadding(0, 8, 0, 0);
+
+        sender.setTextColor(Color.WHITE);
+        sender.setTextSize(18);
+        sender.setTypeface(Typeface.DEFAULT_BOLD);
+        sender.setText(name);
+        sender.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        event.setTextColor(Color.WHITE);
+        event.setTextSize(18);
+        event.setText(events[type_friend_request - 1]);
+        event.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        layoutButton.setOrientation(LinearLayout.HORIZONTAL);
+
+        ok.setTextColor(Color.WHITE);
+        ok.setText("Accept");
+        ok.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1));    // weight
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(owner.getApplicationContext(), name, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        no.setTextColor(Color.WHITE);
+        no.setText("Deny");
+        no.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1));    // weight
+
+        layoutText.addView(sender);
+        layoutText.addView(event);
+        layoutButton.addView(ok);
+        layoutButton.addView(no);
+
+        LinearLayout mLinLay = new LinearLayout(owner.getApplicationContext());
+        mLinLay.setOrientation(LinearLayout.VERTICAL);
+        mLinLay.addView(layoutText, param);
+        mLinLay.addView(layoutButton, param);
+
+        View v = new View(owner.getApplicationContext());
+        v.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                2));
+        v.setBackgroundColor(Color.GRAY);
+
+        mLinLay.addView(v);
+
+        return mLinLay;
     }
     public View notif_friendConfirm() {
         return null;
