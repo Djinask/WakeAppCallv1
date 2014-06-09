@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -54,7 +55,10 @@ public class NotificationService extends Service {
                     mClients = null;
                     break;
                 case msg_service_ui:
-                    Log.e("service", "msg_service_ui");
+                    // when the UI is created, check if there are notifications
+                    Log.e("service", String.valueOf(msg.arg1));
+                    if(msg.arg1 == 1)
+                        new checkNewNotifications().execute();
                     break;
                 default:
                     super.handleMessage(msg);
@@ -78,7 +82,7 @@ public class NotificationService extends Service {
             public void run() {
                 try {
                     // check if there are new notifications
-                    checkNewNotifications();
+                    new checkNewNotifications().execute();
 
                 } catch (Throwable t) {
                     Log.e("TimerTick", "Timer Tick Failed.", t);
@@ -89,30 +93,39 @@ public class NotificationService extends Service {
         isRunning = true;
     }
 
-    private void checkNewNotifications() {
-        final UserFunctions userFunction = new UserFunctions();
-        final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-        JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
+    // thread to check new notifications
+    private class checkNewNotifications extends AsyncTask {
 
-        if(jsonNotif!=null){
-            Log.e("JSON NOTIFY",String.valueOf(jsonNotif.length()));
-            IDs = new String[jsonNotif.length()];
-            names = new String[jsonNotif.length()];
+        @Override
+        protected Object doInBackground(Object... arg0) {
 
-            for(int i=0; i<jsonNotif.length(); i++)
-            {
-                try {
-                    IDs[i] = jsonNotif.getJSONObject(i).getString("id_n");
-                    names[i] = jsonNotif.getJSONObject(i).getString("from_id"); // -> poi bisogna trovare il nome dall'ID (tabella dati amici?)
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            final UserFunctions userFunction = new UserFunctions();
+            final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+            JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
+
+            if(jsonNotif!=null){
+                Log.e("JSON NOTIFY",String.valueOf(jsonNotif.length()));
+                IDs = new String[jsonNotif.length()];
+                names = new String[jsonNotif.length()];
+
+                for(int i=0; i<jsonNotif.length(); i++)
+                {
+                    try {
+                        IDs[i] = jsonNotif.getJSONObject(i).getString("id_n");
+                        names[i] = jsonNotif.getJSONObject(i).getString("from_id"); // -> poi bisogna trovare il nome dall'ID (tabella dati amici?)
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            // manda i dati alla UI
-            sendMessageToUI();
+                // send data to UI (if active)
+                if(NotificationActivity.active)
+                    sendMessageToUI();
 
-            // manda notifica
-            //showNotification();
+                // send Android notification
+                //showNotification();
+            }
+
+            return null;
         }
     }
 

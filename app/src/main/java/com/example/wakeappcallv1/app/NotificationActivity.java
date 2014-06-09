@@ -60,10 +60,15 @@ public class NotificationActivity extends Fragment {
     boolean mIsBound;
 
     Activity owner;
+    static boolean active = false;
+
+    String[] IDs;
+    String[] names;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        active = true;
         owner = activity;
     }
 
@@ -80,8 +85,13 @@ public class NotificationActivity extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        active = true;
+
         // starts service
         owner.startService(new Intent(owner, NotificationService.class));
+
+        // when the UI is created, tell service to check if there are notifications
+        sendMessageToService(1);
 
         restoreMe(savedInstanceState);
         CheckIfServiceIsRunning();
@@ -96,9 +106,8 @@ public class NotificationActivity extends Fragment {
             switch (msg.what) {
                 case NotificationService.msg_service_ui:
                     Log.e("activity", "msg_service_ui");
-                    String[] IDs = msg.getData().getStringArray("id");
-                    Log.e("IDS",IDs.toString());
-                    String[] names = msg.getData().getStringArray("names");
+                    IDs = msg.getData().getStringArray("id");
+                    names = msg.getData().getStringArray("names");
                     if(IDs != null & IDs.length > 0)
                         createGUI(IDs, names);
                     break;
@@ -179,13 +188,23 @@ public class NotificationActivity extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // save state
-        //outState.putString("name", value);
+        outState.putStringArray("IDs", IDs);
+        outState.putStringArray("names", names);
     }
     private void restoreMe(Bundle state) {
         if (state!=null) {
             // restore state
-            //value = (state.getString("name"));
+            IDs = (state.getStringArray("IDS"));
+            names = (state.getStringArray("names"));
+            // tell service to check notifications
+            sendMessageToService(1);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
     }
 
     @Override
@@ -193,6 +212,7 @@ public class NotificationActivity extends Fragment {
         super.onDestroy();
         try {
             doUnbindService();
+            active = false;
         } catch (Throwable t) {
             Log.e("NotificationActivity", "Failed to unbind from the service.", t);
         }
@@ -206,17 +226,26 @@ public class NotificationActivity extends Fragment {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
+        if(listNotif==null)
+            return;
+
         listNotif.removeAllViews(); // clear view before adding new notifications
 
         for(int i=0; i<IDs.length; i++) {
-            Log.e("stringaaaa",IDs[i]+","+names[i]);
-            if (IDs[i].equals("1"))
-                listNotif.addView(notif_friendRequest(names[i]), params);
+            Log.e("stringa", IDs[i] + "," + names[i]);
+            listNotif.addView(notif(names[i], IDs[i]), params);
         }
     }
 
     /* creating views for each type of notification */
-    public View notif_friendRequest(final String name) {
+    public View notif(final String name, String type_notif) {
+
+        final int num_notif = Integer.parseInt(type_notif);
+
+        // main layout
+        final LinearLayout mLinLay = new LinearLayout(owner.getApplicationContext());
+        mLinLay.setOrientation(LinearLayout.VERTICAL);
+
         LinearLayout layoutText = new LinearLayout(owner.getApplicationContext());
         LinearLayout layoutButton = new LinearLayout(owner.getApplicationContext());
         TextView sender = new TextView(owner.getApplicationContext());
@@ -241,7 +270,7 @@ public class NotificationActivity extends Fragment {
 
         event.setTextColor(Color.WHITE);
         event.setTextSize(18);
-        event.setText(events[type_friend_request - 1]);
+        event.setText(events[num_notif - 1]);
         event.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -257,7 +286,10 @@ public class NotificationActivity extends Fragment {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(owner.getApplicationContext(), name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
+                mLinLay.setVisibility(View.GONE);
+                // set accepted where friend_id = name, owner_id = id utente loggato
+                // remove from server
             }
         });
 
@@ -267,16 +299,28 @@ public class NotificationActivity extends Fragment {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 1));    // weight
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
+                mLinLay.setVisibility(View.GONE);
+                // set not accepted, active = 0 where friend_id = name, owner_id = id utente loggato
+                // remove from server
+            }
+        });
 
         layoutText.addView(sender);
         layoutText.addView(event);
-        layoutButton.addView(ok);
-        layoutButton.addView(no);
 
-        LinearLayout mLinLay = new LinearLayout(owner.getApplicationContext());
-        mLinLay.setOrientation(LinearLayout.VERTICAL);
         mLinLay.addView(layoutText, param);
-        mLinLay.addView(layoutButton, param);
+
+        // if friend_request or alarm_request,
+        // show button with OK, DENY
+        if(num_notif == 1 || num_notif == 3) {
+            layoutButton.addView(ok);
+            layoutButton.addView(no);
+            mLinLay.addView(layoutButton, param);
+        }
 
         View v = new View(owner.getApplicationContext());
         v.setLayoutParams(new LinearLayout.LayoutParams(
@@ -287,17 +331,5 @@ public class NotificationActivity extends Fragment {
         mLinLay.addView(v);
 
         return mLinLay;
-    }
-    public View notif_friendConfirm() {
-        return null;
-    }
-    public View notif_alarmRequest() {
-        return null;
-    }
-    public View notif_alarmConfirm() {
-        return null;
-    }
-    public View notif_alarmDenial() {
-        return null;
     }
 }
