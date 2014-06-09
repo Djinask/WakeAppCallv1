@@ -341,7 +341,7 @@ public class AddFriendsActivity extends Activity {
                 email = jsonSearch.getString("email");
                 friendUid = jsonSearch.getString("unique_id");
 
-                user.put("uid",friendUid);
+                /*user.put("uid",friendUid);
                 user.put("name",name);
                 user.put("email",email);
                 user.put("phone",jsonSearch.getString("phone"));
@@ -350,7 +350,7 @@ public class AddFriendsActivity extends Activity {
                 user.put("city",jsonSearch.getString("city"));
                 user.put("img_path", jsonSearch.getString("image_path"));
                 user.put("created_at", jsonSearch.getString("created_at"));
-                user.put("updated_at",jsonSearch.getString("updated_at"));
+                user.put("updated_at",jsonSearch.getString("updated_at"));*/
 
 
 
@@ -475,8 +475,6 @@ public class AddFriendsActivity extends Activity {
                 db = new DatabaseHandler(getApplicationContext());
                 // adds friendship relationship
                 db.addOneFriendLocal(jsonAdd);
-                // adds friend details
-                db.addOneFriendDetailsLocal(user);
 
                 // send notification
                 userFunction.addNotification(db.getUserDetails().get("uid"), user.get("uid"), "1");

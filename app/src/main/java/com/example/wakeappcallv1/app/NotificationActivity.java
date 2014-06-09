@@ -31,6 +31,12 @@ import android.widget.Toast;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class NotificationActivity extends Fragment {
 
     // values used to know what kind of notification we read from DB
@@ -250,7 +256,7 @@ public class NotificationActivity extends Fragment {
     }
 
     /* creating views for each type of notification */
-    public View notif(final String id, final String name, final String type_notif) {
+    public View notif(final String id, final String user_id, final String type_notif) {
 
         final int num_notif = Integer.parseInt(type_notif);
         final DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
@@ -276,7 +282,7 @@ public class NotificationActivity extends Fragment {
         sender.setTextColor(Color.WHITE);
         sender.setTextSize(18);
         sender.setTypeface(Typeface.DEFAULT_BOLD);
-        sender.setText(name);
+        sender.setText(user_id);
         sender.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -302,10 +308,34 @@ public class NotificationActivity extends Fragment {
                 Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
                 // set friendship accepted
-                userFunction.setFriendAccepted(db.getUserDetails().get("uid"), name);
+                new setFriendAccepted(db.getUserDetails().get("uid"), user_id);
+
+                // add friends details (onyl when request accepted)
+                JSONObject jsonSearch = userFunction.getUserDetails(user_id);
+                Map<String, String> user = new HashMap<String, String>();
+                try
+                {
+                    user.put("uid",jsonSearch.getString("uid"));
+                    user.put("name",jsonSearch.getString("name"));
+                    user.put("email",jsonSearch.getString("email"));
+                    user.put("phone",jsonSearch.getString("phone"));
+                    user.put("birth_date",jsonSearch.getString("birth_date"));
+                    user.put("country",jsonSearch.getString("country"));
+                    user.put("city",jsonSearch.getString("city"));
+                    user.put("image_path", jsonSearch.getString("image_path"));
+                    user.put("created_at", jsonSearch.getString("created_at"));
+                    user.put("updated_at",jsonSearch.getString("updated_at"));
+                }
+                catch (JSONException err)
+                {
+                    Log.e("JSON error: ", err.toString());
+                }
+                // adds friend details
+                db.addOneFriendDetailsLocal(user);
+
                 // send notification
                 // current user accepted "name" request
-                new addNotification(db.getUserDetails().get("uid"), name, type_notif);
+                new addNotification(db.getUserDetails().get("uid"), user_id, type_notif);
                 // remove from server
                 new setNotificationSeen(id).execute();
             }
@@ -380,6 +410,22 @@ public class NotificationActivity extends Fragment {
         @Override
         protected Object doInBackground(Object... arg0) {
             userFunction.addNotification(from, to, id);
+            return null;
+        }
+    }
+
+    // thread to set friendship accepted
+    private class setFriendAccepted extends AsyncTask {
+
+        String uid_from, uid_to;
+        setFriendAccepted(String uid_from, String uid_to) {
+            this.uid_from = uid_from;
+            this.uid_to = uid_to;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            userFunction.setFriendAccepted(uid_from, uid_to);
             return null;
         }
     }
