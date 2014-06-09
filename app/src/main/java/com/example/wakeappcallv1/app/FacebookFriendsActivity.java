@@ -63,7 +63,6 @@ public class FacebookFriendsActivity extends FragmentActivity {
                 // We just store our selection in the Application for other activities to look at.
                 FriendPickerApplication application = (FriendPickerApplication) getApplication();
                 application.setSelectedUsers(friendPickerFragment.getSelection());
-
                 setResult(RESULT_OK, null);
                 finish();
             }
@@ -77,6 +76,7 @@ public class FacebookFriendsActivity extends FragmentActivity {
         Toast toast = Toast.makeText(this, "well, shit...!", Toast.LENGTH_SHORT);
         toast.show();
     }
+
 
     @Override
     protected void onStart() {

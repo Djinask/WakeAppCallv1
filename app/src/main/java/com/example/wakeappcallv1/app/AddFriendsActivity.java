@@ -106,10 +106,17 @@ public class AddFriendsActivity extends Activity {
         mail = (EditText) findViewById(R.id.friendMail);
 
         //facebook button
-        Button addFb = (Button) findViewById(R.id.addFriendFromFb);
+        addFb = (Button) findViewById(R.id.addFriendFromFb);
         addFb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                onClickPickFriends();
+                ensureOpenSession();
+                Intent intent = new Intent(AddFriendsActivity.this, FacebookFriendsActivity.class);
+                // Note: The following line is optional, as multi-select behavior is the default for
+                // FriendPickerFragment. It is here to demonstrate how parameters could be passed to the
+                // friend picker if single-select functionality was desired, or if a different user ID was
+                // desired (for instance, to see friends of a friend).
+                FacebookFriendsActivity.populateParameters(intent, null, true, true);
+                startActivityForResult(intent, PICK_FRIENDS_ACTIVITY);
             }
         });
 
@@ -122,7 +129,7 @@ public class AddFriendsActivity extends Activity {
         lifecycleHelper.onCreate(savedInstanceState);
 
 
-        ensureOpenSession();
+
 
 
         // pressed search button on keyboard
@@ -259,10 +266,6 @@ public class AddFriendsActivity extends Activity {
         } else {
             pickFriendsWhenSessionOpened = true;
         }
-    }
-
-    private void onClickPickFriends() {
-        startPickFriendsActivity();
     }
 
     public void attemptSearch()
