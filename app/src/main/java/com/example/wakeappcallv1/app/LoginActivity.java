@@ -1,13 +1,12 @@
 package com.example.wakeappcallv1.app;
 
+import java.net.URL;
 import java.util.Arrays;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -30,14 +29,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 import com.facebook.*;
@@ -50,15 +46,10 @@ import com.facebook.widget.LoginButton;
 
  */
 
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
+public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+
+
 
     //Facebook login management
     private UiLifecycleHelper uiHelper;
@@ -68,29 +59,29 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
      */
     private UserLoginTask mAuthTask = null;
     private UserLoginTaskFB FbAuthTask = null;
+    private GraphUser utente;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    TextView loginErrorMsg;
-
+    private TextView loginErrorMsg;
+    // Json Keywords
 
     private static String KEY_SUCCESS = "success";
     private static String KEY_ERROR = "error";
     private static String KEY_ERROR_MSG = "error_msg";
-
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PHONE = "phone";
     private static final String KEY_BIRTHDATE = "birth_date";
+    private static final String KEY_IMAGE_PATH = "img_path";
     private static final String KEY_COUNTRY = "country";
     private static final String KEY_CITY = "city";
     private static final String KEY_UID = "uid";
+    private static final String KEY_FACEBOOK_ID = "facebook_id";
     private static final String KEY_CREATED_AT = "created_at";
-
-
 
 
     @Override
@@ -100,8 +91,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         //FB login
         LoginButton fbbutton = (LoginButton) findViewById(R.id.facebook);
-        JSONObject json;
-        fbbutton.setReadPermissions(Arrays.asList("public_profile","email","user_friends"));
+        // Set up the login form.
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        loginErrorMsg = (TextView) findViewById(R.id.login_error);
+        mPasswordView = (EditText) findViewById(R.id.password);
+        populateAutoComplete();
+
+
+        fbbutton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
+
         fbbutton.setOnErrorListener(new LoginButton.OnErrorListener() {
 
             @Override
@@ -117,35 +115,28 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             public void call(Session session, SessionState state, Exception exception) {
 
                 if (session.isOpened()) {
-                    Log.i("DEBUG","Access Token"+ session.getAccessToken());
+                    Log.i("DEBUG", "Access Token" + session.getAccessToken());
                     Request.executeMeRequestAsync(session,
                             new Request.GraphUserCallback() {
                                 @Override
-                                public void onCompleted(GraphUser user,Response response) {
+                                public void onCompleted(GraphUser user, Response response) {
                                     if (user != null) {
-                                        Log.i("DEBUG","User ID "+ user.getId());
-                                        Log.i("DEBUG","Email "+ user.asMap().get("email"));
+                                        Log.i("DEBUG", "User ID " + user.getId());
+                                        Log.i("DEBUG", "Email " + user.asMap().get("email"));
 //                                        lblEmail.setText(user.asMap().get("email").toString());
                                         attemptLoginFb(user);
 
 
                                     }
                                 }
-                            });
+                            }
+                    );
                 }
 
             }
         });
 
 
-
-
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView)findViewById(R.id.email);
-        populateAutoComplete();
-        loginErrorMsg = (TextView) findViewById(R.id.login_error);
-
-        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -257,24 +248,26 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         }
     }
+
     public boolean attemptLoginFb(GraphUser u) {
         if (mAuthTask != null) {
             return true;
         }
 
 
-        GraphUser user=u;
+        GraphUser user = u;
 
 
-            showProgress(true);
+        showProgress(true);
 
 
-            FbAuthTask = new UserLoginTaskFB(user);
-            FbAuthTask.execute((Void) null);
+        FbAuthTask = new UserLoginTaskFB(user);
+        FbAuthTask.execute((Void) null);
         return true;
 
 
     }
+
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
         return email.contains("@");
@@ -331,11 +324,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
                 // Select only email addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                                                                     .CONTENT_ITEM_TYPE},
+                .CONTENT_ITEM_TYPE},
 
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC"
+        );
     }
 
     @Override
@@ -389,10 +383,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             return emailAddressCollection;
         }
 
-	    @Override
-	    protected void onPostExecute(List<String> emailAddressCollection) {
-	       addEmailsToAutoComplete(emailAddressCollection);
-	    }
+        @Override
+        protected void onPostExecute(List<String> emailAddressCollection) {
+            addEmailsToAutoComplete(emailAddressCollection);
+        }
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -403,9 +397,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         mEmailView.setAdapter(adapter);
     }
-
-
-
 
 
     /**
@@ -423,13 +414,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
 
         UserLoginTask(String email, String password) {
 
-              mEmail = email;
+            mEmail = email;
             mPassword = password;
         }
+
         JSONObject json;
         JSONArray jsonAlarms;
         JSONArray jsonFriends;
         JSONArray jsonFriendsDetails;
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -437,70 +430,74 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             final UserFunctions userFunction = new UserFunctions();
 
 
-                                        try {
+            try {
 
-                                            json = userFunction.loginUser(mEmail, mPassword);
-
-
-                                            //  check for login response
-                                            Log.e("JSON", json.getString(KEY_SUCCESS));
-                                            if (json.getString(KEY_SUCCESS) != null) {
+                json = userFunction.loginUser(mEmail, mPassword);
 
 
-                                                String res = json.getString(KEY_SUCCESS);
-                                                if(Integer.parseInt(res) == 1){
-                                                    try {
+                //  check for login response
+                Log.e("JSON", json.getString(KEY_SUCCESS));
+                if (json.getString(KEY_SUCCESS) != null) {
 
 
-                                                        jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
-
-                                                        jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
-
-                                                        jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
-
-                                                    }catch (JSONException e){
-                                                        e.printStackTrace();
-                                                    }
-
-                                                    Log.e("SUCCESS:", res);
-                                                    // user successfully logged in
-                                                    // Store user details in SQLite Database
-                                                    DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-                                                    JSONObject json_user = json.getJSONObject("user");
-
-                                                    // Clear all previous data in database
-                                                    userFunction.logoutUser(getApplicationContext());
-                                                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
-                                                    db.addAlarmLocal(jsonAlarms);
-                                                    db.addFriendsLocal(jsonFriends);
-                                                    db.addFriendsDetailsLocal(jsonFriendsDetails);
-
-                                                    // Launch Dashboard Screen
-                                                    Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-
-                                                    // Close all views before launching Dashboard
-                                                    dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    startActivity(dashboard);
-
-                                                    // Close Login Screen
-                                                    //finish();
-                                                }else {
-                                                    // Error in login
-                                                    Log.e("FAIL:", res);
-                                                    //Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
+                    String res = json.getString(KEY_SUCCESS);
+                    if (Integer.parseInt(res) == 1) {
+                        try {
 
 
+                            jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
 
+                            jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
 
+                            jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
+                        Log.e("SUCCESS:", res);
+                        // user successfully logged in
+                        // Store user details in SQLite Database
+                        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                        JSONObject json_user = json.getJSONObject("user");
+
+                        // Clear all previous data in database
+                        userFunction.logoutUser(getApplicationContext());
+                        db.addUser(json_user.getString(KEY_NAME),
+                                json_user.getString(KEY_EMAIL),
+                                json_user.getString(KEY_PHONE),
+                                json_user.getString(KEY_BIRTHDATE),
+                                json_user.getString(KEY_COUNTRY),
+                                json_user.getString(KEY_CITY),
+                                json_user.getString(KEY_IMAGE_PATH),
+                                json.getString(KEY_UID),
+                                json_user.getString(KEY_FACEBOOK_ID),
+                                json_user.getString(KEY_CREATED_AT));
+
+                        db.addAlarmLocal(jsonAlarms);
+                        db.addFriendsLocal(jsonFriends);
+                        db.addFriendsDetailsLocal(jsonFriendsDetails);
+
+                        // Launch Dashboard Screen
+                        Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+
+                        // Close all views before launching Dashboard
+                        dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(dashboard);
+
+                        // Close Login Screen
+                        //finish();
+                    } else {
+                        // Error in login
+                        Log.e("FAIL:", res);
+                        //Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
             // TODO: register the new account here.
@@ -512,18 +509,26 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
             mAuthTask = null;
             showProgress(false);
             Log.e("onPost", "onpost");
+            Log.e("SUCCESS", success.toString());
 
-//            if (success) {
-//
-//            } else {
-            try {
+            if (success) {
+                Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+
+                // Close all views before launching Dashboard
+                dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(dashboard);
+
+                // Close Login Screen
+                finish();
+            } else {
+           try {
 
 
                 Toast.makeText(getApplicationContext(), json.getString(KEY_ERROR_MSG), Toast.LENGTH_LONG).show();
-            } catch (JSONException e) {
+           } catch (JSONException e) {
                 e.printStackTrace();
             }
-//            }
+            }
         }
 
         @Override
@@ -534,107 +539,86 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor>{
     }
 
 
+    public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
+        String mEmail;
+        String mId;
+        JSONObject json;
+        JSONArray jsonAlarms;
+        JSONArray jsonFriends;
+        JSONArray jsonFriendsDetails;
+        UserFunctions userFunction;
+
+        @Override
+        public boolean equals(Object o) {
+            return super.equals(o);
+        }
+
+        UserLoginTaskFB(GraphUser user) {
+            userFunction = new UserFunctions();
+            utente = user;
+            mEmail = utente.asMap().get("email").toString();
+            mId = utente.getId();
+
+        }
 
 
 
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            try {
 
 
-public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
-    String mEmail;
-    String mId;
-    GraphUser utente;
+                json = userFunction.checkUser_if_exist(mEmail);
 
 
-    @Override
-    public boolean equals(Object o) {
-        return super.equals(o);
-    }
-
-    UserLoginTaskFB(GraphUser user) {
-
-        utente = user;
-
-        mEmail = utente.asMap().get("email").toString();
-        mId = utente.getId();
-
-    }
-    JSONObject json;
-    JSONArray jsonAlarms;
-    JSONArray jsonFriends;
-    JSONArray jsonFriendsDetails;
-    @Override
-    protected Boolean doInBackground(Void... params) {
+                //  check for login response
+                Log.e("USER EXIXSTS?", json.getString(KEY_SUCCESS));
+                if (json.getString(KEY_SUCCESS) != null) {
 
 
-        final UserFunctions userFunction = new UserFunctions();
+                    String res = json.getString(KEY_SUCCESS);
+                    if (Integer.parseInt(res) == 1) {
+
+                        json = userFunction.login_fb(mEmail);
 
 
-        try {
-
-            json = userFunction.checkUser_if_exist(mEmail);
+                        try {
 
 
-            //  check for login response
-            Log.e("JSON", json.getString(KEY_SUCCESS));
-            if (json.getString(KEY_SUCCESS) != null) {
+                            jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
 
+                            jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
 
-                String res = json.getString(KEY_SUCCESS);
-                if(Integer.parseInt(res) == 1){
-                    json = userFunction.login_fb(mEmail);
-                    try {
+                            jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-                        jsonAlarms = userFunction.getAlarms(mEmail, json.getString("uid"));
-
-                        jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
-
-                        jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
-
-                    }catch (JSONException e){
-                        e.printStackTrace();
-                    }
-
-                    Log.e("SUCCESS:", res);
-                    // user successfully logged in
-                    // Store user details in SQLite Database
-                    DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-                    JSONObject json_user = json.getJSONObject("user");
-
-                    // Clear all previous data in database
-                    userFunction.logoutUser(getApplicationContext());
-                    db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,mId, json_user.getString(KEY_CREATED_AT));
-                    db.addAlarmLocal(jsonAlarms);
-                    db.addFriendsLocal(jsonFriends);
-                    db.addFriendsDetailsLocal(jsonFriendsDetails);
-
-                    // Launch Dashboard Screen
-                    Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
-
-                    // Close all views before launching Dashboard
-                    dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(dashboard);
-
-//                    Close Login Screen
-                    finish();
-                }else {
-                    // Error in login
-                    Log.e("FAIL:", res);
-
-                    json = userFunction.registerUser(utente.getName(), utente.asMap().get("email").toString(), utente.getId(),"1234","","", "" );
-                    Log.e("name",utente.getName());
-                    Log.e("email", utente.asMap().get("email").toString());
-                    Log.e("pass id", utente.getId());
-
-
-                    Log.e("REGISTERED:", json.getString(KEY_SUCCESS));
-                    if(json.getString(KEY_SUCCESS).equals("1")){
+                        Log.e("SUCCESS:", res);
+                        // user successfully logged in
+                        // Store user details in SQLite Database
                         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-                        Log.e("JSON TO STRING", json.toString());
                         JSONObject json_user = json.getJSONObject("user");
 
-                        db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,utente.getId(), json_user.getString(KEY_CREATED_AT));
-                        Log.e("REGISTERED:", json.toString());
+                        // Clear all previous data in database
+                        userFunction.logoutUser(getApplicationContext());
+                        db.addUser(json_user.getString(KEY_NAME),
+                                json_user.getString(KEY_EMAIL),
+                                json_user.getString(KEY_PHONE),
+                                json_user.getString(KEY_BIRTHDATE),
+                                json_user.getString(KEY_COUNTRY),
+                                json_user.getString(KEY_CITY),
+                                json_user.getString(KEY_IMAGE_PATH),
+                                json.getString(KEY_UID),
+                                json_user.getString(KEY_FACEBOOK_ID),
+                                json_user.getString(KEY_CREATED_AT));
+
+                        db.addAlarmLocal(jsonAlarms);
+                        db.addFriendsLocal(jsonFriends);
+                        db.addFriendsDetailsLocal(jsonFriendsDetails);
+
                         // Launch Dashboard Screen
                         Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
 
@@ -642,42 +626,77 @@ public class UserLoginTaskFB extends AsyncTask<Void, Void, Boolean> {
                         dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(dashboard);
 
+//                    Close Login Screen
+                        finish();
+                    } else {
+                        // Usero Does Not Exist from FACEBOOK
 
 
+                        JSONObject jsonImage;
 
+                        json = userFunction.registerUser(
+                                utente.getName(),                       //User Name
+                                utente.asMap().get("email").toString(), //User Email
+                                utente.getId(),                         //User Id
+                                null,                                 //User Phone
+                                null,                                     //User BirthDay
+                                null,                                     //User Country
+                                null,                                     //User City
+                                utente.getId(),                                     //User Facebook Id
+                                "http://graph.facebook.com/" + utente.getId() + "/picture"  //User avatar path
+                        );
+                         Log.e("REGISTERED:", json.getString(KEY_SUCCESS));
+
+                        if (json.getString(KEY_SUCCESS).equals("1")) {
+                            Log.e("JSON RESPONSE", json.toString());
+                            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                            JSONObject json_user = json.getJSONObject("user");
+                            // After registration add user on local db
+                            db.addUser(json_user.getString(KEY_NAME),
+                                    json_user.getString(KEY_EMAIL),
+                                    json_user.getString(KEY_PHONE),
+                                    json_user.getString(KEY_BIRTHDATE),
+                                    json_user.getString(KEY_COUNTRY),
+                                    json_user.getString(KEY_CITY),
+                                    json_user.getString(KEY_IMAGE_PATH),
+                                    json.getString(KEY_UID),
+                                    json_user.getString(KEY_FACEBOOK_ID),
+                                    json_user.getString(KEY_CREATED_AT));
+                            Log.e("REGISTERED:", json.toString());
+                            // Launch Dashboard Screen
+                            Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
+                            // Close all views before launching Dashboard
+                            dashboard.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(dashboard);
+                           finish();
+
+
+                        }
                     }
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
-            e.printStackTrace();
+
+
+            return true;
         }
 
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            FbAuthTask = null;
 
 
+        }
 
-
-
-
-
-
-        return true;
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
     }
-
-    @Override
-    protected void onPostExecute(final Boolean success) {
-        FbAuthTask = null;
-
-
-    }
-
-    @Override
-    protected void onCancelled() {
-        mAuthTask = null;
-        showProgress(false);
-    }
-}
 
 
 

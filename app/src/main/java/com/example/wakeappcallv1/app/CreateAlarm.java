@@ -6,10 +6,12 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -31,6 +33,7 @@ public class CreateAlarm extends Activity {
         setContentView(R.layout.activity_create_alarm);
 
         final TimePicker myTimePicker  = (TimePicker) findViewById(R.id.timePicker);
+        final DatePicker myDatePicker  = (DatePicker) findViewById(R.id.datePicker);
         final EditText name = (EditText)findViewById(R.id.AlarmName);
 
         Button nextButton = (Button) findViewById(R.id.NextBtn);
@@ -39,22 +42,7 @@ public class CreateAlarm extends Activity {
 
 
 
-
-
-
-
         myTimePicker.setIs24HourView(true);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -65,7 +53,21 @@ public class CreateAlarm extends Activity {
             public void onClick(View view) {
 
                 alarm.put("alarm_name", name.getText().toString());
-                alarm.put("alarm_setted_time", name.getText().toString());
+                alarm.put("alarm_setted_time",myDatePicker.getYear()+
+                        "-"+
+                        (myDatePicker.getMonth()+1)+
+                        "-"+
+                        myDatePicker.getDayOfMonth()+
+                        " "+
+                        myTimePicker.getCurrentHour()+":"+myTimePicker.getCurrentMinute() );
+
+
+                
+
+
+
+
+
                 Intent AlarmChoice = new Intent(getApplicationContext(), AlarmChoiceActivity.class);
                 AlarmChoice.putExtra("extra", alarm);
 

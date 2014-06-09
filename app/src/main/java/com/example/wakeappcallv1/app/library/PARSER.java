@@ -4,15 +4,8 @@ package com.example.wakeappcallv1.app.library;
  * Created by lucamarconcini on 16/05/14.
  */
 
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
 import org.apache.http.HttpEntity;
+import java.io.BufferedReader;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -20,10 +13,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
 import android.util.Log;
 
 public class PARSER {
@@ -41,11 +37,6 @@ public class PARSER {
 
         // Making HTTP request
         try {
-
-
-
-
-
 
             // defaultHttpClient
             HttpClient httpClient = new DefaultHttpClient();
@@ -101,4 +92,5 @@ public class PARSER {
         return jObj;
 
     }
+
 }

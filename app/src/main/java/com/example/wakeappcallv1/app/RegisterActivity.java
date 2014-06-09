@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,8 @@ public class RegisterActivity extends Activity {
     private static final String KEY_COUNTRY = "country";
     private static final String KEY_CITY = "city";
     private static final String KEY_UID = "uid";
+    private static final String KEY_IMAGE_PATH = "img_path";
+    private static final String KEY_FACEBOOK_ID = "facebook_id";
     private static final String KEY_CREATED_AT = "created_at";
 
 
@@ -112,7 +115,17 @@ public class RegisterActivity extends Activity {
                             final String city = inputCity.getText().toString();
 
 
-                            json = userFunction.registerUser(name, email, password, phone, birthDate, country, city);
+                            json = userFunction.registerUser(
+                                    name,                       //User Name
+                                    email, //User Email
+                                    password,                         //User Id
+                                    phone,                                 //User Phone
+                                    birthDate,                                     //User BirthDay
+                                    country,                                     //User Country
+                                    city,                                     //User City
+                                    null,                                     //User Facebook Id
+                                    null  //User avatar path
+                            );
 
                             registerErrorMsg.post(
                                     new Runnable() {
@@ -134,7 +147,18 @@ public class RegisterActivity extends Activity {
                                                         userFunction.logoutUser(getApplicationContext());
 
 
-                                                        db.addUser(json_user.getString(KEY_NAME), json_user.getString(KEY_EMAIL),json_user.getString(KEY_PHONE),json_user.getString(KEY_BIRTHDATE),json_user.getString(KEY_COUNTRY),json_user.getString(KEY_CITY) ,json.getString(KEY_UID), json_user.getString(KEY_CREATED_AT));
+                                                        db.addUser(json_user.getString(KEY_NAME),
+                                                                json_user.getString(KEY_EMAIL),
+                                                                json_user.getString(KEY_PHONE),
+                                                                json_user.getString(KEY_BIRTHDATE),
+                                                                json_user.getString(KEY_COUNTRY),
+                                                                json_user.getString(KEY_CITY),
+                                                                json_user.getString(KEY_IMAGE_PATH),
+                                                                json.getString(KEY_UID),
+                                                                json_user.getString(KEY_FACEBOOK_ID),
+                                                                json_user.getString(KEY_CREATED_AT));
+                                                        Log.e("REGISTERED:", json.toString());
+
                                                         // Launch Dashboard Screen
                                                         Intent dashboard = new Intent(getApplicationContext(), HomeActivity.class);
                                                         // Close all views before launching Dashboard

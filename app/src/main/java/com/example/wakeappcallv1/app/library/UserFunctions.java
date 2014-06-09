@@ -5,6 +5,7 @@ package com.example.wakeappcallv1.app.library;
  */
 
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import org.apache.http.NameValuePair;
@@ -14,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Base64;
 import android.util.Log;
 
 public class UserFunctions {
@@ -24,6 +27,8 @@ public class UserFunctions {
     // use http://10.0.2.2/ to connect to your localhost ie http://localhost/
     private static String loginURL = "http://wakeappcall.net63.net/index.php";
     private static String registerURL = "http://wakeappcall.net63.net/index.php";
+//    private static String loginURL = "http://10.0.2.2/ApiWac/index.php";
+//    private static String registerURL = "http://10.0.2.2/ApiWac/index.php";
 
 
 
@@ -31,6 +36,7 @@ public class UserFunctions {
     private static String check_user= "check_user";
     private static String loginFb_tag = "login_fb";
     private static String register_tag = "register";
+    private static String update_img = "update_img";
     private static String add_alarm_tag = "new_alarm";
     private static String get_alarm_tag = "get_alarms";
     private static String add_friends_tag = "add_friends";
@@ -96,7 +102,7 @@ public class UserFunctions {
      * @param country
      * @param city
      * */
-    public JSONObject registerUser(String name, String email, String password, String phone, String birthDate, String country, String city){
+    public JSONObject registerUser(String name, String email, String password, String phone, String birthDate, String country, String city, String FB_id, String avatar_path ){
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", register_tag));
@@ -107,6 +113,9 @@ public class UserFunctions {
         params.add(new BasicNameValuePair("birthDate", birthDate));
         params.add(new BasicNameValuePair("country", country));
         params.add(new BasicNameValuePair("city", city));
+        params.add(new BasicNameValuePair("fb_id", FB_id));
+        params.add(new BasicNameValuePair("image_path", avatar_path));
+
 
         // getting JSON Object
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
@@ -265,6 +274,34 @@ public class UserFunctions {
         }
 
         return jsArr;
+    }
+
+
+    public JSONObject updateProfileImage(String url_image, String owner ){
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        image.compress(Bitmap.CompressFormat.PNG, 90, stream); //compress to which format you want.
+
+
+//
+//        byte [] byte_arr = stream.toByteArray();
+//        String image_str = Base64.encodeToString(byte_arr,Base64.DEFAULT);
+//
+//        Log.e("IMAGE ARRAY", image_str);
+//
+
+
+        ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair("tag", update_img));
+        params.add(new BasicNameValuePair("owner", owner));
+        params.add(new BasicNameValuePair("image", url_image));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
     }
 
 
