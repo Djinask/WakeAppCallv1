@@ -43,8 +43,6 @@ public class NotificationService extends Service {
     private String[] IDs;
     private String[] names;
 
-    int notif_code = 0;
-
     final Messenger mMessenger = new Messenger(new Handler() { // Handler of incoming messages from clients.
         public void handleMessage(Message msg) {
 

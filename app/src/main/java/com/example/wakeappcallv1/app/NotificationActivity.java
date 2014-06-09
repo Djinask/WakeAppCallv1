@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class NotificationActivity extends Fragment {
     private String type_alarm_confirmation = "4";
     private String type_alarm_denial = "5";
 
-    public static String[] events = {" wants to add you to its friends",
+    public static String[] events = {" wants to add you to his/her friends",
                                 " accepted your friend request",
                                 " wants you to wake him/her up for the Alarm ",
                                 " has confirmed to wake you up for the Alarm ",
@@ -69,7 +70,16 @@ public class NotificationActivity extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         active = true;
+        // says to service to update
+        sendMessageToService(1);
         owner = activity;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // says to service to update
+        sendMessageToService(1);
     }
 
     @Override
@@ -240,7 +250,7 @@ public class NotificationActivity extends Fragment {
     }
 
     /* creating views for each type of notification */
-    public View notif(final String id, final String name, String type_notif) {
+    public View notif(final String id, final String name, final String type_notif) {
 
         final int num_notif = Integer.parseInt(type_notif);
         final DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
@@ -292,10 +302,10 @@ public class NotificationActivity extends Fragment {
                 Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
                 // set accepted where friend_id = name, owner_id = id utente loggato
-
+                // -------------------------------- TO DO ------------------------------------------
                 // send notification
                 // current user accepted "name" request
-                new addNotification(db.getUserDetails().get("uid"), name, "2");
+                new addNotification(db.getUserDetails().get("uid"), name, type_notif);
                 // remove from server
                 new setNotificationSeen(id).execute();
             }
