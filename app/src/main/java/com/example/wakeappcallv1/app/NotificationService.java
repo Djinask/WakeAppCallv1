@@ -53,7 +53,7 @@ public class NotificationService extends Service {
                     break;
                 case unregister_client:
                     Log.e("service", "unregister");
-                    mClients = null;
+                    //mClients = null;
                     break;
                 case msg_service_ui:
                     // when the UI is created, check if there are notifications
@@ -105,7 +105,6 @@ public class NotificationService extends Service {
             JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
 
             if(jsonNotif!=null){
-                Log.e("JSON NOTIFY",String.valueOf(jsonNotif.length()));
                 IDs = new String[jsonNotif.length()];
                 names = new String[jsonNotif.length()];
                 notif_ids = new String[jsonNotif.length()];
@@ -166,7 +165,7 @@ public class NotificationService extends Service {
 
         } catch (RemoteException e) {
             // The client is dead. Remove it from the list; we are going through the list from back to front so this is safe to do inside the loop.
-            mClients = null;
+            //mClients = null;
         }
     }
 

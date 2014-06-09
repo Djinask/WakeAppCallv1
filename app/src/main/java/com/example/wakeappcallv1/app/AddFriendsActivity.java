@@ -77,7 +77,8 @@ public class AddFriendsActivity extends Activity {
     private Button addFb;
     private static final int PICK_FRIENDS_ACTIVITY = 1;
 
-    Map<String, String> user;
+    //Map<String, String> user;
+    //String uid_friend;
 
     SearchFriendTask mSearchTask;
     AddFriendTask mAddTask;
@@ -95,7 +96,7 @@ public class AddFriendsActivity extends Activity {
         setContentView(R.layout.activity_add_friends);
 
         // array with user details
-        user = new HashMap<String, String>();
+        //user = new HashMap<String, String>();
 
 
         Button addName = (Button) findViewById(R.id.addFriendByName);
@@ -477,7 +478,7 @@ public class AddFriendsActivity extends Activity {
                 db.addOneFriendLocal(jsonAdd);
 
                 // send notification
-                userFunction.addNotification(db.getUserDetails().get("uid"), user.get("uid"), "1");
+                userFunction.addNotification(db.getUserDetails().get("uid"), friendUid, "1");
             }
             catch (Exception e)
             {

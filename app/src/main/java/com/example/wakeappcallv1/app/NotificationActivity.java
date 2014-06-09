@@ -76,16 +76,7 @@ public class NotificationActivity extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         active = true;
-        // says to service to update
-        sendMessageToService(1);
         owner = activity;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // says to service to update
-        sendMessageToService(1);
     }
 
     @Override
@@ -118,9 +109,6 @@ public class NotificationActivity extends Fragment {
 
         // starts service
         owner.startService(new Intent(owner, NotificationService.class));
-
-        // when the UI is created, tell service to check if there are notifications
-        sendMessageToService(1);
 
         restoreMe(savedInstanceState);
         CheckIfServiceIsRunning();
@@ -226,8 +214,6 @@ public class NotificationActivity extends Fragment {
             // restore state
             IDs = (state.getStringArray("IDS"));
             names = (state.getStringArray("names"));
-            // tell service to check notifications
-            sendMessageToService(1);
         }
     }
 
@@ -317,7 +303,7 @@ public class NotificationActivity extends Fragment {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
                 // set friendship accepted
                 new setFriendAccepted(db.getUserDetails().get("uid"), user_id);
@@ -327,7 +313,7 @@ public class NotificationActivity extends Fragment {
 
                 // send notification
                 // current user accepted "name" request
-                new addNotification(db.getUserDetails().get("uid"), user_id, type_notif);
+                new addNotification(db.getUserDetails().get("uid"), user_id, "2");
                 // remove from server
                 new setNotificationSeen(id).execute();
             }
