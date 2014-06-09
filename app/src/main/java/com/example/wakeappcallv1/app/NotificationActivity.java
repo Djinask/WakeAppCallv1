@@ -3,18 +3,14 @@ package com.example.wakeappcallv1.app;
 /**
  * Created by Andrea on 21/05/2014.
  */
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,26 +24,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wakeappcallv1.app.R;
+import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.UserFunctions;
 
 public class NotificationActivity extends Fragment {
 
     // values used to know what kind of notification we read from DB
-    private int type_friend_request = 1;
-    private int type_friend_confirmation = 2;
-    private int type_alarm_request = 3;
-    private int type_alarm_confirmation = 4;
-    private int type_alarm_denial = 5;
+    private String type_friend_request = "1";
+    private String type_friend_confirmation = "2";
+    private String type_alarm_request = "3";
+    private String type_alarm_confirmation = "4";
+    private String type_alarm_denial = "5";
 
-    private String[] events = {" wants to add you to its friends",
+    public static String[] events = {" wants to add you to its friends",
                                 " accepted your friend request",
                                 " wants you to wake him/her up for the Alarm ",
                                 " has confirmed to wake you up for the Alarm ",
                                 " can't wake you up for the Alarm "};
+
+    public static String[] titles = {"Friend request", "Friend accepted", "Alarm request", "Alarm confirmed", "Alarm deny"};
     /*
     *name* wants you to wake him/her up. (confirm/reject) for the Alarm *x*
     *name* has confirmed to wake you up for Alarm *x*
@@ -55,6 +53,7 @@ public class NotificationActivity extends Fragment {
     *name* wants to add you to friends. (Confirm/Reject)
     *name* is your friend now
      */
+    UserFunctions userFunction;
 
     Messenger mService = null;
     boolean mIsBound;
@@ -64,6 +63,7 @@ public class NotificationActivity extends Fragment {
 
     String[] IDs;
     String[] names;
+    String[] notif_ids;
 
     @Override
     public void onAttach(Activity activity) {
@@ -86,6 +86,7 @@ public class NotificationActivity extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         active = true;
+        userFunction = new UserFunctions();
 
         // starts service
         owner.startService(new Intent(owner, NotificationService.class));
@@ -108,8 +109,9 @@ public class NotificationActivity extends Fragment {
                     Log.e("activity", "msg_service_ui");
                     IDs = msg.getData().getStringArray("id");
                     names = msg.getData().getStringArray("names");
+                    notif_ids = msg.getData().getStringArray("notif_ids");
                     if(IDs != null & IDs.length > 0)
-                        createGUI(IDs, names);
+                        createGUI(notif_ids, IDs, names);
                     break;
                 default:
                     super.handleMessage(msg);
@@ -219,7 +221,7 @@ public class NotificationActivity extends Fragment {
     }
 
     // ---------------------- CREATE GUI FOR EACH NOTIFICATION ----------------------------------------
-    public void createGUI(String[] IDs, String[] names) {
+    public void createGUI(String[] notif_ids, String[] IDs, String[] names) {
         // linear layout inside scroll view
         // here add all notifications layouts
         LinearLayout listNotif = (LinearLayout) owner.findViewById(R.id.notifLayout);
@@ -233,14 +235,15 @@ public class NotificationActivity extends Fragment {
 
         for(int i=0; i<IDs.length; i++) {
             Log.e("stringa", IDs[i] + "," + names[i]);
-            listNotif.addView(notif(names[i], IDs[i]), params);
+            listNotif.addView(notif(notif_ids[i], names[i], IDs[i]), params);
         }
     }
 
     /* creating views for each type of notification */
-    public View notif(final String name, String type_notif) {
+    public View notif(final String id, final String name, String type_notif) {
 
         final int num_notif = Integer.parseInt(type_notif);
+        final DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
 
         // main layout
         final LinearLayout mLinLay = new LinearLayout(owner.getApplicationContext());
@@ -289,7 +292,12 @@ public class NotificationActivity extends Fragment {
                 Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
                 // set accepted where friend_id = name, owner_id = id utente loggato
+
+                // send notification
+                // current user accepted "name" request
+                new addNotification(db.getUserDetails().get("uid"), name, "2");
                 // remove from server
+                new setNotificationSeen(id).execute();
             }
         });
 
@@ -306,6 +314,7 @@ public class NotificationActivity extends Fragment {
                 mLinLay.setVisibility(View.GONE);
                 // set not accepted, active = 0 where friend_id = name, owner_id = id utente loggato
                 // remove from server
+                new setNotificationSeen(id).execute();
             }
         });
 
@@ -331,5 +340,37 @@ public class NotificationActivity extends Fragment {
         mLinLay.addView(v);
 
         return mLinLay;
+    }
+
+    // thread to set notifications seen
+    private class setNotificationSeen extends AsyncTask {
+
+        String id;
+        setNotificationSeen(String id) {
+            this.id = id;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            userFunction.setNotificationSeen(id);
+            return null;
+        }
+    }
+
+    // thread to set notifications seen
+    private class addNotification extends AsyncTask {
+
+        String id, from, to;
+        addNotification(String from, String to, String id) {
+            this.id = id;
+            this.from = from;
+            this.to = to;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            userFunction.addNotification(from, to, id);
+            return null;
+        }
     }
 }

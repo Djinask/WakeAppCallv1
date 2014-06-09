@@ -39,8 +39,11 @@ public class NotificationService extends Service {
 
     Messenger mClients;
 
+    private String[] notif_ids;
     private String[] IDs;
     private String[] names;
+
+    int notif_code = 0;
 
     final Messenger mMessenger = new Messenger(new Handler() { // Handler of incoming messages from clients.
         public void handleMessage(Message msg) {
@@ -107,12 +110,18 @@ public class NotificationService extends Service {
                 Log.e("JSON NOTIFY",String.valueOf(jsonNotif.length()));
                 IDs = new String[jsonNotif.length()];
                 names = new String[jsonNotif.length()];
+                notif_ids = new String[jsonNotif.length()];
 
                 for(int i=0; i<jsonNotif.length(); i++)
                 {
                     try {
+                        notif_ids[i] = jsonNotif.getJSONObject(i).getString("id");
                         IDs[i] = jsonNotif.getJSONObject(i).getString("id_n");
-                        names[i] = jsonNotif.getJSONObject(i).getString("from_id"); // -> poi bisogna trovare il nome dall'ID (tabella dati amici?)
+                        names[i] = jsonNotif.getJSONObject(i).getString("from_id");
+
+                        // send Android notification
+                        showNotification(IDs[i], names[i]);
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -120,29 +129,27 @@ public class NotificationService extends Service {
                 // send data to UI (if active)
                 if(NotificationActivity.active)
                     sendMessageToUI();
-
-                // send Android notification
-                //showNotification();
             }
 
             return null;
         }
     }
 
-    private void showNotification() {
+    private void showNotification(String id, String name) {
         nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        int notif_code = 0;
         Intent dashIntent = new Intent(this, DashboardActivity.class);
         dashIntent.putExtra("fromNotification", true);
 
+        int intid = Integer.parseInt(id);
+
         // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.logo_md, "message_show_on_status_bar", System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.logo_md, name + NotificationActivity.events[intid-1], System.currentTimeMillis());
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, dashIntent, 0);
         // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(this, "title", "body", contentIntent);
+        notification.setLatestEventInfo(this, NotificationActivity.titles[intid-1], name+" "+NotificationActivity.events[intid-1], contentIntent);
         // Send the notification.
-        nm.notify(notif_code, notification);
+        nm.notify(intid, notification);
     }
 
     // ---------------------- SEND MESSAGE FROM SERVICE TO UI ----------------------------------------
@@ -152,6 +159,7 @@ public class NotificationService extends Service {
             Bundle b = new Bundle();
             b.putStringArray("id", IDs);
             b.putStringArray("names", names);
+            b.putStringArray("notif_ids", notif_ids);
 
             Message msg = Message.obtain(null, msg_service_ui);
             msg.setData(b);

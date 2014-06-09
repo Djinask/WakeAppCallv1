@@ -40,6 +40,7 @@ public class UserFunctions {
     private static String get_friends_details_tag = "get_friends_details";
     private static String add_notification = "add_notification";
     private static String get_notification = "get_notification";
+    private static String set_notification_seen = "set_notification_seen";
 
     // constructor
     public UserFunctions(){
@@ -300,6 +301,18 @@ public class UserFunctions {
         }
 
         return jsArr;
+    }
+
+    public JSONObject setNotificationSeen(String id) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", set_notification_seen));
+        params.add(new BasicNameValuePair("notif_id", id));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
     }
 
     /**
