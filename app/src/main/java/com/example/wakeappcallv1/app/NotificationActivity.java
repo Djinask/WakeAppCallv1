@@ -89,6 +89,18 @@ public class NotificationActivity extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // says to service to update
+            sendMessageToService(1);
+        }
+        else {
+        }
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -310,28 +322,8 @@ public class NotificationActivity extends Fragment {
                 // set friendship accepted
                 new setFriendAccepted(db.getUserDetails().get("uid"), user_id);
 
-                // add friends details (onyl when request accepted)
-                JSONObject jsonSearch = userFunction.getUserDetails(user_id);
-                Map<String, String> user = new HashMap<String, String>();
-                try
-                {
-                    user.put("uid",jsonSearch.getString("uid"));
-                    user.put("name",jsonSearch.getString("name"));
-                    user.put("email",jsonSearch.getString("email"));
-                    user.put("phone",jsonSearch.getString("phone"));
-                    user.put("birth_date",jsonSearch.getString("birth_date"));
-                    user.put("country",jsonSearch.getString("country"));
-                    user.put("city",jsonSearch.getString("city"));
-                    user.put("image_path", jsonSearch.getString("image_path"));
-                    user.put("created_at", jsonSearch.getString("created_at"));
-                    user.put("updated_at",jsonSearch.getString("updated_at"));
-                }
-                catch (JSONException err)
-                {
-                    Log.e("JSON error: ", err.toString());
-                }
-                // adds friend details
-                db.addOneFriendDetailsLocal(user);
+                // add user details
+                new getFriendsDetails(db, user_id);
 
                 // send notification
                 // current user accepted "name" request
@@ -426,6 +418,44 @@ public class NotificationActivity extends Fragment {
         @Override
         protected Object doInBackground(Object... arg0) {
             userFunction.setFriendAccepted(uid_from, uid_to);
+            return null;
+        }
+    }
+
+    // thread to set friendship accepted
+    private class getFriendsDetails extends AsyncTask {
+
+        DatabaseHandler db;
+        String uid;
+        getFriendsDetails(DatabaseHandler db, String uid) {
+            this.db = db;
+            this.uid = uid;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            // add friends details (onyl when request accepted)
+            JSONObject jsonSearch = userFunction.getUserDetails(uid);
+            Map<String, String> user = new HashMap<String, String>();
+            try
+            {
+                user.put("uid",jsonSearch.getString("uid"));
+                user.put("name",jsonSearch.getString("name"));
+                user.put("email",jsonSearch.getString("email"));
+                user.put("phone",jsonSearch.getString("phone"));
+                user.put("birth_date",jsonSearch.getString("birth_date"));
+                user.put("country",jsonSearch.getString("country"));
+                user.put("city",jsonSearch.getString("city"));
+                user.put("image_path", jsonSearch.getString("image_path"));
+                user.put("created_at", jsonSearch.getString("created_at"));
+                user.put("updated_at",jsonSearch.getString("updated_at"));
+            }
+            catch (JSONException err)
+            {
+                Log.e("JSON error: ", err.toString());
+            }
+            // adds friend details
+            db.addOneFriendDetailsLocal(user);
             return null;
         }
     }
