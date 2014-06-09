@@ -48,6 +48,7 @@ public class UserFunctions {
     private static String get_notification = "get_notification";
     private static String set_notification_seen = "set_notification_seen";
     private static String set_friendship_accepted = "set_friendship_accepted";
+    private static String get_user_details = "get_user_details";
 
     // constructor
     public UserFunctions(){
@@ -188,6 +189,18 @@ public class UserFunctions {
 
         // return json
         return js;
+    }
+
+    public JSONObject getUserDetails(String uid) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", get_user_details));
+        params.add(new BasicNameValuePair("uid", uid));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
     }
 
     public JSONObject searchFriend(String email, String search_mail) {
