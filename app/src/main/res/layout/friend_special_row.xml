@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    android:orientation="horizontal"
+    android:focusable="false">
+
+
+    <com.facebook.widget.ProfilePictureView
+
+        android:id="@+id/profile_pic"
+        android:layout_width="@dimen/rowHeight"
+        android:layout_height="@dimen/rowHeight"
+        android:scaleType="fitXY"
+        android:src="@drawable/icona_del_utente"
+        android:focusable="false"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/rowHeight"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/rowHeight"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_weight="1">
+
+
+
+            <TextView
+                android:id="@+id/friendTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dip"
+                android:text="Friend name"
+                android:textSize="20dip"
+                android:textStyle="bold"
+                android:textColor="@android:color/background_light"
+                android:focusable="false"/>
+            <TextView
+                android:id="@+id/emailTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dip"
+                android:text="Email"
+                android:textSize="16dip"
+                android:textColor="@android:color/background_light"
+                android:focusable="false"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
