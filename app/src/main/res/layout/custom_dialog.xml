@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:orientation="vertical"
     android:background="@android:color/black">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/content">
+
 
     <com.example.wakeappcallv1.app.Classes.RoundedImageView
         android:id="@+id/imageDialog"
@@ -16,8 +23,34 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="#FFF"
+
         android:layout_toRightOf="@+id/imageDialog"/>
 
+    </LinearLayout>
 
+<LinearLayout
+    android:id="@+id/buttons"
 
-</RelativeLayout>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <Button
+        android:text="Cancel"
+        android:id="@+id/cancel"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+        />
+
+    <Button
+        android:text="Ok"
+        android:id="@+id/ok"
+        android:layout_width="0dp"
+        android:layout_weight="0.5"
+        android:layout_height="wrap_content"
+
+        />
+</LinearLayout>
+
+</LinearLayout>

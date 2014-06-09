@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wakeappcallv1.app.Classes.CustomDialogClass;
 import com.example.wakeappcallv1.app.R;
 
 import org.apache.http.HttpEntity;
@@ -230,42 +231,42 @@ public class AddFriendsActivity extends Activity {
 
             if(succ == 1)
             {
-//                new AlertDialog.Builder(new ContextThemeWrapper(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
-//                    .setTitle("Search result")
-//
-//                    .setMessage("Are you sure you want to add\n\t\t" + name + "\nto your friends?")
-//                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            attemptAdd();
-//                            bar.setVisibility(View.VISIBLE);
-//                        }
-//                    })
-//                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            // do nothing
-//                        }
-//                    })
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-//                    .show();
-
-
-                /// mio dialog per prova custom
 
 
 
                 // Create custom dialog object
-                final Dialog dialog = new Dialog(AddFriendsActivity.this);
+              final Dialog dialog = new Dialog(AddFriendsActivity.this,android.R.style.Theme_Holo_Dialog);
                 // Include dialog.xml file
                 dialog.setContentView(R.layout.custom_dialog);
                 // Set dialog title
+
                 dialog.setTitle("Search result:");
+
 
                 // set values for custom dialog components - text, image and button
                 TextView text = (TextView) dialog.findViewById(R.id.textDialog);
-                text.setText("Are you sure you want to add\n" + name + "\nto your friends?");
+                Button ok = (Button) dialog.findViewById(R.id.ok);
+                Button cancel = (Button) dialog.findViewById(R.id.cancel);
                 ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
 
+
+                text.setText("Are you sure you want to add:\n" + name + "\nto your friends?");
                 image.setImageBitmap(user_image);
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        attemptAdd();
+                        bar.setVisibility(View.VISIBLE);
+
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.cancel();
+
+                    }
+                });
 
                 dialog.show();
 
@@ -336,6 +337,7 @@ public class AddFriendsActivity extends Activity {
             {
                 // add friendship to the online DB
                 jsonAdd = userFunction.addFriend(mMyEmail, ownUid, toUid);
+                Log.e("JSON RESPONSE FROM ADDING FRIENDS", jsonAdd.toString());
 
                 // add the new friendship to the local DB
                 // (it has to be confirmed)
