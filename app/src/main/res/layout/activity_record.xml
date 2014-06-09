@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@color/abc_search_url_text_pressed"
+    >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Keep pressed to record"
+        android:gravity="center"
+        android:textSize="50dp"/>
+
+    <Button
+        android:id="@+id/recordbutton"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:src="@drawable/mike_grey"
+        android:background="@drawable/mike_grey"
+
+    />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/playrecording"
+            android:layout_width="0px"
+            android:layout_weight=".3"
+            android:layout_height="30pt"
+            android:text="Play"/>
+        <Button
+            android:id="@+id/deleterecording"
+            android:layout_width="0px"
+            android:layout_weight=".3"
+            android:layout_height="30pt"
+            android:text="Delete"/>
+        <Button
+            android:id="@+id/sendrecording"
+            android:layout_width="0px"
+            android:layout_weight=".3"
+            android:layout_height="30pt"
+            android:text="Send"/>
+        </LinearLayout>
+
+
+</LinearLayout>

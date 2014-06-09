@@ -47,6 +47,9 @@ import org.json.JSONObject;
 
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -55,12 +58,24 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Andrea on 26/05/14.
  */
 public class AddFriendsActivity extends Activity {
+    //facebook
+    private static final List<String> PERMISSIONS = new ArrayList<String>() {
+        {
+            add("user_friends");
+            add("public_profile");
+        }
+    };
+    private UiLifecycleHelper lifecycleHelper;
+    boolean pickFriendsWhenSessionOpened;
+    private Button addFb;
+    private static final int PICK_FRIENDS_ACTIVITY = 1;
 
     Map<String, String> user;
 
@@ -82,13 +97,33 @@ public class AddFriendsActivity extends Activity {
         // array with user details
         user = new HashMap<String, String>();
 
-        Button addFb = (Button) findViewById(R.id.addFriendFromFb);
+
         Button addName = (Button) findViewById(R.id.addFriendByName);
 
         bar = (ProgressBar) findViewById(R.id.searchProgress);
         bar.setVisibility(View.INVISIBLE);
 
         mail = (EditText) findViewById(R.id.friendMail);
+
+        //facebook button
+        Button addFb = (Button) findViewById(R.id.addFriendFromFb);
+        addFb.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                onClickPickFriends();
+            }
+        });
+
+        lifecycleHelper = new UiLifecycleHelper(this, new Session.StatusCallback() {
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+                onSessionStateChanged(session, state, exception);
+            }
+        });
+        lifecycleHelper.onCreate(savedInstanceState);
+
+
+        ensureOpenSession();
+
 
         // pressed search button on keyboard
         mail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -135,6 +170,99 @@ public class AddFriendsActivity extends Activity {
                 }
             }
         });
+    }
+
+
+    //makes sure user is connected with facebook
+    private boolean ensureOpenSession() {
+        if (Session.getActiveSession() == null ||
+                !Session.getActiveSession().isOpened()) {
+            Session.openActiveSession(
+                    this,
+                    true,
+                    PERMISSIONS,
+                    new Session.StatusCallback() {
+                        @Override
+                        public void call(Session session, SessionState state, Exception exception) {
+                            onSessionStateChanged(session, state, exception);
+                        }
+                    });
+            return false;
+        }
+        return true;
+    }
+
+    private boolean sessionHasNecessaryPerms(Session session) {
+        if (session != null && session.getPermissions() != null) {
+            for (String requestedPerm : PERMISSIONS) {
+                if (!session.getPermissions().contains(requestedPerm)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private List<String> getMissingPermissions(Session session) {
+        List<String> missingPerms = new ArrayList<String>(PERMISSIONS);
+        if (session != null && session.getPermissions() != null) {
+            for (String requestedPerm : PERMISSIONS) {
+                if (session.getPermissions().contains(requestedPerm)) {
+                    missingPerms.remove(requestedPerm);
+                }
+            }
+        }
+        return missingPerms;
+    }
+
+    private void onSessionStateChanged(final Session session, SessionState state, Exception exception) {
+        if (state.isOpened() && !sessionHasNecessaryPerms(session)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.need_perms_alert_text);
+            builder.setPositiveButton(
+                    R.string.need_perms_alert_button_ok,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            session.requestNewReadPermissions(
+                                    new Session.NewPermissionsRequest(
+                                            AddFriendsActivity.this,
+                                            getMissingPermissions(session)));
+                        }
+                    });
+            builder.setNegativeButton(
+                    R.string.need_perms_alert_button_quit,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+            builder.show();
+        } else if (pickFriendsWhenSessionOpened && state.isOpened()) {
+            pickFriendsWhenSessionOpened = false;
+
+            startPickFriendsActivity();
+        }
+    }
+
+    private void startPickFriendsActivity() {
+        if (ensureOpenSession()) {
+            Intent intent = new Intent(this, FacebookFriendsActivity.class);
+            // Note: The following line is optional, as multi-select behavior is the default for
+            // FriendPickerFragment. It is here to demonstrate how parameters could be passed to the
+            // friend picker if single-select functionality was desired, or if a different user ID was
+            // desired (for instance, to see friends of a friend).
+            FacebookFriendsActivity.populateParameters(intent, null, true, true);
+            startActivityForResult(intent, PICK_FRIENDS_ACTIVITY);
+        } else {
+            pickFriendsWhenSessionOpened = true;
+        }
+    }
+
+    private void onClickPickFriends() {
+        startPickFriendsActivity();
     }
 
     public void attemptSearch()

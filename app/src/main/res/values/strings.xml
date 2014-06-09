@@ -50,5 +50,11 @@
 
     <string name="title_friend_list">Friends</string>
     <string name="title_friend_detail">Friend Detail</string>
+    <string name="title_activity_facebook_friends">FacebookFriendsActivity</string>
+    <string name="title_activity_friend_picker_application">FriendPickerApplication</string>
+    <string name="title_activity_record">RecordActivity</string>
+    <string name="need_perms_alert_text">Wake-App Call needs additional persmissions</string>
+    <string name="need_perms_alert_button_ok">Okay</string>
+    <string name="need_perms_alert_button_quit">Cancel</string>
 
 </resources>
