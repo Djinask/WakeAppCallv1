@@ -301,8 +301,8 @@ public class NotificationActivity extends Fragment {
             public void onClick(View view) {
                 Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
-                // set accepted where friend_id = name, owner_id = id utente loggato
-                // -------------------------------- TO DO ------------------------------------------
+                // set friendship accepted
+                userFunction.setFriendAccepted(db.getUserDetails().get("uid"), name);
                 // send notification
                 // current user accepted "name" request
                 new addNotification(db.getUserDetails().get("uid"), name, type_notif);
