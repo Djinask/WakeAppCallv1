@@ -22,7 +22,6 @@
             <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:resource="@menu/menu_custom" />
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -70,6 +69,20 @@
 
         <service android:name=".NotificationService"></service>
 
+
+        <activity
+            android:name="com.example.wakeappcallv1.app.FacebookFriendsActivity"
+            android:label="@string/title_activity_facebook_friends" >
+        </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.FriendPickerApplication"
+            android:label="@string/title_activity_friend_picker_application" >
+        </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.RecordActivity"
+            android:label="@string/title_activity_record" >
+
+        </activity>
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -79,5 +92,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 </manifest>
