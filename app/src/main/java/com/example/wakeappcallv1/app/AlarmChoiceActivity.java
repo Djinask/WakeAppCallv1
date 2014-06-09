@@ -72,6 +72,7 @@ public class AlarmChoiceActivity extends Activity {
                 alarm.put("alarm_ring_default","0");
 
         Button random = (Button) findViewById(R.id.random);
+        Button special = (Button) findViewById(R.id.special);
 
 
         random.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +87,18 @@ public class AlarmChoiceActivity extends Activity {
 
 
         });
+
+        special.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent SomeOneSpecial = new Intent(getApplicationContext(), SomeoneSpecialActivity.class);
+                SomeOneSpecial.putExtra("extra", alarm);
+
+                SomeOneSpecial.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(SomeOneSpecial);
+            }
+        });
+
 
     }
 
@@ -124,7 +137,7 @@ public class AlarmChoiceActivity extends Activity {
 
 
 
-public class AddAlarmTask extends AsyncTask<Void, Void, Boolean> {
+    public class AddAlarmTask extends AsyncTask<Void, Void, Boolean> {
     HashMap<String, String> alarm;
 
     @Override

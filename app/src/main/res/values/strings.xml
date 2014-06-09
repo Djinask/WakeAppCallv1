@@ -56,5 +56,7 @@
     <string name="need_perms_alert_text">Wake-App Call needs additional persmissions</string>
     <string name="need_perms_alert_button_ok">Okay</string>
     <string name="need_perms_alert_button_quit">Cancel</string>
+    <string name="title_activity_someone_special">SomeoneSpecialActivity</string>
+    <string name="title_activity_friend_special_adapter">FriendSpecialAdapter</string>
 
 </resources>
