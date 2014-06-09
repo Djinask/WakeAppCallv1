@@ -2,12 +2,20 @@ package com.example.wakeappcallv1.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
@@ -17,12 +25,19 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.R;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
 import org.json.JSONArray;
@@ -32,6 +47,11 @@ import org.json.JSONObject;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -134,6 +154,7 @@ public class AddFriendsActivity extends Activity {
         String mMyEmail;
         String mFriendMail;
         JSONObject jsonSearch;
+        Bitmap user_image;
 
         SearchFriendTask(String myMail, String friendMail) {
 
@@ -149,6 +170,16 @@ public class AddFriendsActivity extends Activity {
             try
             {
                 jsonSearch = userFunction.searchFriend(mMyEmail, mFriendMail);
+                Log.e("PATH DEL BITMAP", jsonSearch.getString("image_path"));
+
+                URL fbAvatarUrl = new URL(jsonSearch.getString("image_path")+"?type=large");
+                HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
+                HttpEntity entity = response.getEntity();
+                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+                user_image = BitmapFactory.decodeStream(bufHttpEntity.getContent());
+                httpRequest.abort();
             }
             catch (Exception e)
             {
@@ -165,6 +196,8 @@ public class AddFriendsActivity extends Activity {
             int succ = 0;
             String name = null;
             String email = null;
+            String avatar_path = null;
+            BitmapDrawable icon = null;
 
             try
             {
@@ -180,8 +213,11 @@ public class AddFriendsActivity extends Activity {
                 user.put("birth_date",jsonSearch.getString("birth_date"));
                 user.put("country",jsonSearch.getString("country"));
                 user.put("city",jsonSearch.getString("city"));
-                user.put("created_at",jsonSearch.getString("created_at"));
+                user.put("img_path", jsonSearch.getString("image_path"));
+                user.put("created_at", jsonSearch.getString("created_at"));
                 user.put("updated_at",jsonSearch.getString("updated_at"));
+
+
 
             }
             catch (JSONException err)
@@ -191,22 +227,47 @@ public class AddFriendsActivity extends Activity {
 
             if(succ == 1)
             {
-                new AlertDialog.Builder(new ContextThemeWrapper(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
-                    .setTitle("Search result")
-                    .setMessage("Are you sure you want to add\n\t\t"+name+"\n\t\t"+email+"\nto your friends?")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            attemptAdd();
-                            bar.setVisibility(View.VISIBLE);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+//                new AlertDialog.Builder(new ContextThemeWrapper(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
+//                    .setTitle("Search result")
+//
+//                    .setMessage("Are you sure you want to add\n\t\t" + name + "\nto your friends?")
+//                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            attemptAdd();
+//                            bar.setVisibility(View.VISIBLE);
+//                        }
+//                    })
+//                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            // do nothing
+//                        }
+//                    })
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .show();
+
+
+                /// mio dialog per prova custom
+
+
+
+                // Create custom dialog object
+                final Dialog dialog = new Dialog(AddFriendsActivity.this);
+                // Include dialog.xml file
+                dialog.setContentView(R.layout.custom_dialog);
+                // Set dialog title
+                dialog.setTitle("Search result:");
+
+                // set values for custom dialog components - text, image and button
+                TextView text = (TextView) dialog.findViewById(R.id.textDialog);
+                text.setText("Are you sure you want to add\n" + name + "\nto your friends?");
+                ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
+
+                image.setImageBitmap(user_image);
+
+                dialog.show();
+
+
+
             }
             else
             {
@@ -322,6 +383,23 @@ public class AddFriendsActivity extends Activity {
         protected void onCancelled() {
             mMyEmail = null;
             bar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            input.reset();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

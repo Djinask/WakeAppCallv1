@@ -43,14 +43,24 @@ public class AlarmChoiceActivity extends Activity {
         setContentView(R.layout.activity_alarm_choice);
         Intent intent = getIntent();
         mProgressView = findViewById(R.id.login_progress);
-        alarm = (HashMap<String, String>) intent.getSerializableExtra("extra");
+
+
+
+
+        alarm = (HashMap<String, String>)intent.getSerializableExtra("extra");
+        Log.v("alarmNAme", alarm.get("alarm_name"));
+        Log.v("alarmNAme", alarm.get("alarm_setted_time"));
+
+
+
 
 
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
         String owner=db.getUserDetails().get("uid");
+        Log.e("User hm",db.getUserDetails().toString());
 
-        alarm.put("alarm_owner", owner);
-        alarm.put("alarm_setted_time", "7:00");
+                alarm.put("alarm_owner", owner);
+
                 alarm.put("alarm_active", "1");
                 alarm.put("alarm_mode","0");
                 alarm.put("alarm_status","0");
@@ -156,7 +166,7 @@ public class AddAlarmTask extends AsyncTask<Void, Void, Boolean> {
 //            jsonAlarms = userFunction.getAlarms(mEmail,json.getString("uid"));
 
             //  check for add response
-            Log.e("JSONAC", json.toString());
+            Log.e("JSON response", json.toString());
             if (json.getString(KEY_SUCCESS) != null) {
 
 

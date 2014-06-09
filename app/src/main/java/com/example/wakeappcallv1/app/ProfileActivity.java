@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.Classes.RoundedImageView;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -357,8 +359,22 @@ public class ProfileActivity extends Fragment {
 
 
 
-
-
+//
+//    private void loadImageFromStorage(String path)
+//    {
+//
+//        try {
+//            File f=new File(path, "profile.jpg");
+//            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+//            ImageView img=(ImageView)findViewById(R.id.imgPicker);
+//            img.setImageBitmap(b);
+//        }
+//        catch (FileNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
 

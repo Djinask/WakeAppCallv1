@@ -102,13 +102,13 @@ public class NotificationActivity extends Fragment {
 
         //listNotif.addView(view, params);
 
-        Button b = (Button) owner.findViewById(R.id.stopserv);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                owner.stopService(new Intent(owner, NotificationService.class));
-            }
-        });
+       // Button b = (Button) owner.findViewById(R.id.stopserv);
+//        b.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                owner.stopService(new Intent(owner, NotificationService.class));
+//            }
+//        });
 
         restoreMe(savedInstanceState);
 

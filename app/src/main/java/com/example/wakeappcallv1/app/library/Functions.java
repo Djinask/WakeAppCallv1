@@ -38,4 +38,5 @@ public class Functions {
                 new Rect(0, 0, targetWidth, targetHeight), null);
         return targetBitmap;
     }
+
 }

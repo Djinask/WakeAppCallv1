@@ -37,7 +37,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_FRIENDSHIP = "friendship";
     private static final String TABLE_FRIENDS_DETAILS = "friends_details";
 
-    // Login Table Columns names
+    //LOGIN NAMES
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
@@ -45,12 +45,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BIRTHDATE = "birth_date";
     private static final String KEY_COUNTRY = "country";
     private static final String KEY_CITY = "city";
+    private static final String KEY_IMAGE_PATH = "image_path";
+    private static final String KEY_FACEBOOK_ID = "facebook_id";
     private static final String KEY_UID = "uid";
     private static final String KEY_CREATED_AT = "created_at";
     private static final String KEY_UPDATED_AT = "updated_at";
 
 
-    // Alarm Table Columns names
+    // ALARM NAMES
     private static final String KEY_ALARM_UID = "alarm_uuid";
     private static final String KEY_ALARM_ID = "alarm_uid";
     private static final String KEY_ALARM_NAME = "alarm_name";
@@ -68,7 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ALARM_CREATED_AT = "created_at";
     private static final String KEY_ALARM_UPDATED_AT = "updated_at";
 
-    // Friendship Table Columns names
+    // FRIENDSHIP NAME
     private static final String KEY_FRIENDSHIP_UID = "friendship_uid";
     private static final String KEY_FRIENDSHIP_ID = "friendship_id";
     private static final String KEY_FRIENDSHIP_OWNER = "friendship_owner";
@@ -93,6 +95,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BIRTHDATE + " TEXT,"
                 + KEY_COUNTRY + " TEXT,"
                 + KEY_CITY + " TEXT,"
+                + KEY_IMAGE_PATH + " TEXT,"
+                + KEY_FACEBOOK_ID + " TEXT,"
                 + KEY_UID + " TEXT,"
                 + KEY_UPDATED_AT + " TEXT,"
                 + KEY_CREATED_AT + " TEXT" + ")";
@@ -166,7 +170,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Storing user details in database
      * */
-    public void addUser(String name, String email,String phone, String birthdate, String country, String city, String uid, String created_at) {
+    public void addUser(String name, String email,String phone, String birthdate, String country, String city, String image_path, String uid, String Fb_id, String created_at) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -176,7 +180,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BIRTHDATE, birthdate); // BirthDate
         values.put(KEY_COUNTRY, country); // country
         values.put(KEY_CITY, city); // City
+        values.put(KEY_IMAGE_PATH, image_path);
         values.put(KEY_UID, uid); // Unique id
+        values.put(KEY_FACEBOOK_ID, Fb_id);
         values.put(KEY_CREATED_AT, created_at); // Created At
 
         // Inserting Row
@@ -290,14 +296,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if(cursor.getCount() > 0){
-            user.put("name", cursor.getString(1));
-            user.put("email", cursor.getString(2));
-            user.put("phone", cursor.getString(3));
-            user.put("birthdate", cursor.getString(4));
-            user.put("country", cursor.getString(5));
-            user.put("city", cursor.getString(6));
-            user.put("uid", cursor.getString(7));
-            user.put("created_at", cursor.getString(8));
+            user.put("name", cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+            user.put("email", cursor.getString(cursor.getColumnIndex(KEY_EMAIL)));
+            user.put("phone", cursor.getString(cursor.getColumnIndex(KEY_PHONE)));
+            user.put("birthdate", cursor.getString(cursor.getColumnIndex(KEY_BIRTHDATE)));
+            user.put("country", cursor.getString(cursor.getColumnIndex(KEY_COUNTRY)));
+            user.put("city", cursor.getString(cursor.getColumnIndex(KEY_CITY)));
+            user.put("image_path",cursor.getString(cursor.getColumnIndex(KEY_IMAGE_PATH)));
+            user.put(KEY_FACEBOOK_ID, cursor.getString(cursor.getColumnIndex(KEY_FACEBOOK_ID)));
+            user.put("uid", cursor.getString(cursor.getColumnIndex(KEY_UID)));
+            user.put("created_at", cursor.getString(cursor.getColumnIndex(KEY_CREATED_AT)));
         }
         cursor.close();
         db.close();
@@ -598,11 +606,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return friendsDetails;
     }
-
-
-
-
-
 
 
 }

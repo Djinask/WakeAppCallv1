@@ -151,6 +151,7 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
 
 
                 Session session = Session.getActiveSession();
+
                 if (session != null) {
 
                     if (!session.isClosed()) {

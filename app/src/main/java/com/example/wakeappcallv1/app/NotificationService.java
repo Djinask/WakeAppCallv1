@@ -69,7 +69,7 @@ public class NotificationService extends Service {
         Log.e("MyService", "Service Created.");
         //Toast.makeText(this, "Service Created ", Toast.LENGTH_LONG).show();
 
-        int delay = 5000;  // ms
+        int delay = 50000;  // ms
         // here the functions to repeat cyclically
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {

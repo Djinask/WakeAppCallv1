@@ -23,9 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/AlarmName"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/holo_blue_dark"
         android:layout_gravity="center_horizontal"
         android:hint="Name"
+        android:text="Alarm"
         android:textSize="30dp"/>
 
     <!--<TextClock-->
@@ -33,11 +34,15 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:id="@+id/textClock"-->
         <!--android:textColor="@android:color/white"/>-->
-
+<LinearLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <TimePicker
 
         android:id="@+id/timePicker"
-        android:layout_width="match_parent"
+        android:layout_width="135dip"
+        style="@android:style/Theme.Black"
 
 
 
@@ -45,6 +50,17 @@
         android:layout_height="wrap_content"
         android:spinnersShown="true"
         />
+    <DatePicker
+        android:id="@+id/datePicker"
+
+        android:layout_width="220dip"
+        android:layout_height="wrap_content"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
+        style="@android:style/Theme.Black"
+        />
+
+</LinearLayout>
 
 
     <View
