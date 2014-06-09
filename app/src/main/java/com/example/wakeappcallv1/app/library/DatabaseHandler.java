@@ -138,6 +138,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BIRTHDATE + " TEXT,"
                 + KEY_COUNTRY + " TEXT,"
                 + KEY_CITY + " TEXT,"
+                + KEY_FACEBOOK_ID + " TEXT,"
+                + KEY_IMAGE_PATH + " TEXT,"
                 + KEY_UID + " TEXT,"
                 + KEY_UPDATED_AT + " TEXT,"
                 + KEY_CREATED_AT + " TEXT" + ")";
@@ -562,6 +564,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put(KEY_BIRTHDATE, user.get(KEY_BIRTHDATE));
             values.put(KEY_COUNTRY, user.get(KEY_COUNTRY));
             values.put(KEY_CITY, user.get(KEY_CITY));
+            values.put(KEY_FACEBOOK_ID, user.get(KEY_FACEBOOK_ID));
+            values.put(KEY_IMAGE_PATH, user.get(KEY_IMAGE_PATH));
             values.put(KEY_CREATED_AT, user.get(KEY_CREATED_AT));
             values.put(KEY_UPDATED_AT, user.get(KEY_UPDATED_AT));
 

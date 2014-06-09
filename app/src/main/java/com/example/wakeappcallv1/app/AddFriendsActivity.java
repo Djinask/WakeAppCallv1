@@ -174,12 +174,12 @@ public class AddFriendsActivity extends Activity {
             try
             {
                 jsonSearch = userFunction.searchFriend(mMyEmail, mFriendMail);
-                Log.e("PATH DEL BITMAP", jsonSearch.getString("image_path"));
+
 
                 URL fbAvatarUrl = new URL(jsonSearch.getString("image_path")+"?type=large");
                 HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
                 DefaultHttpClient httpclient = new DefaultHttpClient();
-                HttpResponse response = (HttpResponse) httpclient.execute(httpRequest);
+                HttpResponse response = httpclient.execute(httpRequest);
                 HttpEntity entity = response.getEntity();
                 BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
                 user_image = BitmapFactory.decodeStream(bufHttpEntity.getContent());
