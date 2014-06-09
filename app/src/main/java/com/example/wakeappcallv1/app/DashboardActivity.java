@@ -173,7 +173,9 @@ public class DashboardActivity extends FragmentActivity implements ActionBar.Tab
             // Closing dashboard screen
             finish();
         }
-        else if (item.getItemId()==2){}
+        else if (item.getItemId()==2){
+
+        }
         else return super.onOptionsItemSelected(item);
 
         return true;

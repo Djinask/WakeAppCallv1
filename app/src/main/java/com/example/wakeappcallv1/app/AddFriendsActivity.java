@@ -71,6 +71,9 @@ public class AddFriendsActivity extends Activity {
 
     String friendUid = null;
 
+    UserFunctions userFunction;
+    DatabaseHandler db;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
@@ -327,7 +330,7 @@ public class AddFriendsActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... voids) {
 
-            UserFunctions userFunction = new UserFunctions();
+            userFunction = new UserFunctions();
 
             try
             {
@@ -336,11 +339,14 @@ public class AddFriendsActivity extends Activity {
 
                 // add the new friendship to the local DB
                 // (it has to be confirmed)
-                DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                db = new DatabaseHandler(getApplicationContext());
                 // adds friendship relationship
                 db.addOneFriendLocal(jsonAdd);
                 // adds friend details
                 db.addOneFriendDetailsLocal(user);
+
+                // send notification
+                userFunction.addNotification(db.getUserDetails().get("uid"), user.get("uid"), "1");
             }
             catch (Exception e)
             {
