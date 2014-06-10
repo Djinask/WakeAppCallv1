@@ -375,6 +375,7 @@ public class UserFunctions {
 
         // getting JSON Object
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+
         // return json
         return json;
     }

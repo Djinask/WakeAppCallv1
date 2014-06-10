@@ -554,6 +554,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addOneFriendDetailsLocal(Map<String,String> user) {
         SQLiteDatabase db = this.getWritableDatabase();
+        Log.e("Entrato nella addOneFriendDetailLocal", user.toString());
 
         try {
             ContentValues values = new ContentValues();

@@ -77,7 +77,7 @@ public class NotificationService extends Service {
 
         Log.e("MyService", "Service Created.");
 
-        int delay = 10000000;  // ms
+        int delay = 10000;  // ms
         // here the functions to repeat cyclically
         timer.scheduleAtFixedRate(new TimerTask() {
             public void run() {

@@ -8,6 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -31,9 +33,18 @@ import android.widget.Toast;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -306,16 +317,40 @@ public class NotificationActivity extends Fragment {
                 //Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
                 // set friendship accepted
-                new setFriendAccepted(db.getUserDetails().get("uid"), user_id);
+                Log.e("CLICATO", "ENTRATO");
 
-                // add user details
-                new getFriendsDetails(db, user_id);
+                switch (num_notif) {
+                    case 1 :
 
-                // send notification
-                // current user accepted "name" request
-                new addNotification(db.getUserDetails().get("uid"), user_id, "2");
-                // remove from server
-                new setNotificationSeen(id).execute();
+                    new setFriendAccepted(db.getUserDetails().get("uid"), user_id).execute();
+
+
+                    // add user details
+                    new getFriendsDetails(db, user_id).execute();
+
+                    // send notification
+                    // current user accepted "name" request
+                    new addNotification(db.getUserDetails().get("uid"), user_id, "2");
+                    // remove from server
+                    new setNotificationSeen(id).execute();
+                    break;
+
+                    case 3:
+                        new setNotificationSeen(id).execute();
+
+
+                        Intent wakeSomeOnUp = new Intent(getActivity(), WakeSomeOneActivity.class);
+
+                        // Close all views before launching Dashboard
+                        wakeSomeOnUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(wakeSomeOnUp);
+                        getActivity().finish();
+                        break;
+
+
+
+
+                }
             }
         });
 
@@ -403,7 +438,8 @@ public class NotificationActivity extends Fragment {
 
         @Override
         protected Object doInBackground(Object... arg0) {
-            userFunction.setFriendAccepted(uid_from, uid_to);
+            JSONObject j=userFunction.setFriendAccepted(uid_from, uid_to);
+
             return null;
         }
     }
@@ -420,11 +456,18 @@ public class NotificationActivity extends Fragment {
 
         @Override
         protected Object doInBackground(Object... arg0) {
-            // add friends details (onyl when request accepted)
+            // add friends details (only when request accepted)
             JSONObject jsonSearch = userFunction.getUserDetails(uid);
             Map<String, String> user = new HashMap<String, String>();
             try
+
+
             {
+
+
+
+
+
                 user.put("uid",jsonSearch.getString("uid"));
                 user.put("name",jsonSearch.getString("name"));
                 user.put("email",jsonSearch.getString("email"));
@@ -432,9 +475,9 @@ public class NotificationActivity extends Fragment {
                 user.put("birth_date",jsonSearch.getString("birth_date"));
                 user.put("country",jsonSearch.getString("country"));
                 user.put("city",jsonSearch.getString("city"));
-                user.put("image_path", jsonSearch.getString("image_path"));
+                user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
                 user.put("created_at", jsonSearch.getString("created_at"));
-                user.put("updated_at",jsonSearch.getString("updated_at"));
+                user.put("updated_at", jsonSearch.getString("updated_at"));
             }
             catch (JSONException err)
             {
@@ -442,6 +485,8 @@ public class NotificationActivity extends Fragment {
             }
             // adds friend details
             db.addOneFriendDetailsLocal(user);
+
+
             return null;
         }
     }

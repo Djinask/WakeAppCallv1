@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    >
+<LinearLayout
+    android:layout_marginTop="20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RelativeLayout
+        android:id="@+id/icona"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        >
+
+        <com.example.wakeappcallv1.app.Classes.RoundedImageView
+
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/icona_utente"
+            android:contentDescription="profile_image" />
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/cornice_utente"
+            android:id="@+id/shape"
+            android:contentDescription="profile_image" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="0.6"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/com_facebook_blue"
+        android:textSize="30dp"
+        android:text="MI CHIAMI O REGISTRI?"/>
+</LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:background="@drawable/phone_blue"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="160dp" />
+    <Button
+        android:background="@drawable/microphone_red"
+        android:layout_weight="0.5"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+       />
+
+</LinearLayout>
+
+
+</LinearLayout>

@@ -8,7 +8,7 @@
     android:focusable="false">
 
 
-    <com.facebook.widget.ProfilePictureView
+    <com.example.wakeappcallv1.app.Classes.RoundedImageView
 
         android:id="@+id/profile_pic"
         android:layout_width="@dimen/rowHeight"

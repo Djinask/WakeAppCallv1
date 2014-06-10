@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_dark"
+    android:orientation="horizontal"
+    android:focusable="false">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/rowHeight"
+        android:orientation="horizontal">
+        <com.example.wakeappcallv1.app.Classes.RoundedImageView
+
+            android:id="@+id/profile_pic"
+            android:layout_width="@dimen/rowHeight"
+            android:layout_height="@dimen/rowHeight"
+            android:scaleType="fitXY"
+            android:src="@drawable/icona_del_utente"
+            android:focusable="false"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/rowHeight"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/friendTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dip"
+                android:text="Friend name"
+                android:textSize="20dip"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_blue_dark"
+                android:focusable="false"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dip"
+                android:text="asks you to wake him up at:"
+                android:textSize="16dip"
+                android:textStyle="bold"
+                android:textColor="@android:color/background_light"
+                android:focusable="false"/>
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dip"
+                android:text="00:00 GG:MM:AAA"
+                android:textSize="16dip"
+                android:textColor="@android:color/darker_gray"
+                android:focusable="false"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:text="YES"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+        <Button
+            android:text="No"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"/>
+
+    </LinearLayout>
+</LinearLayout>
+
+</LinearLayout>

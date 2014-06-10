@@ -2,6 +2,8 @@ package com.example.wakeappcallv1.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.content.Context;
@@ -15,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wakeappcallv1.app.Classes.RoundedImageView;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
@@ -26,6 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -75,6 +82,8 @@ public class FriendListAdapter extends BaseAdapter {
         this.position = position;
         final String name = friends_details.get("names").get(position);
         final String mail = friends_details.get("email").get(position);
+        final String uid = friends_details.get("UIDs").get(position);
+
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -87,11 +96,27 @@ public class FriendListAdapter extends BaseAdapter {
         TextView friendMail = (TextView) view.findViewById(R.id.emailTextView);
         friendMail.setText(mail);
 
+
+
+        try {
+            File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            RoundedImageView avatar = (RoundedImageView) view.findViewById(R.id.profile_pic);
+            avatar.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+
+
         CheckBox accept = (CheckBox) view.findViewById(R.id.accepted);
-        accept.setChecked(friends_details.get("accepted").get(position).equals("1"));
+//        accept.setChecked(friends_details.get("accepted").get(position).equals("1"));
 
 
         return view;
     }
+
 
 }

@@ -51,7 +51,7 @@ public class ProfileActivity extends Fragment {
     Bitmap profPict;
     private static final int GALLERY = 1;
     private static Bitmap image = null;
-    private ProfilePictureView iconaUtente;
+    private RoundedImageView iconaUtente;
     private static Bitmap rotateImage = null;
 
 
@@ -126,10 +126,19 @@ public class ProfileActivity extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        iconaUtente = (ProfilePictureView)owner.findViewById(R.id.icona_utente);
-        iconaUtente.setCropped(true);
-        iconaUtente.setDrawingCacheEnabled(true);
-        iconaUtente.setProfileId(db.getUserDetails().get("uid"));
+
+        try {
+            File f=new File("/data/data/com.example.wakeappcallv1.app/app_users/"+db.getUserDetails().get("uid").toString()+".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            iconaUtente = (RoundedImageView)owner.findViewById(R.id.icona_utente);
+            iconaUtente.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+
         final EditText userName = (EditText) owner.findViewById(R.id.profilename);
         final EditText email = (EditText) owner.findViewById(R.id.email);
         final EditText phone = (EditText) owner.findViewById(R.id.phone);
@@ -137,6 +146,7 @@ public class ProfileActivity extends Fragment {
         final EditText birthdate = (EditText) owner.findViewById(R.id.birthDate);
         final EditText country = (EditText) owner.findViewById(R.id.country);
         final EditText city = (EditText) owner.findViewById(R.id.city);
+
 
         //Buttons
         final ImageView shape_button = (ImageView)owner.findViewById(R.id.shape);
@@ -153,20 +163,8 @@ public class ProfileActivity extends Fragment {
 
 
         HashMap user= db.getUserDetails();
-        URL image_value= null;
-//
-//        try {
-//            image_value = new URL("http://graph.facebook.com/"+ db.getUserDetails().get("uid").toString()+"/picture");
-//
-//            Log.e("image value", image_value.toString());
-//            profPict= BitmapFactory.decodeStream(image_value.openConnection().getInputStream());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        iconaUtente.setImageBitmap(profPict);
+
+
         userName.setText(user.get("name").toString());
         email.setText(user.get("email").toString());
         phone.setText(user.get("phone").toString());

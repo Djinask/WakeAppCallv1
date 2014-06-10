@@ -76,7 +76,7 @@ public class PARSER {
 
 
             json = json.substring(0, json.indexOf('\n'));
-            Log.e("JSON", json);
+
         } catch (Exception e) {
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }

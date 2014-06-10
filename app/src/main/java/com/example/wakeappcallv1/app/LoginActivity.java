@@ -1,5 +1,7 @@
 package com.example.wakeappcallv1.app;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.Arrays;
 import android.animation.Animator;
@@ -7,10 +9,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build.VERSION;
@@ -29,6 +35,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -397,13 +409,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         mEmailView.setAdapter(adapter);
     }
-
-
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         String mEmail;
         String mPassword;
 
@@ -652,13 +658,29 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                             JSONObject json_user = json.getJSONObject("user");
                             // After registration add user on local db
+
+                            Bitmap user_image=null;
+
+                            URL fbAvatarUrl = new URL("http://graph.facebook.com/" + utente.getId() + "/picture?type=large");
+                            HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
+                            DefaultHttpClient httpclient = new DefaultHttpClient();
+                            HttpResponse response = httpclient.execute(httpRequest);
+                            HttpEntity entity = response.getEntity();
+                            BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+                            user_image = BitmapFactory.decodeStream(bufHttpEntity.getContent());
+                            httpRequest.abort();
+
+                            String path =saveToInternalSorage(user_image,json.getString("uid"));
+                            Log.e("path dell'utente ", path);
+
+                            // Salvo l'avatar e lo carico nel db
                             db.addUser(json_user.getString(KEY_NAME),
                                     json_user.getString(KEY_EMAIL),
                                     json_user.getString(KEY_PHONE),
                                     json_user.getString(KEY_BIRTHDATE),
                                     json_user.getString(KEY_COUNTRY),
                                     json_user.getString(KEY_CITY),
-                                    json_user.getString(KEY_IMAGE_PATH),
+                                    path+"/"+json.getString("uid")+".jpg",
                                     json.getString(KEY_UID),
                                     json_user.getString(KEY_FACEBOOK_ID),
                                     json_user.getString(KEY_CREATED_AT));
@@ -698,7 +720,27 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
     }
 
+    private String saveToInternalSorage(Bitmap bitmapImage, String fileName){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("users", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,fileName+".jpg");
 
+        FileOutputStream fos = null;
+        try {
+
+            fos = new FileOutputStream(mypath);
+
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            Log.e("FILE CREATED", mypath.toString());
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return directory.getAbsolutePath();
+    }
 
 }
 

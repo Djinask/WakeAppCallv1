@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -52,6 +54,9 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -387,7 +392,7 @@ public class AddFriendsActivity extends Activity {
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        attemptAdd();
+                        attemptAdd(user_image);
                         bar.setVisibility(View.VISIBLE);
 
                     }
@@ -430,7 +435,7 @@ public class AddFriendsActivity extends Activity {
 
     //---------------------------------------------------------------------------------------------
 
-    public void attemptAdd()
+    public void attemptAdd(Bitmap user_image)
     {
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
@@ -440,7 +445,7 @@ public class AddFriendsActivity extends Activity {
 
         if (!TextUtils.isEmpty(myMail) && !TextUtils.isEmpty(owner) && !TextUtils.isEmpty(friendUid))
         {
-            mAddTask = new AddFriendTask(myMail, owner, friendUid);
+            mAddTask = new AddFriendTask(myMail, owner, friendUid, user_image);
             mAddTask.execute((Void) null);
         }
 
@@ -452,12 +457,15 @@ public class AddFriendsActivity extends Activity {
         String mMyEmail;
         String ownUid, toUid;
         JSONObject jsonAdd;
+        Bitmap friend_avatar;
 
-        AddFriendTask(String myMail, String owner, String friendUid) {
+        AddFriendTask(String myMail, String owner, String friendUid, Bitmap user_image) {
 
             mMyEmail = myMail;
             ownUid = owner;
             toUid = friendUid;
+            friend_avatar=user_image;
+
         }
 
         @Override
@@ -469,7 +477,6 @@ public class AddFriendsActivity extends Activity {
             {
                 // add friendship to the online DB
                 jsonAdd = userFunction.addFriend(mMyEmail, ownUid, toUid);
-                Log.e("JSON RESPONSE FROM ADDING FRIENDS", jsonAdd.toString());
 
                 // add the new friendship to the local DB
                 // (it has to be confirmed)
@@ -505,6 +512,17 @@ public class AddFriendsActivity extends Activity {
 
             if(succ == 1)
             {
+                //save avatar in the internal storage device
+                final String fileName = friendUid;
+
+
+
+
+
+
+                    saveToInternalSorage(friend_avatar,fileName);
+
+
                 Toast.makeText(getApplicationContext(), "Friend request correctly sent!", Toast.LENGTH_LONG).show();
                 startActivityForResult(new Intent(getApplicationContext(), DashboardActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 0);
                 finish();
@@ -525,19 +543,26 @@ public class AddFriendsActivity extends Activity {
     }
 
 
-    public static Bitmap getBitmapFromURL(String src) {
+
+    private String saveToInternalSorage(Bitmap bitmapImage, String fileName){
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+        File directory = cw.getDir("avatar_images", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath=new File(directory,fileName+".jpg");
+
+        FileOutputStream fos = null;
         try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            input.reset();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (IOException e) {
+
+            fos = new FileOutputStream(mypath);
+
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            Log.e("FILE CREATED", mypath.toString());
+            fos.close();
+        } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return directory.getAbsolutePath();
     }
 }

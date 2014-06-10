@@ -38,26 +38,30 @@ import java.util.Map;
 /**
  * Created by Luca Marconcini on 03/06/14.
  */
-public class FriendSpecialAdapter extends BaseAdapter{
-
+public class WakeSomeOneAdapter extends BaseAdapter{
+//
     private Context context;
-    Map<String,ArrayList<String>> friends_details;
-    private int position;
-    public FriendSpecialAdapter(){}
+//    Map<String,ArrayList<String>> friends_details;
+//    private int position;
+    public WakeSomeOneAdapter(){}
 
-    public FriendSpecialAdapter(Context context, Map<String,ArrayList<String>> friends_details) {
+    public WakeSomeOneAdapter(Context context, Map<String,ArrayList<String>> request_alarms) {
         this.context = context;
-        this.friends_details = friends_details;
+//        this.friends_details = friends_details;
     }
 
     @Override
     public int getCount() {
-        return friends_details.get("names").size();
+//        return friends_details.get("names").size();
+        return 0; //debug
     }
 
     @Override
     public Object getItem(int position) {
-        return friends_details.get(position);
+
+//        return friends_details.get(position);
+        return 0; //debug
+
     }
 
 
@@ -69,34 +73,34 @@ public class FriendSpecialAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
-
-        this.position = position;
-        final String name = friends_details.get("names").get(position);
-        final String mail = friends_details.get("email").get(position);
-        final String uid = friends_details.get("UIDs").get(position);
+//
+//        this.position = position;
+//        final String name = friends_details.get("names").get(position);
+//        final String mail = friends_details.get("email").get(position);
+//        final String uid = friends_details.get("UIDs").get(position);
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.friend_special_row, null);
+            view = inflater.inflate(R.layout.wake_someone_row, null);
         }
 
-        TextView friendName = (TextView) view.findViewById(R.id.friendTextView);
-        friendName.setText(name);
-
-        TextView friendMail = (TextView) view.findViewById(R.id.emailTextView);
-        friendMail.setText(mail);
-
-        try {
-            File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            RoundedImageView avatar = (RoundedImageView) view.findViewById(R.id.profile_pic);
-            avatar.setImageBitmap(b);
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+//        TextView friendName = (TextView) view.findViewById(R.id.friendTextView);
+//        friendName.setText(name);
 //
+//        TextView friendMail = (TextView) view.findViewById(R.id.emailTextView);
+//        friendMail.setText(mail);
+
+//        try {
+//            File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
+//            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+//            RoundedImageView avatar = (RoundedImageView) view.findViewById(R.id.profile_pic);
+//            avatar.setImageBitmap(b);
+//        }
+//        catch (FileNotFoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+////
 //        CheckBox accept = (CheckBox) view.findViewById(R.id.accepted);
 //        accept.setChecked(friends_details.get("accepted").get(position).equals("1"));
 

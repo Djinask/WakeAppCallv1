@@ -8,13 +8,12 @@
     android:focusable="false">
 
 
-    <com.facebook.widget.ProfilePictureView
+    <com.example.wakeappcallv1.app.Classes.RoundedImageView
 
         android:id="@+id/profile_pic"
         android:layout_width="@dimen/rowHeight"
         android:layout_height="@dimen/rowHeight"
         android:scaleType="fitXY"
-        android:src="@drawable/icona_del_utente"
         android:focusable="false"/>
 
     <LinearLayout

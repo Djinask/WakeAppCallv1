@@ -246,6 +246,8 @@ public class SomeoneSpecialActivity extends Activity {
                         alarm.get("alarm_play_after"),
                         alarm.get("alarm_volume"),
                         alarm.get("alarm_ring_default"));
+
+                userFunction.addNotification(db.getUserDetails().get("uid"), who, "3");
 //            jsonAlarms = userFunction.getAlarms(mEmail,json.getString("uid"));
 
                 //  check for add response
