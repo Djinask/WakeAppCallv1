@@ -19,7 +19,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.Functions;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
 import org.apache.http.HttpEntity;
@@ -59,10 +59,10 @@ public class NotificationActivity extends Fragment {
     private final int type_alarm_denial = 5;
 
     public static String[] events = {" wants to add you to his/her friends",
-                                " accepted your friend request",
-                                " wants you to wake him/her up for the Alarm ",
-                                " has confirmed to wake you up for the Alarm ",
-                                " can't wake you up for the Alarm "};
+            " accepted your friend request",
+            " wants you to wake him/her up for the Alarm ",
+            " has confirmed to wake you up for the Alarm ",
+            " can't wake you up for the Alarm "};
 
     public static String[] titles = {"Friend request", "Friend accepted", "Alarm request", "Alarm confirmed", "Alarm deny"};
 
@@ -447,9 +447,59 @@ public class NotificationActivity extends Fragment {
                 }
             }
             else {
-                userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_denial));
+                if(num_notif == type_alarm_request)
+                    userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_denial));
             }
 
+            return null;
+        }
+    }
+
+    private class SaveAvatarFromUrl extends AsyncTask {
+
+        JSONObject jsonSearch;
+        Bitmap user_image;
+        String mMyEmail;
+        String mFriendMail;
+        String user_uid;
+
+        SaveAvatarFromUrl(String MyMail, String ToMail, String uid) {
+            this.mMyEmail=MyMail;
+            this.mFriendMail=ToMail;
+            this.user_uid=uid;
+
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+
+            try
+            {
+                jsonSearch = userFunction.searchFriend(mMyEmail, mFriendMail);
+
+
+                URL fbAvatarUrl = new URL(jsonSearch.getString("image_path")+"?type=large");
+                Log.e("avatar url", fbAvatarUrl.toString());
+                HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(httpRequest);
+                HttpEntity entity = response.getEntity();
+                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+                user_image = BitmapFactory.decodeStream(bufHttpEntity.getContent());
+                httpRequest.abort();
+
+                Functions f = new Functions();
+                String path = f.saveToInternalSorage(user_image,user_uid,getActivity());
+                Log.e("uid dell amico accettato",user_uid);
+                Log.e("Salvato",path);
+
+
+
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -468,6 +518,11 @@ public class NotificationActivity extends Fragment {
             JSONObject jsonSearch = userFunction.getUserDetails(uid);
             try
             {
+
+                DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
+
+                new SaveAvatarFromUrl(db.getUserDetails().get("email"),jsonSearch.getString("email"), jsonSearch.getString("uid") ).execute();
+
                 user.put("uid",jsonSearch.getString("uid"));
                 user.put("name",jsonSearch.getString("name"));
                 user.put("email",jsonSearch.getString("email"));
