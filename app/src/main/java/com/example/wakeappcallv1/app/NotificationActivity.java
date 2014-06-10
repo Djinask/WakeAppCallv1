@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.Functions;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
 import org.apache.http.HttpEntity;
@@ -323,6 +324,8 @@ public class NotificationActivity extends Fragment {
                     case 1 :
 
                     new setFriendAccepted(db.getUserDetails().get("uid"), user_id).execute();
+                        // i have to store the avatar
+
 
 
                     // add user details
@@ -336,16 +339,16 @@ public class NotificationActivity extends Fragment {
                     break;
 
                     case 3:
-                        new setNotificationSeen(id).execute();
+                    new setNotificationSeen(id).execute();
 
 
-                        Intent wakeSomeOnUp = new Intent(getActivity(), WakeSomeOneActivity.class);
+                    Intent wakeSomeOnUp = new Intent(getActivity(), WakeSomeOneActivity.class);
 
                         // Close all views before launching Dashboard
-                        wakeSomeOnUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(wakeSomeOnUp);
-                        getActivity().finish();
-                        break;
+                    wakeSomeOnUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(wakeSomeOnUp);
+                    getActivity().finish();
+                    break;
 
 
 
@@ -426,6 +429,54 @@ public class NotificationActivity extends Fragment {
             return null;
         }
     }
+    private class SaveAvatarFromUrl extends AsyncTask {
+
+        JSONObject jsonSearch;
+        Bitmap user_image;
+        String mMyEmail;
+        String mFriendMail;
+        String user_uid;
+
+        SaveAvatarFromUrl(String MyMail, String ToMail, String uid) {
+            this.mMyEmail=MyMail;
+            this.mFriendMail=ToMail;
+            this.user_uid=uid;
+
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+
+            try
+            {
+                jsonSearch = userFunction.searchFriend(mMyEmail, mFriendMail);
+
+
+                URL fbAvatarUrl = new URL(jsonSearch.getString("image_path")+"?type=large");
+                Log.e("avatar url", fbAvatarUrl.toString());
+                HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
+                DefaultHttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response = httpclient.execute(httpRequest);
+                HttpEntity entity = response.getEntity();
+                BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+                user_image = BitmapFactory.decodeStream(bufHttpEntity.getContent());
+                httpRequest.abort();
+
+                Functions f = new Functions();
+                String path = f.saveToInternalSorage(user_image,user_uid,getActivity());
+                Log.e("uid dell amico accettato",user_uid);
+                Log.e("Salvato",path);
+
+
+
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     // thread to set friendship accepted
     private class setFriendAccepted extends AsyncTask {
@@ -466,7 +517,7 @@ public class NotificationActivity extends Fragment {
 
 
 
-
+                new SaveAvatarFromUrl(db.getUserDetails().get("email"),jsonSearch.getString("email"), jsonSearch.getString("uid") ).execute();
 
                 user.put("uid",jsonSearch.getString("uid"));
                 user.put("name",jsonSearch.getString("name"));
