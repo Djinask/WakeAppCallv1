@@ -428,6 +428,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         JSONArray jsonAlarms;
         JSONArray jsonFriends;
         JSONArray jsonFriendsDetails;
+         JSONArray jsonTasks;
 
         @Override
         protected Boolean doInBackground(Void... params) {
@@ -457,6 +458,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
                             jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
 
+                            jsonTasks = userFunction.getTasks(mEmail, json.getString("uid"));
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -483,6 +486,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         db.addAlarmLocal(jsonAlarms);
                         db.addFriendsLocal(jsonFriends);
                         db.addFriendsDetailsLocal(jsonFriendsDetails);
+                        db.addTaskLocal(jsonTasks);
 
                         // Launch Dashboard Screen
                         Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -552,6 +556,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         JSONArray jsonAlarms;
         JSONArray jsonFriends;
         JSONArray jsonFriendsDetails;
+        JSONArray jsonTasks;
         UserFunctions userFunction;
 
         @Override
@@ -597,6 +602,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             jsonFriends = userFunction.getFriends(mEmail, json.getString("uid"));
 
                             jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
+                            jsonTasks = userFunction.getTasks(mEmail, json.getString("uid"));
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -624,6 +631,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         db.addAlarmLocal(jsonAlarms);
                         db.addFriendsLocal(jsonFriends);
                         db.addFriendsDetailsLocal(jsonFriendsDetails);
+                        db.addTaskLocal(jsonTasks);
 
                         // Launch Dashboard Screen
                         Intent dashboard = new Intent(getApplicationContext(), DashboardActivity.class);

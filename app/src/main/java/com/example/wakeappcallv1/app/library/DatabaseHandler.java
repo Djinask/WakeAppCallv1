@@ -36,6 +36,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Friendship table name
     private static final String TABLE_FRIENDSHIP = "friendship";
     private static final String TABLE_FRIENDS_DETAILS = "friends_details";
+    private static final String TABLE_TASKS = "user_tasks";
+
 
     //LOGIN NAMES
     private static final String KEY_ID = "id";
@@ -79,6 +81,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_FRIENDSHIP_ACTIVE = "friendship_active";
     private static final String KEY_FRIENDSHIP_CREATED_AT = "created_at";
     private static final String KEY_FRIENDSHIP_UPDATED_AT = "updated_at";
+
+    //TASK NAMES
+    private static final String KEY_TASK_ID = "task_id";
+    private static final String KEY_TASK_UID = "task_uid";
+    private static final String KEY_TASK_ALARM_NAME = "task_alarm_name";
+    private static final String KEY_TASK_ALARM_OWNER = "task_alarm_owner";
+    private static final String KEY_TASK_ALARM_OWNER_NAME = "task_alarm_owner_name";
+    private static final String KEY_TASK_ALARM_OWNER_FB_ID = "task_alarm_owner_fb_id";
+    private static final String KEY_TASK_ALARM_OWNER_MAIL = "task_alarm_owner_mail";
+    private static final String KEY_TASK_ALARM_OWNER_PHONE = "task_alarm_owner_phone";
+    private static final String KEY_TASK_SETTED_TIME = "task_alarm_setted_time";
+    private static final String KEY_TASK_ALARM_ACTIVE = "task_alarm_active";
+    private static final String KEY_TASK_CREATED_AT = "task_alarm_created_at";
+
+
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -144,11 +162,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_UPDATED_AT + " TEXT,"
                 + KEY_CREATED_AT + " TEXT" + ")";
 
+        String CREATE_TASK_TABLE = "CREATE TABLE " + TABLE_TASKS + "("
+                + KEY_TASK_ID + " INTEGER PRIMARY KEY,"
+                + KEY_TASK_UID + " TEXT,"
+                + KEY_TASK_ALARM_NAME + " TEXT UNIQUE,"
+                + KEY_TASK_ALARM_OWNER + " TEXT,"
+                + KEY_TASK_ALARM_OWNER_NAME + " TEXT,"
+                + KEY_TASK_ALARM_OWNER_FB_ID + " TEXT,"
+                + KEY_TASK_ALARM_OWNER_MAIL + " TEXT,"
+                + KEY_TASK_ALARM_OWNER_PHONE + " TEXT,"
+                + KEY_TASK_SETTED_TIME + " TEXT,"
+                + KEY_TASK_ALARM_ACTIVE + " TEXT,"
+                + KEY_TASK_CREATED_AT +")";
+
 
         try {
             db.execSQL(CREATE_LOGIN_TABLE);
             db.execSQL(CREATE_ALARM_TABLE);
             db.execSQL(CREATE_FRIENDSHIP_TABLE);
+            db.execSQL(CREATE_TASK_TABLE);
+
             db.execSQL(CREATE_FRIENDS_DETAILS_TABLE);
 
         }catch(android.database.sqlite.SQLiteException ex){
@@ -612,5 +645,73 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return friendsDetails;
     }
 
+
+    public void addTaskLocal(JSONArray jsonTasks) {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            db.execSQL("delete from " + TABLE_TASKS);
+
+
+            for (int i=0;i<jsonTasks.length();i++){
+                ContentValues values = new ContentValues();
+                values.put(KEY_TASK_UID, jsonTasks.getJSONObject(i).getString("alarm_uuid"));
+                values.put(KEY_TASK_ALARM_NAME, jsonTasks.getJSONObject(i).getString("alarm_name"));
+                values.put(KEY_TASK_ALARM_OWNER, jsonTasks.getJSONObject(i).getString("alarm_owner"));
+                values.put(KEY_TASK_ALARM_OWNER_NAME, jsonTasks.getJSONObject(i).getString("alarm_owner_name"));
+                values.put(KEY_TASK_ALARM_OWNER_FB_ID, jsonTasks.getJSONObject(i).getString("alarm_owner_fb_id"));
+                values.put(KEY_TASK_ALARM_OWNER_MAIL, jsonTasks.getJSONObject(i).getString("alarm_owner_email"));
+                values.put(KEY_TASK_ALARM_OWNER_PHONE, jsonTasks.getJSONObject(i).getString("alarm_owner_phone"));
+                values.put(KEY_TASK_SETTED_TIME, jsonTasks.getJSONObject(i).getString("alarm_settedTime"));
+                values.put(KEY_TASK_ALARM_ACTIVE, jsonTasks.getJSONObject(i).getString("alarm_active"));
+                values.put(KEY_TASK_CREATED_AT, jsonTasks.getJSONObject(i).getString("created_at"));
+
+                // Inserting Row
+                db.insert(TABLE_TASKS, null, values);
+
+            }}catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        db.close(); // Closing database connection
+    }
+    public ArrayList<HashMap<String,String>> getTasksDetail(){
+        ArrayList<HashMap<String,String>> tasksDetails = new ArrayList<HashMap<String, String>>();
+        // all rows in the table are actual friends of the current user (no need of owner uid)
+        String selectQuery = "SELECT * FROM " + TABLE_TASKS;
+        Log.e("query", selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            // Move to first row
+            while (cursor.moveToNext()) {
+                HashMap<String, String> HM = new HashMap<String, String>();
+                HM.put(KEY_TASK_UID, cursor.getString(cursor.getColumnIndex(KEY_TASK_UID)));
+                HM.put(KEY_TASK_ALARM_NAME, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_NAME)));
+                HM.put(KEY_TASK_ALARM_OWNER, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_OWNER)));
+                HM.put(KEY_TASK_ALARM_OWNER_NAME, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_OWNER_NAME)));
+                HM.put(KEY_TASK_ALARM_OWNER_FB_ID, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_OWNER_FB_ID)));
+                HM.put(KEY_TASK_ALARM_OWNER_MAIL, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_OWNER_MAIL)));
+                HM.put(KEY_TASK_ALARM_OWNER_PHONE, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_OWNER_PHONE)));
+                HM.put(KEY_TASK_SETTED_TIME, cursor.getString(cursor.getColumnIndex(KEY_TASK_SETTED_TIME)));
+                HM.put(KEY_TASK_ALARM_ACTIVE, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_ACTIVE)));
+                HM.put(KEY_TASK_CREATED_AT, cursor.getString(cursor.getColumnIndex(KEY_TASK_CREATED_AT)));
+
+                tasksDetails.add(HM);
+            }
+
+            db.close();
+        }catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        }
+
+        return tasksDetails;
+    }
 
 }
