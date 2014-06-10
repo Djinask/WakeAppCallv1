@@ -75,10 +75,7 @@
             android:name="com.example.wakeappcallv1.app.FacebookFriendsActivity"
             android:label="@string/title_activity_facebook_friends" >
         </activity>
-        <activity
-            android:name="com.example.wakeappcallv1.app.FriendPickerApplication"
-            android:label="@string/title_activity_friend_picker_application" >
-        </activity>
+
         <activity
             android:name="com.example.wakeappcallv1.app.RecordActivity"
             android:label="@string/title_activity_record" >

@@ -3,12 +3,16 @@ package com.example.wakeappcallv1.app;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,15 +21,20 @@ import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
+import com.facebook.UiLifecycleHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
 public class AlarmChoiceActivity extends Activity {
+    private UiLifecycleHelper uiHelper;
+
     HashMap<String, String> alarm;
     private AddAlarmTask mAddTask = null;
     private View mProgressView;
@@ -44,8 +53,8 @@ public class AlarmChoiceActivity extends Activity {
         Intent intent = getIntent();
         mProgressView = findViewById(R.id.login_progress);
 
-
-
+        uiHelper = new UiLifecycleHelper(this, null);
+        uiHelper.onCreate(savedInstanceState);
 
         alarm = (HashMap<String, String>)intent.getSerializableExtra("extra");
         Log.v("alarmNAme", alarm.get("alarm_name"));
@@ -79,8 +88,37 @@ public class AlarmChoiceActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(AlarmChoiceActivity.this, android.R.style.Theme_Holo_Dialog));
+                builder.setMessage(getString(R.string.share_confirm)).setTitle(getString(R.string.share));
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent shareIntent = new Intent();
+                        shareIntent.setAction(Intent.ACTION_SEND);
+                        String msg=getString(R.string.settings_share_text);
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, msg );
+                       /* Uri path = Uri.fromFile(new File("android.resource://"+ getApplicationContext().getPackageName()
+                                +"/" + R.drawable.logo_md));
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, path);
+                        shareIntent.setType("image/png");*/
+                        shareIntent.setType("text/plain");
 
-                saveAlarm(0);  // mode 0 means "random"
+                        startActivity(shareIntent);
+
+                        saveAlarm(0);  // mode 0 means "random"
+
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        saveAlarm(0);  // mode 0 means "random"
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
+
 
 
             }
@@ -102,16 +140,6 @@ public class AlarmChoiceActivity extends Activity {
 
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.alarm_choice, menu);     DOVE SI TROVA STO MENU SILVIA?
-        return true;
-
-
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -189,16 +217,16 @@ public class AlarmChoiceActivity extends Activity {
 
 
                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-                    // Allarm added on the dataBase
+                    // Alarm added on the dataBase
                     // Store user details in SQLite Database
 
 
                     Log.e("JSObj TO UPDATE", json.toString());
 
-                    // Close Login Screen
-                    //finish();
+
+                    finish();
                 }else {
-                    // Error in login
+
                     Log.e("FAIL:", res);
                     //Toast.makeText(getApplicationContext(), R.string.error_login, Toast.LENGTH_LONG).show();
                 }
