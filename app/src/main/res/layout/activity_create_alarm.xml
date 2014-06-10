@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
 
     tools:context="com.example.wakeappcallv1.app.CreateAlarm"
-    android:background="@android:color/transparent"
+    android:background="@color/abc_search_url_text_pressed"
 >
 
     <ScrollView
@@ -37,7 +37,8 @@
 <LinearLayout
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/common_signin_btn_light_text_focused">
     <TimePicker
 
         android:id="@+id/timePicker"
@@ -78,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Ripetizione Settimanale"
+            android:text="Repeat weekly?"
             android:textColor="@android:color/white"
             android:id="@+id/textView" />
 
@@ -96,20 +97,11 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:textSize="25dp"
-            android:textOn="D"
-            android:textOff="D"
-            android:text="D"
+            android:textOn="S"
+            android:textOff="S"
+            android:text="S"
             android:textColor="@android:color/holo_red_dark"
             android:id="@+id/Domenica" />
-        <ToggleButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:textSize="25dp"
-            android:textOn="L"
-            android:textOff="L"
-            android:text="L"
-            android:id="@+id/Lunedi" />
-
         <ToggleButton
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -117,29 +109,38 @@
             android:textOn="M"
             android:textOff="M"
             android:text="M"
+            android:id="@+id/Lunedi" />
+
+        <ToggleButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textSize="25dp"
+            android:textOn="T"
+            android:textOff="T"
+            android:text="T"
             android:id="@+id/Martedi" />
         <ToggleButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:textSize="25dp"
-            android:textOn="M"
-            android:textOff="M"
+            android:textOn="W"
+            android:textOff="W"
             android:id="@+id/Merconledi" />
         <ToggleButton
             android:layout_width="40dp"
             android:textSize="25dp"
             android:layout_height="40dp"
-            android:textOn="G"
-            android:textOff="G"
-            android:text="G"
+            android:textOn="T"
+            android:textOff="T"
+            android:text="T"
             android:id="@+id/Giovedi" />
 
         <ToggleButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:textOn="V"
-            android:textOff="V"
-            android:text="V"
+            android:textOn="F"
+            android:textOff="F"
+            android:text="F"
             android:textSize="25dp"
             android:id="@+id/Venerdi" />
         <ToggleButton
@@ -167,7 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Ripetizione Settimanale"
+            android:text="Repeat weekly"
              />
     <CheckBox
         android:layout_width="40dp"

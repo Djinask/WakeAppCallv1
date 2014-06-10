@@ -14,7 +14,7 @@
         android:layout_width="@dimen/rowHeight"
         android:layout_height="@dimen/rowHeight"
         android:scaleType="fitXY"
-        android:src="@drawable/icona_del_utente"
+        android:src="@drawable/default_profile"
         android:focusable="false"/>
 
     <LinearLayout

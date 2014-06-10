@@ -58,5 +58,10 @@
     <string name="need_perms_alert_button_quit">Cancel</string>
     <string name="title_activity_someone_special">SomeoneSpecialActivity</string>
     <string name="title_activity_friend_special_adapter">FriendSpecialAdapter</string>
+    <string name="ok">Ok</string>
+    <string name="share_confirm">Let more people know about this?</string>
+    <string name="share">Share</string>
+    <string name="cancel">No</string>
+    <string name="settings_share_text">I need someone to wake me up on time! If you want to help, download  Wake-App Call! (Coming soon!)</string>
 
 </resources>
