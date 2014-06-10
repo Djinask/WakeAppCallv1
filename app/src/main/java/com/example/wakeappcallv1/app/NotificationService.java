@@ -41,7 +41,9 @@ public class NotificationService extends Service {
 
     private String[] notif_ids;
     private String[] IDs;
-    private String[] names;
+    private String[] from_ids;
+
+    UserFunctions userFunction;
 
     final Messenger mMessenger = new Messenger(new Handler() { // Handler of incoming messages from clients.
         public void handleMessage(Message msg) {
@@ -100,13 +102,13 @@ public class NotificationService extends Service {
         @Override
         protected Object doInBackground(Object... arg0) {
 
-            final UserFunctions userFunction = new UserFunctions();
+            userFunction = new UserFunctions();
             final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
             JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
 
             if(jsonNotif!=null){
                 IDs = new String[jsonNotif.length()];
-                names = new String[jsonNotif.length()];
+                from_ids = new String[jsonNotif.length()];
                 notif_ids = new String[jsonNotif.length()];
 
                 for(int i=0; i<jsonNotif.length(); i++)
@@ -114,10 +116,10 @@ public class NotificationService extends Service {
                     try {
                         notif_ids[i] = jsonNotif.getJSONObject(i).getString("id");
                         IDs[i] = jsonNotif.getJSONObject(i).getString("id_n");
-                        names[i] = jsonNotif.getJSONObject(i).getString("from_id");
+                        from_ids[i] = jsonNotif.getJSONObject(i).getString("from_id");
 
                         // send Android notification
-                        showNotification(IDs[i], names[i]);
+                        showNotification(IDs[i], from_ids[i]);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -132,19 +134,26 @@ public class NotificationService extends Service {
         }
     }
 
-    private void showNotification(String id, String name) {
+    private void showNotification(String id, String from) {
         nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         Intent dashIntent = new Intent(this, DashboardActivity.class);
         dashIntent.putExtra("fromNotification", true);
 
         int intid = Integer.parseInt(id);
 
+        String name = "n/a";
+        try {
+            name = userFunction.getUserDetails(from).get("name").toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         // Set the icon, scrolling text and timestamp
         Notification notification = new Notification(R.drawable.logo_md, name + NotificationActivity.events[intid-1], System.currentTimeMillis());
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, dashIntent, 0);
         // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(this, NotificationActivity.titles[intid-1], name+" "+NotificationActivity.events[intid-1], contentIntent);
+        notification.setLatestEventInfo(this, NotificationActivity.titles[intid-1], name + NotificationActivity.events[intid-1], contentIntent);
         // Send the notification.
         nm.notify(intid, notification);
     }
@@ -155,7 +164,7 @@ public class NotificationService extends Service {
             //Send data as a String
             Bundle b = new Bundle();
             b.putStringArray("id", IDs);
-            b.putStringArray("names", names);
+            b.putStringArray("names", from_ids);
             b.putStringArray("notif_ids", notif_ids);
 
             Message msg = Message.obtain(null, msg_service_ui);
