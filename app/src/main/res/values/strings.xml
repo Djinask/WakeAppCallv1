@@ -63,5 +63,7 @@
     <string name="share">Share</string>
     <string name="cancel">No</string>
     <string name="settings_share_text">I need someone to wake me up on time! If you want to help, download  Wake-App Call! (Coming soon!)</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_button_text">Ok</string>
 
 </resources>
