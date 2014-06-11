@@ -104,8 +104,13 @@ public class NotificationService extends Service {
 
             userFunction = new UserFunctions();
             final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-            JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
-    Log.e("############JSON ARRAY", String.valueOf(jsonNotif.isNull(0)));
+
+            // --- notification on the Android system bar
+
+            JSONArray jsonNotif = userFunction.getNotificationUnseen(db.getUserDetails().get("uid"));
+
+            Log.e("############JSON ARRAY", String.valueOf(jsonNotif.isNull(0)));
+
             if(!jsonNotif.isNull(0)){
                 IDs = new String[jsonNotif.length()];
                 from_ids = new String[jsonNotif.length()];
@@ -119,30 +124,65 @@ public class NotificationService extends Service {
                         from_ids[i] = jsonNotif.getJSONObject(i).getString("from_id");
 
                         // send Android notification
-                        showNotification(IDs[i], from_ids[i]);
+                        showNotification(notif_ids[i], IDs[i], from_ids[i]);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-                // send data to UI (if active)
-                if(NotificationActivity.active)
-                    sendMessageToUI();
-            }else {
-
-                return null;
             }
+
+
+
+            // --- notification on the app UI
+
+
+                // reset arrays
+                IDs = null;
+                from_ids = null;
+                notif_ids = null;
+
+                jsonNotif = userFunction.getNotificationActive(db.getUserDetails().get("uid"));
+            Log.e("############JSON ARRAY", String.valueOf(jsonNotif.isNull(0)));
+
+            if (!jsonNotif.isNull(0)) {
+                    IDs = new String[jsonNotif.length()];
+                    from_ids = new String[jsonNotif.length()];
+                    notif_ids = new String[jsonNotif.length()];
+
+                    for (int i = 0; i < jsonNotif.length(); i++) {
+                        try {
+                            notif_ids[i] = jsonNotif.getJSONObject(i).getString("id");
+                            IDs[i] = jsonNotif.getJSONObject(i).getString("id_n");
+                            from_ids[i] = jsonNotif.getJSONObject(i).getString("from_id");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // send data to UI (if active)
+                    if(NotificationActivity.active) {
+                        sendMessageToUI();
+                    }
+                } else {
+
+                    return null;
+                }
+
+
             return null;
         }
 
     }
 
-    private void showNotification(String id, String from) {
+    private void showNotification(String notif_id, String id, String from) {
         nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+
+        // activity to be opened when clicked on notification
         Intent dashIntent = new Intent(this, DashboardActivity.class);
         dashIntent.putExtra("fromNotification", true);
 
         int intid = Integer.parseInt(id);
+        int intnotif = Integer.parseInt(notif_id);
 
         String name = "n/a";
         try {
@@ -157,8 +197,17 @@ public class NotificationService extends Service {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, dashIntent, 0);
         // Set the info for the views that show in the notification panel.
         notification.setLatestEventInfo(this, NotificationActivity.titles[intid-1], name + NotificationActivity.events[intid-1], contentIntent);
-        // Send the notification.
-        nm.notify(intid, notification);
+
+        // Hide the notification after its selected
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        // LED lights to notification
+        notification.defaults |= Notification.DEFAULT_LIGHTS;
+
+        // Send the notification to the Android bar
+        nm.notify(intnotif, notification);
+
+        // set notification seen, so it will not be show again
+        new setNotificationSeen(notif_id).execute();
     }
 
     // ---------------------- SEND MESSAGE FROM SERVICE TO UI ----------------------------------------
@@ -203,5 +252,22 @@ public class NotificationService extends Service {
         Log.e("MyService", "Service Stopped.");
         Toast.makeText(this,"Service Stopped ", Toast.LENGTH_LONG).show();
         isRunning = false;
+    }
+
+
+
+    // thread to set notifications seen
+    private class setNotificationSeen extends AsyncTask {
+
+        String id;
+        setNotificationSeen(String id) {
+            this.id = id;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            userFunction.setNotificationSeen(id);
+            return null;
+        }
     }
 }

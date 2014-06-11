@@ -46,8 +46,10 @@ public class UserFunctions {
     private static String delete_friends_tag = "delete_friends";
     private static String get_friends_details_tag = "get_friends_details";
     private static String add_notification = "add_notification";
-    private static String get_notification = "get_notification";
+    private static String get_notification_unseen = "get_notification_unseen";
     private static String set_notification_seen = "set_notification_seen";
+    private static String get_notification_active = "get_notification_active";
+    private static String set_notification_not_active = "set_notification_not_active";
     private static String set_friendship_accepted = "set_friendship_accepted";
     private static String get_user_details = "get_user_details";
 
@@ -356,11 +358,44 @@ public class UserFunctions {
         return json;
     }
 
-
-    public JSONArray getNotification(String notif_to){
+    public JSONArray getNotificationActive(String notif_to){
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("tag", get_notification));
+        params.add(new BasicNameValuePair("tag", get_notification_active));
+        params.add(new BasicNameValuePair("notif_to", notif_to));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        JSONArray jsArr = new JSONArray();
+
+        try {
+
+            jsArr = json.getJSONArray("notification");
+            if(jsArr.isNull(0))return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsArr;
+    }
+
+    public JSONObject setNotificationNotActive(String id) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", set_notification_not_active));
+        params.add(new BasicNameValuePair("notif_id", id));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
+
+    public JSONArray getNotificationUnseen(String notif_to){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", get_notification_unseen));
         params.add(new BasicNameValuePair("notif_to", notif_to));
 
         // getting JSON Object

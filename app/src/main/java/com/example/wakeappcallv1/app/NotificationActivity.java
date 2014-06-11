@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -74,13 +75,15 @@ public class NotificationActivity extends Fragment {
     boolean mIsBound;
 
     Activity owner;
-    static boolean active = false;
+    static boolean active = true;
 
     String[] IDs;
     String[] names;
     String[] notif_ids;
 
-    String user_name = "";
+    ProgressBar bar;
+
+    Map<String,String> user_name = new HashMap<String,String>();
 
     @Override
     public void onAttach(Activity activity) {
@@ -93,6 +96,7 @@ public class NotificationActivity extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+            active = true;
             // says to service to update
             sendMessageToService(1);
         }
@@ -120,6 +124,18 @@ public class NotificationActivity extends Fragment {
         // starts service
         owner.startService(new Intent(owner, NotificationService.class));
 
+        bar = (ProgressBar) owner.findViewById(R.id.notifProgress);
+
+        ImageButton del = (ImageButton) owner.findViewById(R.id.deleteAllNotif);
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(notif_ids != null)
+                    bar.setVisibility(View.VISIBLE);
+                    new setNotificationNotActive(notif_ids).execute();
+            }
+        });
+
         restoreMe(savedInstanceState);
         CheckIfServiceIsRunning();
         // bind the service
@@ -136,8 +152,11 @@ public class NotificationActivity extends Fragment {
                     IDs = msg.getData().getStringArray("id");
                     names = msg.getData().getStringArray("names");
                     notif_ids = msg.getData().getStringArray("notif_ids");
-                    if(IDs != null & IDs.length > 0)
+                    if(IDs != null & IDs.length > 0) {
+                        // get user details
+                        new getFriendsDetails(names).execute();
                         createGUI(notif_ids, IDs, names);
+                    }
                     break;
                 default:
                     super.handleMessage(msg);
@@ -292,9 +311,7 @@ public class NotificationActivity extends Fragment {
         sender.setTextSize(18);
         sender.setTypeface(Typeface.DEFAULT_BOLD);
 
-        // get user details
-        new getFriendsDetails(user_id).execute();
-        sender.setText(user_name);
+        sender.setText(user_name.get(user_id));
 
         sender.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -325,7 +342,7 @@ public class NotificationActivity extends Fragment {
                 mLinLay.setVisibility(View.GONE);
                 Log.e("CLICATO", "ENTRATO");
 
-                new acceptNotif(true, db, from_id, to_id, num_notif).execute();
+                new acceptNotif(true, db, from_id, to_id, num_notif, id).execute();
             }
         });
 
@@ -341,7 +358,7 @@ public class NotificationActivity extends Fragment {
                 //Toast.makeText(owner.getApplicationContext(), String.valueOf(num_notif), Toast.LENGTH_SHORT).show();
                 mLinLay.setVisibility(View.GONE);
                 // set not accepted, active = 0 where friend_id = name, owner_id = id utente loggato
-                new acceptNotif(false, db, from_id, to_id, num_notif).execute();
+                new acceptNotif(false, db, from_id, to_id, num_notif, id).execute();
             }
         });
 
@@ -366,40 +383,55 @@ public class NotificationActivity extends Fragment {
 
         mLinLay.addView(v);
 
-        // set seen on server
-        new setNotificationSeen(id).execute();
-
         return mLinLay;
     }
 
-    // thread to set notifications seen
-    private class setNotificationSeen extends AsyncTask {
+    private void clearLayout() {
+        LinearLayout listNotif = (LinearLayout) owner.findViewById(R.id.notifLayout);
+        if(listNotif != null)
+            listNotif.removeAllViews();
+    }
 
-        String id;
-        setNotificationSeen(String id) {
+    // thread to set notifications seen
+    private class setNotificationNotActive extends AsyncTask {
+
+        String[] id;
+        setNotificationNotActive(String[] id) {
             this.id = id;
         }
 
         @Override
         protected Object doInBackground(Object... arg0) {
-            userFunction.setNotificationSeen(id);
+            for(int i=0; i<id.length; i++) {
+                JSONObject j = userFunction.setNotificationNotActive(id[i]);
+            }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+            clearLayout();
+            bar.setVisibility(View.INVISIBLE);
         }
     }
 
+    // (!) called only by notifications with Accept/Deny buttons
     private class acceptNotif extends  AsyncTask {
 
+        String notif_id;
         String from_id, to_id;
         int num_notif;
         DatabaseHandler db;
         boolean accept;
 
-        acceptNotif(Boolean accept, DatabaseHandler db, String from_id, String to_id, int num_notif) {
+        acceptNotif(Boolean accept, DatabaseHandler db, String from_id, String to_id, int num_notif, String notif_id) {
             this.accept = accept;
             this.db = db;
             this.from_id = from_id;
             this.to_id = to_id;
             this.num_notif = num_notif;
+            this.notif_id = notif_id;
         }
 
         @Override
@@ -447,6 +479,8 @@ public class NotificationActivity extends Fragment {
                 if(num_notif == type_alarm_request)
                     userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_denial));
             }
+
+            userFunction.setNotificationNotActive(notif_id);
 
             return null;
         }
@@ -504,45 +538,43 @@ public class NotificationActivity extends Fragment {
     // thread to set friendship accepted
     private class getFriendsDetails extends AsyncTask {
 
-        String uid;
-        getFriendsDetails(String uid) {
+        String[] uid;
+        getFriendsDetails(String[] uid) {
             this.uid = uid;
         }
 
         @Override
         protected Object doInBackground(Object... arg0) {
             // add friends details (only when request accepted)
-            JSONObject jsonSearch = userFunction.getUserDetails(uid);
-            try
-            {
 
-                DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
+            for(int i=0;i<uid.length;i++) {
+                JSONObject jsonSearch = userFunction.getUserDetails(uid[i]);
+                try {
+                    user.clear();
 
-                new SaveAvatarFromUrl(db.getUserDetails().get("email"),jsonSearch.getString("email"), jsonSearch.getString("uid") ).execute();
+                    DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
 
-                user.put("uid",jsonSearch.getString("uid"));
-                user.put("name",jsonSearch.getString("name"));
-                user.put("email",jsonSearch.getString("email"));
-                user.put("phone",jsonSearch.getString("phone"));
-                user.put("birth_date",jsonSearch.getString("birth_date"));
-                user.put("country",jsonSearch.getString("country"));
-                user.put("city",jsonSearch.getString("city"));
-                user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
-                user.put("created_at", jsonSearch.getString("created_at"));
-                user.put("updated_at", jsonSearch.getString("updated_at"));
-            }
-            catch (JSONException err)
-            {
-                Log.e("JSON error: ", err.toString());
+                    new SaveAvatarFromUrl(db.getUserDetails().get("email"), jsonSearch.getString("email"), jsonSearch.getString("uid")).execute();
+
+                    user.put("uid", jsonSearch.getString("uid"));
+                    user.put("name", jsonSearch.getString("name"));
+                    user.put("email", jsonSearch.getString("email"));
+                    user.put("phone", jsonSearch.getString("phone"));
+                    user.put("birth_date", jsonSearch.getString("birth_date"));
+                    user.put("country", jsonSearch.getString("country"));
+                    user.put("city", jsonSearch.getString("city"));
+                    user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/" + uid + ".jpg");
+                    user.put("created_at", jsonSearch.getString("created_at"));
+                    user.put("updated_at", jsonSearch.getString("updated_at"));
+
+                    user_name.put(uid[i], user.get("name"));
+
+                } catch (JSONException err) {
+                    Log.e("JSON error: ", err.toString());
+                }
             }
 
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            user_name = user.get("name");
         }
     }
 
