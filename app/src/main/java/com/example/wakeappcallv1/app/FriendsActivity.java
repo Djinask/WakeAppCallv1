@@ -77,14 +77,18 @@ public class FriendsActivity extends Fragment {
 
         // array with friends details, will be used with adapter
 
-        final ArrayList<String> names = new ArrayList<String>(friends.size());
-        final ArrayList<String> UIDs = new ArrayList<String>(friends.size());
-        final ArrayList<String> mail = new ArrayList<String>(friends.size());
+        ArrayList<String> names = new ArrayList<String>(friends.size());
+        ArrayList<String> UIDs = new ArrayList<String>(friends.size());
+        ArrayList<String> mail = new ArrayList<String>(friends.size());
         final ArrayList<String> birthdate = new ArrayList<String>(friends.size());
         final ArrayList<String> country = new ArrayList<String>(friends.size());
         final ArrayList<String> city = new ArrayList<String>(friends.size());
         ArrayList<String> accepted = new ArrayList<String>(friendships.size());
-        if(!friends.isEmpty() && !friendships.isEmpty() && !names.isEmpty()) {
+
+        //Log.e("names",names.toString());
+
+        if(!friends.isEmpty() && !friendships.isEmpty()) {
+
             for (int i = 0; i < friends.size(); i++) {
                 names.add(friends.get(i).get("name"));
                 UIDs.add(friends.get(i).get("uid"));
@@ -97,6 +101,8 @@ public class FriendsActivity extends Fragment {
             for (int i = 0; i < friendships.size(); i++) {
                 accepted.add(friendships.get(i).get("friendship_accepted"));
             }
+
+        friends_details = new HashMap<String ,ArrayList<String>>();
 
         friends_details.put("names",names);
         friends_details.put("UIDs",UIDs);

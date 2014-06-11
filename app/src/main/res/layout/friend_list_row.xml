@@ -49,13 +49,15 @@
             android:focusable="false"/>
         </LinearLayout>
 
-        <CheckBox
+        <ImageView
             android:id="@+id/accepted"
             android:layout_width="fill_parent"
-            android:layout_weight="8"
+            android:layout_weight="4"
             android:layout_height="@dimen/rowHeight"
+            android:scaleType="centerInside"
             android:focusable="false"
-            android:clickable="false"/>
+            android:clickable="false"
+            android:src="@drawable/tick"/>
     </LinearLayout>
 
 </LinearLayout>

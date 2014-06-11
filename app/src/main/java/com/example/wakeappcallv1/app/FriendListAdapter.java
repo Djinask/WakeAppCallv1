@@ -83,7 +83,9 @@ public class FriendListAdapter extends BaseAdapter {
         final String name = friends_details.get("names").get(position);
         final String mail = friends_details.get("email").get(position);
         final String uid = friends_details.get("UIDs").get(position);
+        final String accepted = friends_details.get("accepted").get(position);
 
+        Log.e("************AMICO",name+","+mail+","+uid+"->"+accepted);
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -96,7 +98,11 @@ public class FriendListAdapter extends BaseAdapter {
         TextView friendMail = (TextView) view.findViewById(R.id.emailTextView);
         friendMail.setText(mail);
 
-
+        ImageView image = (ImageView) view.findViewById(R.id.accepted);
+        if (accepted.equals("1"))
+            image.setVisibility(View.VISIBLE);
+        else
+            image.setVisibility(View.INVISIBLE);
 
         try {
             File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
