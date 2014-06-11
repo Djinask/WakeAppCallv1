@@ -484,8 +484,29 @@ public class AddFriendsActivity extends Activity {
                 // adds friendship relationship
                 db.addOneFriendLocal(jsonAdd);
 
+                // add friends details locally
+                Map<String, String> user = new HashMap<String, String>();
+                JSONObject jsonSearch = userFunction.getUserDetails(toUid);
+                try {
+                    user.put("uid", jsonSearch.getString("uid"));
+                    user.put("name", jsonSearch.getString("name"));
+                    user.put("email", jsonSearch.getString("email"));
+                    user.put("phone", jsonSearch.getString("phone"));
+                    user.put("birth_date", jsonSearch.getString("birth_date"));
+                    user.put("country", jsonSearch.getString("country"));
+                    user.put("city", jsonSearch.getString("city"));
+                    user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/" + toUid + ".jpg");
+                    user.put("created_at", jsonSearch.getString("created_at"));
+                    user.put("updated_at", jsonSearch.getString("updated_at"));
+
+                } catch (JSONException err) {
+                    Log.e("JSON error: ", err.toString());
+                }
+
+                db.addOneFriendDetailsLocal(user);
+
                 // send notification
-                userFunction.addNotification(db.getUserDetails().get("uid"), friendUid, "1");
+                userFunction.addNotification(db.getUserDetails().get("uid"), toUid, "1");
             }
             catch (Exception e)
             {
@@ -513,7 +534,7 @@ public class AddFriendsActivity extends Activity {
             if(succ == 1)
             {
                 //save avatar in the internal storage device
-                final String fileName = friendUid;
+                final String fileName = toUid;
 
 
 

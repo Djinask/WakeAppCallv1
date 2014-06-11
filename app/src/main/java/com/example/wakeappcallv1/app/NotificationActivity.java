@@ -153,8 +153,10 @@ public class NotificationActivity extends Fragment {
                     names = msg.getData().getStringArray("names");
                     notif_ids = msg.getData().getStringArray("notif_ids");
                     if(IDs != null & IDs.length > 0) {
+                        bar.setVisibility(View.VISIBLE);
+
                         // get user details
-                        new getFriendsDetails(names).execute();
+                        new getFriendsDetails(names, 1).execute();
                         createGUI(notif_ids, IDs, names);
                     }
                     break;
@@ -458,19 +460,20 @@ public class NotificationActivity extends Fragment {
                     // send notification to friend (type 2)
                     case type_friend_request:
 
+                        // if I get a request and accept, add Friendship
+                        JSONObject j = userFunction.addFriend(db.getUserDetails().get("mail"), from_id, to_id);
+
                         // set friendship accepted
                         //new setFriendAccepted(from_name, to_name).execute();
-                        JSONObject j = userFunction.setFriendAccepted(from_id, to_id);
+                        j = userFunction.setFriendAccepted(from_id, to_id);
 
-                        // if I get a request and accept, add Friendship
-                        j = userFunction.addFriend(db.getUserDetails().get("mail"), from_id, to_id);
+                        // set accepted in local
+                        db.setFriendAccepted(from_id, to_id);
 
                         // get friend details
-                        // new getFriendsDetails(to_id).execute();
-                        // already read before (to get friend name)
-
-                        // adds friend details
-                        db.addOneFriendDetailsLocal(user);
+                        String[] to = new String[1];
+                        to[0] = to_id;
+                        new getFriendsDetails(to, 2).execute();
 
                         userFunction.addNotification(from_id, to_id, String.valueOf(type_friend_confirmation));
 
@@ -550,8 +553,9 @@ public class NotificationActivity extends Fragment {
     private class getFriendsDetails extends AsyncTask {
 
         String[] uid;
-        getFriendsDetails(String[] uid) {
-            this.uid = uid;
+        int code;
+        getFriendsDetails(String[] uid, int code) {
+            this.uid = uid; this.code = code;
         }
 
         @Override
@@ -586,6 +590,21 @@ public class NotificationActivity extends Fragment {
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            if(code == 2)
+            {
+                DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
+
+                // adds friend details
+                db.addOneFriendDetailsLocal(user);
+            }
+
+            bar.setVisibility(View.INVISIBLE);
         }
     }
 

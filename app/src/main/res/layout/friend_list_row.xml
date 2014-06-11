@@ -21,7 +21,7 @@
             android:src="@drawable/default_profile"
             android:focusable="false"/>
 
-        <com.example.wakeappcallv1.app.Classes.RoundedImageView
+        <ImageView
             android:id="@+id/blur"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

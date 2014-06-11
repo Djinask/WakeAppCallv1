@@ -49,6 +49,9 @@ public class FriendsActivity extends Fragment {
     ProgressBar bar = null;
     String friendUid = null;
 
+    ListView listView;
+    Button addFriend;
+
     int position;
 
     @Override
@@ -60,11 +63,9 @@ public class FriendsActivity extends Fragment {
         return rootView;
     }
 
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        final ListView listView = (ListView) owner.findViewById (R.id.friendlistView);
-        final Button addFriend = (Button) owner.findViewById(R.id.addFriendButton);
+    public void readData() {
+        listView = (ListView) owner.findViewById (R.id.friendlistView);
+        addFriend = (Button) owner.findViewById(R.id.addFriendButton);
         bar = (ProgressBar) owner.findViewById(R.id.deleteProgress);
 
         db = new DatabaseHandler(getActivity());
@@ -96,23 +97,30 @@ public class FriendsActivity extends Fragment {
                 birthdate.add(friends.get(i).get("birth_date"));
                 country.add(friends.get(i).get("country"));
                 city.add(friends.get(i).get("city"));
+
+                // look for corresponding friendship request
+                for(int j=0; j<friendships.size(); j++) {
+                    if(friendships.get(j).get("friendship_to").equals(UIDs.get(i))) {
+                        accepted.add(friendships.get(j).get("friendship_accepted"));
+                    }
+                }
             }
 
-            for (int i = 0; i < friendships.size(); i++) {
+            /*for (int i = 0; i < friendships.size(); i++) {
                 accepted.add(friendships.get(i).get("friendship_accepted"));
-            }
+            }*/
 
-        friends_details = new HashMap<String ,ArrayList<String>>();
+            friends_details = new HashMap<String ,ArrayList<String>>();
 
-        friends_details.put("names",names);
-        friends_details.put("UIDs",UIDs);
-        friends_details.put("email",mail);
-        friends_details.put("accepted",accepted);
-        friends_details.put("birth_date",birthdate);
-        friends_details.put("country",country);
-        friends_details.put("city",city);
+            friends_details.put("names",names);
+            friends_details.put("UIDs",UIDs);
+            friends_details.put("email",mail);
+            friends_details.put("accepted",accepted);
+            friends_details.put("birth_date",birthdate);
+            friends_details.put("country",country);
+            friends_details.put("city",city);
 
-        adapter = new FriendListAdapter(getActivity(), friends_details);
+            adapter = new FriendListAdapter(getActivity(), friends_details);
         }
         registerForContextMenu(listView);
 
@@ -125,9 +133,9 @@ public class FriendsActivity extends Fragment {
 
                 alert.setTitle(friends_details.get("names").get(position));
                 alert.setMessage("E-MAIL: "+friends_details.get("email").get(position)+"\n"
-                                +"BIRTHDATE: "+(birthdate.get(position)==null?"n/a":birthdate.get(position))+"\n"
-                                +"COUNTRY: "+(country.get(position)==null?"n/a":country.get(position))+"\n"
-                                +"CITY: "+(city.get(position)==null?"n/a":city.get(position)));
+                        +"BIRTHDATE: "+(birthdate.get(position)==null?"n/a":birthdate.get(position))+"\n"
+                        +"COUNTRY: "+(country.get(position)==null?"n/a":country.get(position))+"\n"
+                        +"CITY: "+(city.get(position)==null?"n/a":city.get(position)));
 
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -147,6 +155,11 @@ public class FriendsActivity extends Fragment {
         });
 
         listView.setAdapter(adapter);
+    }
+
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        readData();
     }
 
     @Override

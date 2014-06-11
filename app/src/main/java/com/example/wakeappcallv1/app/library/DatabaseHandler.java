@@ -451,6 +451,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
+    public void setFriendAccepted(String owner, String to) {
+        String setQuery = "UPDATE TABLE " + TABLE_FRIENDSHIP + " SET "+KEY_FRIENDSHIP_ACCEPTED+"=1 WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"' AND "+ KEY_FRIENDSHIP_TO + " LIKE '"+to+"'" ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Log.e("QUERY", setQuery);
+
+        try {
+
+            db.execSQL(setQuery);
+
+        }
+        catch(android.database.sqlite.SQLiteException ex){
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * Storing friends details in database
      * */

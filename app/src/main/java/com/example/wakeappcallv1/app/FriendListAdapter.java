@@ -110,7 +110,6 @@ public class FriendListAdapter extends BaseAdapter {
         }
 
 
-
         try {
             File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
