@@ -88,34 +88,10 @@ public class AlarmChoiceActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(AlarmChoiceActivity.this, android.R.style.Theme_Holo_Dialog));
-                builder.setMessage(getString(R.string.share_confirm)).setTitle(getString(R.string.share));
-                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent shareIntent = new Intent();
-                        shareIntent.setAction(Intent.ACTION_SEND);
-                        String msg=getString(R.string.settings_share_text);
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, msg );
-                       /* Uri path = Uri.fromFile(new File("android.resource://"+ getApplicationContext().getPackageName()
-                                +"/" + R.drawable.logo_md));
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, path);
-                        shareIntent.setType("image/png");*/
-                        shareIntent.setType("text/plain");
 
-                        startActivity(shareIntent);
+                saveAlarm(0);  // mode 0 means "random"
 
-                        saveAlarm(0);  // mode 0 means "random"
 
-                    }
-                });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        saveAlarm(0);  // mode 0 means "random"
-
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
 
 
 
@@ -181,8 +157,7 @@ public class AlarmChoiceActivity extends Activity {
     JSONObject json;
     JSONArray jsonAlarms;
 
-
-    @Override
+        @Override
     protected Boolean doInBackground(Void... params) {
         // TODO: attempt authentication against a network service.
 
@@ -224,7 +199,6 @@ public class AlarmChoiceActivity extends Activity {
                     Log.e("JSObj TO UPDATE", json.toString());
 
 
-                    finish();
                 }else {
 
                     Log.e("FAIL:", res);
@@ -244,7 +218,6 @@ public class AlarmChoiceActivity extends Activity {
 
 
 
-        // TODO: register the new account here.
         return true;
     }
 
@@ -253,21 +226,53 @@ public class AlarmChoiceActivity extends Activity {
         mAddTask = null;
         showProgress(false);
         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
-        try {
-            Log.e("alarm_name_:",json.getJSONObject("alarm").getString("alarm_name"));
+
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(AlarmChoiceActivity.this, android.R.style.Theme_Holo_Dialog));
+            builder.setMessage(getString(R.string.share_confirm)).setTitle(getString(R.string.share));
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent shareIntent = new Intent();
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    String msg=getString(R.string.settings_share_text);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, msg );
+//                    Uri path = Uri.fromFile(new File("android.resource://"+ getApplicationContext().getPackageName()
+//                    +"/" + R.drawable.logo_md));
+//                    shareIntent.putExtra(Intent.EXTRA_STREAM, path);
+//                    shareIntent.setType("image/png");
+                    finish();
+                    shareIntent.setType("text/plain");
+
+                    startActivity(shareIntent);
+
+
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent AlarmList = new Intent(getApplicationContext(), AlarmListActivity.class);
+
+                    AlarmList.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(AlarmList);
+
+
+                    finish();
+
+
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+
+
             db.addOneAlarmLocal(json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        Intent AlarmList = new Intent(getApplicationContext(), AlarmListActivity.class);
-        AlarmList.putExtra("extra", "added");
 
-        AlarmList.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(AlarmList);
 
-        // Close Login Screen
-        finish();
+
+
 
     }
 
