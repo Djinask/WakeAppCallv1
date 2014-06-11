@@ -277,6 +277,13 @@ public class NotificationActivity extends Fragment {
 
         listNotif.removeAllViews(); // clear view before adding new notifications
 
+        /*if(IDs.length == 0) {
+            TextView tv = new TextView(owner.getApplicationContext());
+            tv.setText("No notifications.");
+            tv.setTextSize(16);
+            listNotif.addView(tv,params);
+        }*/
+
         for(int i=0; i<IDs.length; i++) {
             Log.e("notifica", IDs[i] + "," + names[i]);
             listNotif.addView(notif(notif_ids[i], names[i], IDs[i]), params);
@@ -402,9 +409,10 @@ public class NotificationActivity extends Fragment {
 
         @Override
         protected Object doInBackground(Object... arg0) {
-            for(int i=0; i<id.length; i++) {
-                JSONObject j = userFunction.setNotificationNotActive(id[i]);
-            }
+            if(id != null)
+                for(int i=0; i<id.length; i++) {
+                    JSONObject j = userFunction.setNotificationNotActive(id[i]);
+                }
             return null;
         }
 
@@ -453,6 +461,9 @@ public class NotificationActivity extends Fragment {
                         // set friendship accepted
                         //new setFriendAccepted(from_name, to_name).execute();
                         JSONObject j = userFunction.setFriendAccepted(from_id, to_id);
+
+                        // if I get a request and accept, add Friendship
+                        j = userFunction.addFriend(db.getUserDetails().get("mail"), from_id, to_id);
 
                         // get friend details
                         // new getFriendsDetails(to_id).execute();

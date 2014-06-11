@@ -7,15 +7,30 @@
     android:orientation="horizontal"
     android:focusable="false">
 
-
-    <com.example.wakeappcallv1.app.Classes.RoundedImageView
-
-        android:id="@+id/profile_pic"
+    <RelativeLayout
         android:layout_width="@dimen/rowHeight"
         android:layout_height="@dimen/rowHeight"
-        android:scaleType="fitXY"
-        android:src="@drawable/default_profile"
-        android:focusable="false"/>
+        android:background="@android:color/background_dark">
+
+        <com.example.wakeappcallv1.app.Classes.RoundedImageView
+
+            android:id="@+id/profile_pic"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_profile"
+            android:focusable="false"/>
+
+        <com.example.wakeappcallv1.app.Classes.RoundedImageView
+            android:id="@+id/blur"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:focusable="false"
+            android:background="#80ffffff"
+            android:visibility="visible"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"

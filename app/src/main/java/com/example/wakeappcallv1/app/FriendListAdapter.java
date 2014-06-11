@@ -99,10 +99,17 @@ public class FriendListAdapter extends BaseAdapter {
         friendMail.setText(mail);
 
         ImageView image = (ImageView) view.findViewById(R.id.accepted);
-        if (accepted.equals("1"))
+        ImageView blur_img = (ImageView) view.findViewById(R.id.blur);
+        if (accepted.equals("1")) {
             image.setVisibility(View.VISIBLE);
-        else
+            blur_img.setVisibility(View.INVISIBLE);
+        }
+        else {
             image.setVisibility(View.INVISIBLE);
+            blur_img.setVisibility(View.VISIBLE);
+        }
+
+
 
         try {
             File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
