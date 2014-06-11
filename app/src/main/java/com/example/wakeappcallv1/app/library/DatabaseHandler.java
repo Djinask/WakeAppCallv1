@@ -692,6 +692,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             // Move to first row
             while (cursor.moveToNext()) {
                 HashMap<String, String> HM = new HashMap<String, String>();
+                HM.put(KEY_TASK_ID, cursor.getString(cursor.getColumnIndex(KEY_TASK_ID)));
                 HM.put(KEY_TASK_UID, cursor.getString(cursor.getColumnIndex(KEY_TASK_UID)));
                 HM.put(KEY_TASK_ALARM_NAME, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_NAME)));
                 HM.put(KEY_TASK_ALARM_OWNER, cursor.getString(cursor.getColumnIndex(KEY_TASK_ALARM_OWNER)));

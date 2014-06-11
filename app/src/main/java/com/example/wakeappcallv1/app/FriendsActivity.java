@@ -72,30 +72,32 @@ public class FriendsActivity extends Fragment {
         // read details of friends from local DB (all row in the table are friends of current user)
         friends = db.getFriendsDetails();
         friendships = db.getFriendshipDetails(db.getUserDetails().get("uid"));
+        Log.i("FRIENDs DETAIL   ",friends.toString());
+        Log.i("FRIEANDSHIP DETAIL", friendships.toString());
 
         // array with friends details, will be used with adapter
-        ArrayList<String> names = new ArrayList<String>(friends.size());
-        ArrayList<String> UIDs = new ArrayList<String>(friends.size());
-        ArrayList<String> mail = new ArrayList<String>(friends.size());
+
+        final ArrayList<String> names = new ArrayList<String>(friends.size());
+        final ArrayList<String> UIDs = new ArrayList<String>(friends.size());
+        final ArrayList<String> mail = new ArrayList<String>(friends.size());
         final ArrayList<String> birthdate = new ArrayList<String>(friends.size());
         final ArrayList<String> country = new ArrayList<String>(friends.size());
         final ArrayList<String> city = new ArrayList<String>(friends.size());
         ArrayList<String> accepted = new ArrayList<String>(friendships.size());
+        if(!friends.isEmpty() && !friendships.isEmpty() && !names.isEmpty()) {
+            for (int i = 0; i < friends.size(); i++) {
+                names.add(friends.get(i).get("name"));
+                UIDs.add(friends.get(i).get("uid"));
+                mail.add(friends.get(i).get("email"));
+                birthdate.add(friends.get(i).get("birth_date"));
+                country.add(friends.get(i).get("country"));
+                city.add(friends.get(i).get("city"));
+            }
 
-        for(int i=0;i<friends.size();i++) {
-            names.add(friends.get(i).get("name"));
-            UIDs.add(friends.get(i).get("uid"));
-            mail.add(friends.get(i).get("email"));
-            birthdate.add(friends.get(i).get("birth_date"));
-            country.add(friends.get(i).get("country"));
-            city.add(friends.get(i).get("city"));
-        }
+            for (int i = 0; i < friendships.size(); i++) {
+                accepted.add(friendships.get(i).get("friendship_accepted"));
+            }
 
-        for(int i=0;i<friendships.size();i++) {
-            accepted.add(friendships.get(i).get("friendship_accepted"));
-        }
-
-        friends_details = new HashMap<String, ArrayList<String>>();
         friends_details.put("names",names);
         friends_details.put("UIDs",UIDs);
         friends_details.put("email",mail);
@@ -105,7 +107,7 @@ public class FriendsActivity extends Fragment {
         friends_details.put("city",city);
 
         adapter = new FriendListAdapter(getActivity(), friends_details);
-
+        }
         registerForContextMenu(listView);
 
         // click on the list item

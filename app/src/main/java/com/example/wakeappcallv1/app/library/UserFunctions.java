@@ -368,8 +368,9 @@ public class UserFunctions {
         JSONArray jsArr = new JSONArray();
 
         try {
-            jsArr = json.getJSONArray("notification");
 
+            jsArr = json.getJSONArray("notification");
+            if(jsArr.isNull(0))return null;
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -436,12 +436,9 @@ public class NotificationActivity extends Fragment {
                     case type_alarm_request:
 
                         userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_confirmation));
-
-                        Intent wakeSomeOnUp = new Intent(getActivity(), WakeSomeOneActivity.class);
-
-                        // Close all views before launching Dashboard
-                        wakeSomeOnUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(wakeSomeOnUp);
+                        Intent WakeSomeOne = new Intent(owner, WakeSomeOneActivity.class);
+                        WakeSomeOne.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(WakeSomeOne);
                         getActivity().finish();
                         break;
                 }
@@ -549,37 +546,5 @@ public class NotificationActivity extends Fragment {
         }
     }
 
-    // thread to set notifications seen
-    /*private class addNotification extends AsyncTask {
 
-        String id, from, to;
-        addNotification(String from, String to, String id) {
-            this.id = id;
-            this.from = from;
-            this.to = to;
-        }
-
-        @Override
-        protected Object doInBackground(Object... arg0) {
-            userFunction.addNotification(from, to, id);
-            return null;
-        }
-    }*/
-
-    // thread to set friendship accepted
-    /*private class setFriendAccepted extends AsyncTask {
-
-        String uid_from, uid_to;
-        setFriendAccepted(String uid_from, String uid_to) {
-            this.uid_from = uid_from;
-            this.uid_to = uid_to;
-        }
-
-        @Override
-        protected Object doInBackground(Object... arg0) {
-            JSONObject j=userFunction.setFriendAccepted(uid_from, uid_to);
-
-            return null;
-        }
-    }*/
 }

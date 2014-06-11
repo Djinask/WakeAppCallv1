@@ -6,13 +6,20 @@ package com.example.wakeappcallv1.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.UserFunctions;
+
+import org.json.JSONArray;
 
 public class HomeActivity extends Fragment {
 
@@ -20,6 +27,8 @@ public class HomeActivity extends Fragment {
     private Fragment me;
     private Button wakeMe ;
     private Button wakeSo;
+    UserFunctions f;
+    DatabaseHandler db;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,9 +50,12 @@ public class HomeActivity extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        f= new UserFunctions();
+        db= new DatabaseHandler(getActivity());
 
 
         wakeMe = (Button)owner.findViewById(R.id.wakeMe);
+        wakeSo = (Button)owner.findViewById(R.id.wakeSo);
 
 
 
@@ -52,24 +64,22 @@ public class HomeActivity extends Fragment {
 
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(owner, "WakeAppCall", Toast.LENGTH_LONG).show();
-
-
-
-
                 Intent AlarmActivity = new Intent(owner, AlarmListActivity.class);
                 AlarmActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(AlarmActivity);
+            }
+        });
+
+        wakeSo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
 
 
-
+                new updateTask().execute();
 
 
             }
-
-
         });
 
 
@@ -89,6 +99,38 @@ public class HomeActivity extends Fragment {
         owner = activity;
 
 
+    }
+
+    class updateTask extends AsyncTask {
+
+
+        updateTask() {
+
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+//            showProgress(true);
+
+            JSONArray jsonTasks = f.getTasks(db.getUserDetails().get("email"), db.getUserDetails().get("uid"));
+            Log.i("DA WAKESO JSON ARRAY", jsonTasks.toString());
+            db.addTaskLocal(jsonTasks);
+
+            Log.i("TASKS LOCAL :", db.getTasksDetail().toString());
+
+            Intent WakeSomeOne = new Intent(owner, WakeSomeOneActivity.class);
+            WakeSomeOne.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(WakeSomeOne);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+
+        }
     }
 
 

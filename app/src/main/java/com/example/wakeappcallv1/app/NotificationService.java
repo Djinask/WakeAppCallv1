@@ -105,8 +105,8 @@ public class NotificationService extends Service {
             userFunction = new UserFunctions();
             final DatabaseHandler db = new DatabaseHandler(getApplicationContext());
             JSONArray jsonNotif = userFunction.getNotification(db.getUserDetails().get("uid"));
-
-            if(jsonNotif!=null){
+    Log.e("############JSON ARRAY", String.valueOf(jsonNotif.isNull(0)));
+            if(!jsonNotif.isNull(0)){
                 IDs = new String[jsonNotif.length()];
                 from_ids = new String[jsonNotif.length()];
                 notif_ids = new String[jsonNotif.length()];
@@ -128,10 +128,13 @@ public class NotificationService extends Service {
                 // send data to UI (if active)
                 if(NotificationActivity.active)
                     sendMessageToUI();
-            }
+            }else {
 
+                return null;
+            }
             return null;
         }
+
     }
 
     private void showNotification(String id, String from) {

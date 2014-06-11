@@ -27,20 +27,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 public class WakeSomeOneActivity extends Activity {
-//
-//    HashMap<String, String> alarm;
-//
-    DatabaseHandler db;
-//    ArrayList<HashMap<String, String>> friends;
-//    ArrayList<HashMap<String, String>> friendships;
-//    Map<String,ArrayList<String>> friends_details;
-//    private AddAlarmTask mAddTask = null;
-//
+    private static final String KEY_TASK_ID = "task_id";
+    private static final String KEY_TASK_UID = "task_uid";
+    private static final String KEY_TASK_ALARM_NAME = "task_alarm_name";
+    private static final String KEY_TASK_ALARM_OWNER = "task_alarm_owner";
+    private static final String KEY_TASK_ALARM_OWNER_NAME = "task_alarm_owner_name";
+    private static final String KEY_TASK_ALARM_OWNER_FB_ID = "task_alarm_owner_fb_id";
+    private static final String KEY_TASK_ALARM_OWNER_MAIL = "task_alarm_owner_mail";
+    private static final String KEY_TASK_ALARM_OWNER_PHONE = "task_alarm_owner_phone";
+    private static final String KEY_TASK_SETTED_TIME = "task_alarm_setted_time";
+    private static final String KEY_TASK_ALARM_ACTIVE = "task_alarm_active";
+    private static final String KEY_TASK_CREATED_AT = "task_alarm_created_at";
 //    private static String KEY_SUCCESS = "success";
 //    private static String KEY_ERROR = "error";
 //    private static String KEY_ERROR_MSG = "error_msg";
@@ -49,10 +53,10 @@ public class WakeSomeOneActivity extends Activity {
 //
     WakeSomeOneAdapter adapter;
 //
-//
+    DatabaseHandler db;
     ProgressBar bar = null;
-//    String friendUid = null;
-//
+    HashMap<String,ArrayList<String>> task_details;
+
 //    int position;
 
     @Override
@@ -60,117 +64,79 @@ public class WakeSomeOneActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wake_someone_layout);
 
-
+        db=new DatabaseHandler(this);
+        task_details = new HashMap<String, ArrayList<String>>();
         final ListView listView = (ListView) findViewById(R.id.alarm_list_view);
         bar = (ProgressBar) findViewById(R.id.deleteProgress);
-
-        db = new DatabaseHandler(this);
+        UserFunctions f = new UserFunctions();
         String MyUid=db.getUserDetails().get("uid");
 
-//        Intent intent = getIntent();
-//        alarm = (HashMap<String, String>)intent.getSerializableExtra("extra");
-//        Log.v("alarmNAme", alarm.get("alarm_name"));
-//        Log.v("alarmNAme", alarm.get("alarm_setted_time"));
 
 
 
-//        alarm.put("alarm_owner", owner);
-//
-//        alarm.put("alarm_active", "1");
-//        alarm.put("alarm_mode","0");
-//        alarm.put("alarm_status","0");
-//
-//        alarm.put("alarm_list", "0");
-//        alarm.put("alarm_repeat", "0");
-//        alarm.put("alarm_play_after", "0");
-//        alarm.put("alarm_volume","50");
-//        alarm.put("alarm_ring_default","0");
-//
-//        // read details of friends from local DB (all row in the table are friends of current user)
-//        friends = db.getFriendsDetails(); // Arralyst<HashMap<String,String>>
-        //DEVO RECUPERARE LE PERSONE CHE VOGLIONO ESSERE SVEGLIATE DA ME
+        ArrayList<HashMap<String,String>> tasks= db.getTasksDetail();
 
 
-//
-//        // array with friends details, will be used with adapter
-//        final ArrayList<String> names = new ArrayList<String>(friends.size());
-//        final ArrayList<String> UIDs = new ArrayList<String>(friends.size());
-//        final ArrayList<String> mail = new ArrayList<String>(friends.size());
-//        final ArrayList<String> birthdate = new ArrayList<String>(friends.size());
-//        final ArrayList<String> country = new ArrayList<String>(friends.size());
-//        final ArrayList<String> city = new ArrayList<String>(friends.size());
-//
-//
-//        for(int i=0;i<friends.size();i++) {
-//            names.add(friends.get(i).get("name"));
-//            UIDs.add(friends.get(i).get("uid"));
-//            mail.add(friends.get(i).get("email"));
-//            birthdate.add(friends.get(i).get("birth_date"));
-//            country.add(friends.get(i).get("country"));
-//            city.add(friends.get(i).get("city"));
-//        }
-//
-//
-//
-//        friends_details = new HashMap<String, ArrayList<String>>();
-//        friends_details.put("names",names);
-//        friends_details.put("UIDs",UIDs);
-//        friends_details.put("email",mail);
-//        friends_details.put("birth_date",birthdate);
-//        friends_details.put("country",country);
-//        friends_details.put("city",city);
-//        Log.e("QUANTI SONO ?", friends.size()+" ");
-//
-       // adapter = new WakeSomeOneAdapter(this, "devo passare le richieste");
-//
-//        listView.setAdapter(adapter);
-//        // click on the list item
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, final int position, long l) {
-//
-//                // Create custom dialog object
-//                final Dialog dialog = new Dialog(WakeSomeOneActivity.this, android.R.style.Theme_Holo_Dialog);
-//                // Include dialog.xml file
-//                dialog.setContentView(R.layout.custom_dialog);
-//                // Set dialog title
-//
-//                dialog.setTitle("Search result:");
-//
-//
-//                // set values for custom dialog components - text, image and button
-//                TextView text = (TextView) dialog.findViewById(R.id.textDialog);
-//                Button ok = (Button) dialog.findViewById(R.id.ok);
-//                Button cancel = (Button) dialog.findViewById(R.id.cancel);
-//                ImageView image = (ImageView) dialog.findViewById(R.id.imageDialog);
-//
-//
-//                text.setText("Want you be woken up by "+ friends_details.get("names").get(position)+" ?\n");
-//                //image.setImageBitmap(user_image);
-//                ok.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//
-//                        // atempt request
-//                        saveAlarm(friends_details.get("UIDs").get(position));
-//                    }
-//                });
-//                cancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        bar.setVisibility(View.INVISIBLE);
-//                        dialog.cancel();
-//
-//                    }
-//                });
-//
-//                dialog.show();
-//
-//            }
-//        });
-//
-//        registerForContextMenu(listView);
+
+
+        // array with friends details, will be used with adapter
+        final ArrayList<String> ids = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmNames = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmOwners = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmOwnerNames = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmOwnerFbs = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmOwnerMails = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmOwnerPhones = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmSettedTimes = new ArrayList<String>(tasks.size());
+        final ArrayList<String> alarmActives = new ArrayList<String>(tasks.size());
+
+        final ArrayList<String> alarmCreatedAts = new ArrayList<String>(tasks.size());
+
+
+        for(int i=0;i<tasks.size();i++) {
+            ids.add(tasks.get(i).get(KEY_TASK_ID));
+
+            alarmNames.add(tasks.get(i).get(KEY_TASK_ALARM_NAME));
+            alarmOwners.add(tasks.get(i).get(KEY_TASK_ALARM_OWNER));
+            alarmOwnerNames.add(tasks.get(i).get(KEY_TASK_ALARM_OWNER_NAME));
+            alarmOwnerFbs.add(tasks.get(i).get(KEY_TASK_ALARM_OWNER_FB_ID));
+            alarmOwnerMails.add(tasks.get(i).get(KEY_TASK_ALARM_OWNER_MAIL));
+            alarmOwnerPhones.add(tasks.get(i).get(KEY_TASK_ALARM_OWNER_PHONE));
+            alarmSettedTimes.add(tasks.get(i).get(KEY_TASK_SETTED_TIME));
+            alarmCreatedAts.add(tasks.get(i).get(KEY_TASK_CREATED_AT));
+            alarmActives.add(tasks.get(i).get(KEY_TASK_ALARM_ACTIVE));
+
+
+
+
+        }
+        if(!alarmNames.isEmpty()){
+    task_details.put("task_id", ids);
+    task_details.put("task_alarm_name", alarmNames);
+    task_details.put("task_alarm_owner", alarmOwners);
+    task_details.put("task_alarm_owner_name", alarmOwnerNames);
+    task_details.put("task_alarm_owner_fb_id", alarmOwnerFbs);
+    task_details.put("task_alarm_owner_mail", alarmOwnerMails);
+    task_details.put("task_alarm_owner_phone", alarmOwnerPhones);
+    task_details.put("task_alarm_setted_time", alarmSettedTimes);
+    task_details.put("task_alarm_created_at", alarmCreatedAts);
+    task_details.put("task_alarm_active", alarmActives);
+    Log.i("TASK DETAIL FROM WAKSO", task_details.toString());
+
+
+    adapter = new WakeSomeOneAdapter(this, task_details);
+}
+        registerForContextMenu(listView);  // non so a cosa serva
+        listView.setAdapter(adapter);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+            }
+        });
+
     }
 
 

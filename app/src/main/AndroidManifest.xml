@@ -85,8 +85,8 @@
             android:label="@string/title_activity_someone_special" >
         </activity>
         <activity
-            android:name="com.example.wakeappcallv1.app.FriendSpecialAdapter"
-            android:label="@string/title_activity_friend_special_adapter" >
+            android:name="com.example.wakeappcallv1.app.WakeSomeOneActivity"
+            android:label="WaKeSomeOneActivity" >
         </activity>
     </application>
 
@@ -98,6 +98,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

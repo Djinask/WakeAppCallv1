@@ -111,8 +111,6 @@ public class FriendListAdapter extends BaseAdapter {
 
 
 
-        CheckBox accept = (CheckBox) view.findViewById(R.id.accepted);
-//        accept.setChecked(friends_details.get("accepted").get(position).equals("1"));
 
 
         return view;

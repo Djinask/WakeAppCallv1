@@ -459,6 +459,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
 
                             jsonTasks = userFunction.getTasks(mEmail, json.getString("uid"));
+                            Log.i("TASK DAL LOGIN", jsonTasks.toString());
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -603,6 +604,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
                             jsonFriendsDetails = userFunction.getFriendsDetails(mEmail, json.getString("uid"));
                             jsonTasks = userFunction.getTasks(mEmail, json.getString("uid"));
+                            Log.i("TASK DAL LOGIN", jsonTasks.toString());
 
 
                         } catch (JSONException e) {

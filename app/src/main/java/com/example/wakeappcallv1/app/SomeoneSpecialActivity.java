@@ -157,7 +157,7 @@ public class SomeoneSpecialActivity extends Activity {
                     @Override
                     public void onClick(View view) {
                         bar.setVisibility(View.INVISIBLE);
-                        dialog.cancel();
+                        dialog.dismiss();
 
                     }
                 });
