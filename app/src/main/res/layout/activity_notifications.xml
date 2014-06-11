@@ -5,9 +5,20 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_dark">
 
+    <ProgressBar
+        android:id="@+id/notifProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateBehavior="cycle"
+        android:indeterminate="true"
+        android:focusable="false"
+        android:visibility="invisible"/>
+
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/notifLayout"
@@ -17,4 +28,14 @@
         </LinearLayout>
 
     </ScrollView>
+
+
+    <ImageButton
+        android:id="@+id/deleteAllNotif"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="10"
+        android:background="@android:color/background_dark"
+        android:src="@android:drawable/ic_menu_delete"/>
+
 </LinearLayout>
