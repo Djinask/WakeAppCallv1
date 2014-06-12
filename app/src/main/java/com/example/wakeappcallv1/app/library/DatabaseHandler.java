@@ -185,8 +185,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             db.execSQL(CREATE_FRIENDS_DETAILS_TABLE);
 
         }catch(android.database.sqlite.SQLiteException ex){
-        ex.printStackTrace();
-    }
+            ex.printStackTrace();
+        }
     }
 
     // Upgrading database
@@ -244,19 +244,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_ALARM_NAME, jsonArray.getJSONObject(i).getString(KEY_ALARM_NAME)); // Name
                 values.put(KEY_ALARM_UID, jsonArray.getJSONObject(i).getString(KEY_ALARM_UID)); // id
 
-        values.put(KEY_ALARM_OWNER, jsonArray.getJSONObject(i).getString(KEY_ALARM_OWNER)); // owner
-        values.put(KEY_ALARM_SETTED_TIME, jsonArray.getJSONObject(i).getString(KEY_ALARM_SETTED_TIME)); // time
-        values.put(KEY_ALARM_MODE, jsonArray.getJSONObject(i).getString(KEY_ALARM_MODE)); // mode
-        values.put(KEY_ALARM_STATUS, jsonArray.getJSONObject(i).getString(KEY_ALARM_STATUS)); // status
-        values.put(KEY_ALARM_ACTIVE,jsonArray.getJSONObject(i).getString(KEY_ALARM_ACTIVE) ); //active
-        values.put(KEY_ALARM_SPECIAL, jsonArray.getJSONObject(i).getString(KEY_ALARM_SPECIAL)); // special
-        values.put(KEY_ALARM_LIST, jsonArray.getJSONObject(i).getString(KEY_ALARM_LIST)); //  list
-        values.put(KEY_ALARM_REPEAT, jsonArray.getJSONObject(i).getString(KEY_ALARM_REPEAT)); // repeat
-        values.put(KEY_ALARM_PLAY_AFTER, jsonArray.getJSONObject(i).getString(KEY_ALARM_PLAY_AFTER)); // play_after
-        values.put(KEY_ALARM_VOLUME, jsonArray.getJSONObject(i).getString(KEY_ALARM_VOLUME)); // Volume
-        values.put(KEY_ALARM_RING_DEFAULT, jsonArray.getJSONObject(i).getString(KEY_ALARM_RING_DEFAULT)); // default ring
-        values.put(KEY_ALARM_CREATED_AT, jsonArray.getJSONObject(i).getString(KEY_ALARM_CREATED_AT)); // Created At
-        values.put(KEY_ALARM_UPDATED_AT, jsonArray.getJSONObject(i).getString(KEY_ALARM_UPDATED_AT)); // Updated At
+                values.put(KEY_ALARM_OWNER, jsonArray.getJSONObject(i).getString(KEY_ALARM_OWNER)); // owner
+                values.put(KEY_ALARM_SETTED_TIME, jsonArray.getJSONObject(i).getString(KEY_ALARM_SETTED_TIME)); // time
+                values.put(KEY_ALARM_MODE, jsonArray.getJSONObject(i).getString(KEY_ALARM_MODE)); // mode
+                values.put(KEY_ALARM_STATUS, jsonArray.getJSONObject(i).getString(KEY_ALARM_STATUS)); // status
+                values.put(KEY_ALARM_ACTIVE,jsonArray.getJSONObject(i).getString(KEY_ALARM_ACTIVE) ); //active
+                values.put(KEY_ALARM_SPECIAL, jsonArray.getJSONObject(i).getString(KEY_ALARM_SPECIAL)); // special
+                values.put(KEY_ALARM_LIST, jsonArray.getJSONObject(i).getString(KEY_ALARM_LIST)); //  list
+                values.put(KEY_ALARM_REPEAT, jsonArray.getJSONObject(i).getString(KEY_ALARM_REPEAT)); // repeat
+                values.put(KEY_ALARM_PLAY_AFTER, jsonArray.getJSONObject(i).getString(KEY_ALARM_PLAY_AFTER)); // play_after
+                values.put(KEY_ALARM_VOLUME, jsonArray.getJSONObject(i).getString(KEY_ALARM_VOLUME)); // Volume
+                values.put(KEY_ALARM_RING_DEFAULT, jsonArray.getJSONObject(i).getString(KEY_ALARM_RING_DEFAULT)); // default ring
+                values.put(KEY_ALARM_CREATED_AT, jsonArray.getJSONObject(i).getString(KEY_ALARM_CREATED_AT)); // Created At
+                values.put(KEY_ALARM_UPDATED_AT, jsonArray.getJSONObject(i).getString(KEY_ALARM_UPDATED_AT)); // Updated At
 
                 // Inserting Row
                 db.insert(TABLE_ALARM, null, values);
@@ -264,7 +264,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
 
-        }}catch(android.database.sqlite.SQLiteException ex){
+            }}catch(android.database.sqlite.SQLiteException ex){
             ex.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -284,31 +284,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
 
-                ContentValues values = new ContentValues();
-                values.put(KEY_ALARM_NAME, jo.getJSONObject("alarm").getString(KEY_ALARM_NAME)); // Name
-                values.put(KEY_ALARM_UID, jo.getString(KEY_ALARM_UID)); // id
+            ContentValues values = new ContentValues();
+            values.put(KEY_ALARM_NAME, jo.getJSONObject("alarm").getString(KEY_ALARM_NAME)); // Name
+            values.put(KEY_ALARM_UID, jo.getString(KEY_ALARM_UID)); // id
 
-                values.put(KEY_ALARM_OWNER, jo.getJSONObject("alarm").getString(KEY_ALARM_OWNER)); // owner
-                values.put(KEY_ALARM_SETTED_TIME, jo.getJSONObject("alarm").getString(KEY_ALARM_SETTED_TIME)); // time
-                values.put(KEY_ALARM_MODE, jo.getJSONObject("alarm").getString(KEY_ALARM_MODE)); // mode
-                values.put(KEY_ALARM_STATUS, jo.getJSONObject("alarm").getString(KEY_ALARM_STATUS)); // status
-                values.put(KEY_ALARM_ACTIVE, jo.getJSONObject("alarm").getString(KEY_ALARM_ACTIVE)); //active
-                values.put(KEY_ALARM_SPECIAL, jo.getJSONObject("alarm").getString(KEY_ALARM_SPECIAL)); // special
-                values.put(KEY_ALARM_LIST, jo.getJSONObject("alarm").getString(KEY_ALARM_LIST)); //  list
-                values.put(KEY_ALARM_REPEAT, jo.getJSONObject("alarm").getString(KEY_ALARM_REPEAT)); // repeat
-                values.put(KEY_ALARM_PLAY_AFTER, jo.getJSONObject("alarm").getString(KEY_ALARM_PLAY_AFTER)); // play_after
-                values.put(KEY_ALARM_VOLUME, jo.getJSONObject("alarm").getString(KEY_ALARM_VOLUME)); // Volume
-                values.put(KEY_ALARM_RING_DEFAULT, jo.getJSONObject("alarm").getString(KEY_ALARM_RING_DEFAULT)); // default ring
-                values.put(KEY_ALARM_CREATED_AT, jo.getJSONObject("alarm").getString(KEY_ALARM_CREATED_AT)); // Created At
-                values.put(KEY_ALARM_UPDATED_AT, jo.getJSONObject("alarm").getString(KEY_ALARM_UPDATED_AT)); // Updated At
+            values.put(KEY_ALARM_OWNER, jo.getJSONObject("alarm").getString(KEY_ALARM_OWNER)); // owner
+            values.put(KEY_ALARM_SETTED_TIME, jo.getJSONObject("alarm").getString(KEY_ALARM_SETTED_TIME)); // time
+            values.put(KEY_ALARM_MODE, jo.getJSONObject("alarm").getString(KEY_ALARM_MODE)); // mode
+            values.put(KEY_ALARM_STATUS, jo.getJSONObject("alarm").getString(KEY_ALARM_STATUS)); // status
+            values.put(KEY_ALARM_ACTIVE, jo.getJSONObject("alarm").getString(KEY_ALARM_ACTIVE)); //active
+            values.put(KEY_ALARM_SPECIAL, jo.getJSONObject("alarm").getString(KEY_ALARM_SPECIAL)); // special
+            values.put(KEY_ALARM_LIST, jo.getJSONObject("alarm").getString(KEY_ALARM_LIST)); //  list
+            values.put(KEY_ALARM_REPEAT, jo.getJSONObject("alarm").getString(KEY_ALARM_REPEAT)); // repeat
+            values.put(KEY_ALARM_PLAY_AFTER, jo.getJSONObject("alarm").getString(KEY_ALARM_PLAY_AFTER)); // play_after
+            values.put(KEY_ALARM_VOLUME, jo.getJSONObject("alarm").getString(KEY_ALARM_VOLUME)); // Volume
+            values.put(KEY_ALARM_RING_DEFAULT, jo.getJSONObject("alarm").getString(KEY_ALARM_RING_DEFAULT)); // default ring
+            values.put(KEY_ALARM_CREATED_AT, jo.getJSONObject("alarm").getString(KEY_ALARM_CREATED_AT)); // Created At
+            values.put(KEY_ALARM_UPDATED_AT, jo.getJSONObject("alarm").getString(KEY_ALARM_UPDATED_AT)); // Updated At
 
-                // Inserting Row
-                db.insert(TABLE_ALARM, null, values);
-
-
+            // Inserting Row
+            db.insert(TABLE_ALARM, null, values);
 
 
-            }catch(android.database.sqlite.SQLiteException ex){
+
+
+        }catch(android.database.sqlite.SQLiteException ex){
             ex.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -505,7 +505,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      * */
     public ArrayList<HashMap<String,String>> getFriendshipDetails(String owner){
         ArrayList<HashMap<String,String>> friendship = new ArrayList<HashMap<String, String>>();
-        String selectQuery = "SELECT  * FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"'" ;
+        //String selectQuery = "SELECT  * FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"'" ;
+        String selectQuery = "SELECT  * FROM " + TABLE_FRIENDSHIP + " WHERE ("+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"' AND "+KEY_FRIENDSHIP_ACTIVE+"=1) OR ("+KEY_FRIENDSHIP_TO+" LIKE '"+owner+"' AND "+KEY_FRIENDSHIP_ACCEPTED+"=1 AND "+KEY_FRIENDSHIP_ACTIVE+"=1)";
+
         Log.i("query", selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -544,7 +546,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             db.execSQL(delQuery);
 
-            }
+        }
         catch(android.database.sqlite.SQLiteException ex){
             ex.printStackTrace();
         }

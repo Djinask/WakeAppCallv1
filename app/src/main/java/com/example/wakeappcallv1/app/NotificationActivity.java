@@ -58,8 +58,12 @@ public class NotificationActivity extends Fragment {
     private final int type_friend_request = 1;
     private final int type_friend_confirmation = 2;
     private final int type_alarm_request = 3;
-    private final int type_alarm_confirmation = 4;
-    private final int type_alarm_denial = 5;
+    private final int type_alarm_confirmation_record = 4;
+    private final int type_alarm_confirmation_call = 5;
+    private final int type_alarm_denial = 6;
+    private final int type_task_confirmation = 7;
+    private final int type_task_alert_before = 8;
+    private final int type_task_alert_now = 9;
 
     public static String[] events = {" wants to add you to his/her friends",
             " accepted your friend request",
@@ -67,7 +71,16 @@ public class NotificationActivity extends Fragment {
             " has confirmed to wake you up for the Alarm ",
             " can't wake you up for the Alarm "};
 
-    public static String[] titles = {"Friend request", "Friend accepted", "Alarm request", "Alarm confirmed", "Alarm deny"};
+    public static String[] titles = {"Friend request",
+            "Friend accepted",
+            "Alarm request",
+            "Alarm confirmed record",
+            "Alarm confirmed call",
+            "Alarm deny",
+            "Task confirmation",
+            "Task alert before",
+            "Task alert now"
+    };
 
     UserFunctions userFunction;
 
@@ -106,7 +119,6 @@ public class NotificationActivity extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -134,7 +146,7 @@ public class NotificationActivity extends Fragment {
             public void onClick(View view) {
                 if(notif_ids != null)
                     bar.setVisibility(View.VISIBLE);
-                    new setNotificationNotActiveSeen(notif_ids).execute();
+                new setNotificationNotActiveSeen(notif_ids).execute();
             }
         });
 
@@ -159,7 +171,6 @@ public class NotificationActivity extends Fragment {
 
                         // get user details
                         new getFriendsDetails(names, 1).execute();
-                        createGUI(notif_ids, IDs, names);
                     }
                     break;
                 default:
@@ -310,6 +321,7 @@ public class NotificationActivity extends Fragment {
         TextView event = new TextView(owner.getApplicationContext());
         Button ok = new Button(owner.getApplicationContext());
         Button no = new Button(owner.getApplicationContext());
+        ImageButton del = new ImageButton(owner.getApplicationContext());
 
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -373,6 +385,19 @@ public class NotificationActivity extends Fragment {
             }
         });
 
+        del.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        del.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mLinLay.setVisibility(View.GONE);
+
+                new acceptNotif(false, db, from_id, to_id, num_notif, id).execute();
+            }
+        });
+
         layoutText.addView(sender);
         layoutText.addView(event);
 
@@ -383,8 +408,11 @@ public class NotificationActivity extends Fragment {
         if(num_notif == 1 || num_notif == 3) {
             layoutButton.addView(ok);
             layoutButton.addView(no);
-            mLinLay.addView(layoutButton, param);
         }
+        else {
+            layoutButton.addView(del);
+        }
+        mLinLay.addView(layoutButton, param);
 
         View v = new View(owner.getApplicationContext());
         v.setLayoutParams(new LinearLayout.LayoutParams(
@@ -490,7 +518,8 @@ public class NotificationActivity extends Fragment {
 
                     case type_alarm_request:
 
-                        userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_confirmation));
+                        //userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_confirmation));
+
                         Intent WakeSomeOne = new Intent(owner, WakeSomeOneActivity.class);
                         WakeSomeOne.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(WakeSomeOne);
@@ -503,8 +532,8 @@ public class NotificationActivity extends Fragment {
                     userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_denial));
             }
 
-            userFunction.setNotificationNotActive(notif_id);
-            userFunction.setNotificationSeen(notif_id);
+            /*userFunction.setNotificationNotActive(notif_id);
+            userFunction.setNotificationSeen(notif_id);*/
 
             // create array to pass to function
             String[] id_notif = new String[1];
@@ -564,7 +593,6 @@ public class NotificationActivity extends Fragment {
         }
     }
 
-    // thread to set friendship accepted
     private class getFriendsDetails extends AsyncTask {
 
         String[] uid;
@@ -611,25 +639,30 @@ public class NotificationActivity extends Fragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
 
+            // search friends details when called by service
+            if(code == 1)
+            {
+                createGUI(notif_ids, IDs, names);
+            }
+
+            // search friends details when accept friend request
             if(code == 2)
             {
                 DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
                 ArrayList<HashMap<String, String>> friends  = db.getFriendsDetails();
                 Boolean trovato = false;
                 for(int i=0;i<friends.size();i++){
-//                    Log.e("amici=",friends.get(i).get("email")+" == "+user.get("email"));
-                    if(friends.get(i).get("email").equals(user.get("email")))trovato = true;
-
+                    if(friends.get(i).get("email").equals(user.get("email")))
+                        trovato = true;
                 }
                 // adds friend details
                 if(!trovato) {
-                db.addOneFriendDetailsLocal(user);
-            }
+                    db.addOneFriendDetailsLocal(user);
+                }
             }
 
             bar.setVisibility(View.INVISIBLE);
         }
     }
-
 
 }

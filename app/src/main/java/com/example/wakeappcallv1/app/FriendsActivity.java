@@ -99,19 +99,15 @@ public class FriendsActivity extends Fragment {
                 city.add(friends.get(i).get("city"));
 
                 // look for corresponding friendship request
-                /*for(int j=0; j<friendships.size(); j++) {
-                    if(friendships.get(j).get("friendship_to").equals(UIDs.get(i))) {
+                for(int j=0; j<friendships.size(); j++) {
+                    if(friendships.get(j).get("friendship_to").equals(UIDs.get(i)) || friendships.get(j).get("friendship_owner").equals(UIDs.get(i))) {
                         accepted.add(friendships.get(j).get("friendship_accepted"));
                         break;
                     }
-                }*/
+                }
             }
 
-            for (int i=0;i<friendships.size();i++) {
-                accepted.add(friendships.get(i).get("friendship_accepted"));
-            }
-
-            /*for (int i = 0; i < friendships.size(); i++) {
+            /*for (int i=0;i<friendships.size();i++) {
                 accepted.add(friendships.get(i).get("friendship_accepted"));
             }*/
 
@@ -316,10 +312,8 @@ public class FriendsActivity extends Fragment {
     }
 
 
-
-
-
-
-
-
 }
+
+
+
+
