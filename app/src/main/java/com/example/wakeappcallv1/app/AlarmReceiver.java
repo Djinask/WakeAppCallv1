@@ -71,6 +71,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         play(Context c) {
             this.amanager = (AudioManager) c.getSystemService(context.AUDIO_SERVICE);
+            this.context=c;
 
 
         }
@@ -79,15 +80,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         protected Object doInBackground(Object... arg0) {
             MediaPlayer mediaPlayer= new MediaPlayer();
 
-            String url="http://wakeappcall.net63.net:8080/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
-            Uri uri =  Uri.parse(url);
+
 
             try {
 
                 int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
                 amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
-
-
+                String url="http://wakeappcall.net63.net/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
+                Uri uri =  Uri.parse(url);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
 
                 mediaPlayer.setDataSource(context,uri);
