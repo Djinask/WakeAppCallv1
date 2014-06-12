@@ -617,7 +617,8 @@ public class NotificationActivity extends Fragment {
                 ArrayList<HashMap<String, String>> friends  = db.getFriendsDetails();
                 Boolean trovato = false;
                 for(int i=0;i<friends.size();i++){
-                    if(friends.get(i).get("email")==user.get("email"))trovato = true;
+//                    Log.e("amici=",friends.get(i).get("email")+" == "+user.get("email"));
+                    if(friends.get(i).get("email").equals(user.get("email")))trovato = true;
 
                 }
                 // adds friend details
