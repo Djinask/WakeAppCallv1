@@ -1,44 +1,32 @@
 package com.example.wakeappcallv1.app;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wakeappcallv1.app.Classes.RoundedImageView;
 import com.example.wakeappcallv1.app.library.DatabaseHandler;
 import com.example.wakeappcallv1.app.library.UserFunctions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Luca Marconcini on 03/06/14.
@@ -61,11 +49,12 @@ public class WakeSomeOneAdapter extends BaseAdapter{
     private Context context;
     HashMap<String,ArrayList<String>> task_details = new HashMap<String,ArrayList<String>>();
     private int position;
-    public WakeSomeOneAdapter(){}
+    String myUid;
 
-    public WakeSomeOneAdapter(Context context, HashMap<String,ArrayList<String>> tasks) {
+    public WakeSomeOneAdapter(Context context, HashMap<String,ArrayList<String>> tasks, String myUid) {
         this.context = context;
         this.task_details = tasks;
+        this.myUid = myUid;
     }
 
     @Override
@@ -213,8 +202,23 @@ public class WakeSomeOneAdapter extends BaseAdapter{
 
         no.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
+
+                // start normal thread due to no UI interaction
+                Runnable r = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        UserFunctions userFunction = new UserFunctions();
+                        String code = String.valueOf(NotificationActivity.type_alarm_denial);
+                        JSONObject j = userFunction.addNotification(myUid, alarmOwner, code);
+                    }
+                };
+
+                Thread t = new Thread(r);
+                t.start();
             }
         });
 

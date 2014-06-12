@@ -55,15 +55,15 @@ import java.util.Map;
 public class NotificationActivity extends Fragment {
 
     // values used to know what kind of notification we read from DB
-    private final int type_friend_request = 1;
-    private final int type_friend_confirmation = 2;
-    private final int type_alarm_request = 3;
-    private final int type_alarm_confirmation_record = 4;
-    private final int type_alarm_confirmation_call = 5;
-    private final int type_alarm_denial = 6;
-    private final int type_task_confirmation = 7;
-    private final int type_task_alert_before = 8;
-    private final int type_task_alert_now = 9;
+    public static final int type_friend_request = 1;
+    public static final int type_friend_confirmation = 2;
+    public static final int type_alarm_request = 3;
+    public static final int type_alarm_confirmation_record = 4;
+    public static final int type_alarm_confirmation_call = 5;
+    public static final int type_alarm_denial = 6;
+    public static final int type_task_confirmation = 7;
+    public static final int type_task_alert_before = 8;
+    public static final int type_task_alert_now = 9;
 
     public static String[] events = {" wants to add you to his/her friends",
             " accepted your friend request",
