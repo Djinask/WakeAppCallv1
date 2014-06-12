@@ -324,6 +324,10 @@ public class SomeoneSpecialActivity extends Activity {
 //                         * call broadcost reciver
 //                         */
                 Intent alarmIntent = new Intent(getApplication(), AlarmReceiver.class);
+                alarmIntent.putExtra("owner",alarm.get("alarm_owner"));
+                alarmIntent.putExtra("to",alarm.get("alarm_special"));
+                alarmIntent.putExtra("time",alarm.get("alarm_setted_time"));
+
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Log.e("SETTED TIME",alarm.get("alarm_setted_time"));

@@ -27,7 +27,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -188,11 +190,15 @@ public class WakeSomeOneAdapter extends BaseAdapter{
                     public void onClick(View view) {
                         DatabaseHandler db = new DatabaseHandler(context);
                         String from = db.getUserDetails().get("uid");
-                        String fileName = alarmId+"."+from+"-"+alarmOwner;
+                        //String fileName = alarmId+"."+from+"-"+alarmOwner;
+
+
+                        String fileName = from+"-"+alarmOwner+"-"+alarmSettedTime;
 
                         Intent Record = new Intent(context, RecordActivity.class);
                         Record.putExtra("fileName", fileName);
                         Record.putExtra("owner", alarmOwner);
+                        Record.putExtra("id",alarmId);
 
                         // Close all views before launching Dashboard
                         Record.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

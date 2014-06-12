@@ -345,15 +345,15 @@ public class RecordActivity extends Activity {
 
                             Toast.makeText(getApplicationContext(), "File Upload Complete.", Toast.LENGTH_SHORT).show();
 
-                            // mFileName
-                            // salva path sul server ?
-
                         }
                     });
 
                     // add accepted notification (record)
                     UserFunctions userFunctions = new UserFunctions();
                     DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+
+                    userFunctions.addAlarmPath(getIntent().getStringExtra("id"), getIntent().getStringExtra(mFileName));
+
                     userFunctions.addNotification(db.getUserDetails().get("uid"), getIntent().getStringExtra("owner"), String.valueOf(NotificationActivity.type_alarm_confirmation_record));
                 }
 
