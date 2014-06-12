@@ -253,7 +253,7 @@ public class UserFunctions {
     }
 
 
-     public JSONArray getFriends(String email, String friend_owner){
+    public JSONArray getFriends(String email, String friend_owner){
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", get_friends_tag));
@@ -411,8 +411,8 @@ public class UserFunctions {
             if (!json.getString("error").equals("1")){
 
                 jsArr = json.getJSONArray("notification");
-            if (jsArr.isNull(0)) return null;
-        }
+                if (jsArr.isNull(0)) return null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -445,6 +445,46 @@ public class UserFunctions {
         // return json
         return json;
     }
+
+    public JSONObject addAlarmPath(String alarm_uid, String alarm_path) {
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", "add_alarm_path"));
+        params.add(new BasicNameValuePair("alarm_uid", alarm_uid));
+        params.add(new BasicNameValuePair("alarm_path", alarm_path));
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
+
+    public JSONArray getAlarmPath(String alarm_uid){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", "get_alarm_path"));
+        params.add(new BasicNameValuePair("alarm_uid", alarm_uid));
+
+
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        JSONArray jsArr = new JSONArray();
+
+        try {
+            if (!json.getString("error").equals("1")){
+
+                jsArr = json.getJSONArray("alarm_path");
+                if (jsArr.isNull(0)) return null;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsArr;
+    }
+
 
     /**
      * Function get Login status
