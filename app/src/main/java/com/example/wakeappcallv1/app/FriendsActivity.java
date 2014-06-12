@@ -49,6 +49,8 @@ public class FriendsActivity extends Fragment {
     ProgressBar bar = null;
     String friendUid = null;
 
+    private Boolean active = true;
+
     ListView listView;
     Button addFriend;
 
@@ -61,6 +63,17 @@ public class FriendsActivity extends Fragment {
         super.onCreate(savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_friends, container, false);
         return rootView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            active = true;
+            // check new friends
+        }
+        else {
+        }
     }
 
     public void readData() {

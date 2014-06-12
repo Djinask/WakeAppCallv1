@@ -23,6 +23,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.wakeappcallv1.app.library.DatabaseHandler;
+import com.example.wakeappcallv1.app.library.UserFunctions;
+
 import org.json.JSONArray;
 
 import java.io.DataOutputStream;
@@ -341,10 +344,17 @@ public class RecordActivity extends Activity {
                         public void run() {
 
                             Toast.makeText(getApplicationContext(), "File Upload Complete.", Toast.LENGTH_SHORT).show();
+
+                            // mFileName
+                            // salva path sul server ?
+
                         }
                     });
 
-
+                    // add accepted notification (record)
+                    UserFunctions userFunctions = new UserFunctions();
+                    DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+                    userFunctions.addNotification(db.getUserDetails().get("uid"), getIntent().getStringExtra("owner"), String.valueOf(NotificationActivity.type_alarm_confirmation_record));
                 }
 
                 //close the streams //

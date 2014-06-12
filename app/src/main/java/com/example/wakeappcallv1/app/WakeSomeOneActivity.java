@@ -69,7 +69,7 @@ public class WakeSomeOneActivity extends Activity {
         final ListView listView = (ListView) findViewById(R.id.alarm_list_view);
         bar = (ProgressBar) findViewById(R.id.deleteProgress);
         UserFunctions f = new UserFunctions();
-        String MyUid=db.getUserDetails().get("uid");
+        String myUid=db.getUserDetails().get("uid");
 
 
 
@@ -124,7 +124,7 @@ public class WakeSomeOneActivity extends Activity {
     Log.i("TASK DETAIL FROM WAKSO", task_details.toString());
 
 
-    adapter = new WakeSomeOneAdapter(this, task_details);
+    adapter = new WakeSomeOneAdapter(this, task_details, myUid);
 }
         registerForContextMenu(listView);  // non so a cosa serva
         listView.setAdapter(adapter);
