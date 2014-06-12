@@ -82,6 +82,8 @@ public class AddFriendsActivity extends Activity {
     private Button addFb;
     private static final int PICK_FRIENDS_ACTIVITY = 1;
 
+    Map<String, String> user;
+
     //Map<String, String> user;
     //String uid_friend;
 
@@ -101,7 +103,7 @@ public class AddFriendsActivity extends Activity {
         setContentView(R.layout.activity_add_friends);
 
         // array with user details
-        //user = new HashMap<String, String>();
+        user = new HashMap<String, String>();
 
 
         Button addName = (Button) findViewById(R.id.addFriendByName);
@@ -342,18 +344,16 @@ public class AddFriendsActivity extends Activity {
                 email = jsonSearch.getString("email");
                 friendUid = jsonSearch.getString("unique_id");
 
-                /*user.put("uid",friendUid);
-                user.put("name",name);
-                user.put("email",email);
-                user.put("phone",jsonSearch.getString("phone"));
-                user.put("birth_date",jsonSearch.getString("birth_date"));
-                user.put("country",jsonSearch.getString("country"));
-                user.put("city",jsonSearch.getString("city"));
-                user.put("img_path", jsonSearch.getString("image_path"));
+                user.put("uid", friendUid);
+                user.put("name", name);
+                user.put("email", email);
+                user.put("phone", jsonSearch.getString("phone"));
+                user.put("birth_date", jsonSearch.getString("birth_date"));
+                user.put("country", jsonSearch.getString("country"));
+                user.put("city", jsonSearch.getString("city"));
+                user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/" + friendUid + ".jpg");
                 user.put("created_at", jsonSearch.getString("created_at"));
-                user.put("updated_at",jsonSearch.getString("updated_at"));*/
-
-
+                user.put("updated_at", jsonSearch.getString("updated_at"));
 
             }
             catch (JSONException err)
@@ -480,24 +480,6 @@ public class AddFriendsActivity extends Activity {
                 db.addOneFriendLocal(jsonAdd);
 
                 // add friends details locally
-                Map<String, String> user = new HashMap<String, String>();
-                JSONObject jsonSearch = userFunction.getUserDetails(toUid);
-                try {
-                    user.put("uid", jsonSearch.getString("uid"));
-                    user.put("name", jsonSearch.getString("name"));
-                    user.put("email", jsonSearch.getString("email"));
-                    user.put("phone", jsonSearch.getString("phone"));
-                    user.put("birth_date", jsonSearch.getString("birth_date"));
-                    user.put("country", jsonSearch.getString("country"));
-                    user.put("city", jsonSearch.getString("city"));
-                    user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/" + toUid + ".jpg");
-                    user.put("created_at", jsonSearch.getString("created_at"));
-                    user.put("updated_at", jsonSearch.getString("updated_at"));
-
-                } catch (JSONException err) {
-                    Log.e("JSON error: ", err.toString());
-                }
-
                 db.addOneFriendDetailsLocal(user);
 
                 // send notification

@@ -4,6 +4,7 @@ package com.example.wakeappcallv1.app;
  * Created by Andrea on 21/05/2014.
  */
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -132,7 +133,7 @@ public class NotificationActivity extends Fragment {
             public void onClick(View view) {
                 if(notif_ids != null)
                     bar.setVisibility(View.VISIBLE);
-                    new setNotificationNotActive(notif_ids).execute();
+                    new setNotificationNotActiveSeen(notif_ids).execute();
             }
         });
 
@@ -154,7 +155,6 @@ public class NotificationActivity extends Fragment {
                     notif_ids = msg.getData().getStringArray("notif_ids");
                     if(IDs != null & IDs.length > 0) {
                         bar.setVisibility(View.VISIBLE);
-
                         // get user details
                         new getFriendsDetails(names, 1).execute();
                         createGUI(notif_ids, IDs, names);
@@ -402,10 +402,10 @@ public class NotificationActivity extends Fragment {
     }
 
     // thread to set notifications seen
-    private class setNotificationNotActive extends AsyncTask {
+    private class setNotificationNotActiveSeen extends AsyncTask {
 
         String[] id;
-        setNotificationNotActive(String[] id) {
+        setNotificationNotActiveSeen(String[] id) {
             this.id = id;
         }
 
@@ -414,6 +414,7 @@ public class NotificationActivity extends Fragment {
             if(id != null)
                 for(int i=0; i<id.length; i++) {
                     JSONObject j = userFunction.setNotificationNotActive(id[i]);
+                    j = userFunction.setNotificationSeen(id[i]);
                 }
             return null;
         }
@@ -421,7 +422,14 @@ public class NotificationActivity extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            // clear the GUI
             clearLayout();
+            // remove notification from Android bar
+            NotificationManager nMgr = (NotificationManager) owner.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            for(int i=0;i<id.length;i++) {
+                int idCanc = Integer.parseInt(id[i]);
+                nMgr.cancel(idCanc);
+            }
             bar.setVisibility(View.INVISIBLE);
         }
     }
@@ -466,7 +474,6 @@ public class NotificationActivity extends Fragment {
                         // set friendship accepted
                         //new setFriendAccepted(from_name, to_name).execute();
                         j = userFunction.setFriendAccepted(from_id, to_id);
-
                         // set accepted in local
                         db.setFriendAccepted(from_id, to_id);
 
