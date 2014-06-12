@@ -52,12 +52,12 @@ import java.util.Map;
 public class FacebookFriendsActivity extends FragmentActivity {
 
     DatabaseHandler db;
-
+    ArrayList<String> userids = null;
 
 
     UserFunctions userFunction;
     ProgressBar bar = null;
-    ArrayList<String> friendUids = null;
+
     String mFBId = null;
     String friendUid = null;
 
@@ -98,17 +98,17 @@ public class FacebookFriendsActivity extends FragmentActivity {
                             public void onDoneButtonClicked(PickerFragment<?> fragment) {
                                 List<GraphUser> users = friendPickerFragment.getSelection();
                                 if (users.size() > 0) {
-
-                                    ArrayList<String> userids = new ArrayList<String>(users.size());
+                                    userids = new ArrayList<String>(users.size());
                                     for (GraphUser user:users){
                                         String fn = user.getId();
                                         userids.add(fn+"");
                                         Log.e("FB","Id of user  "+ user.getName()+ " " + fn);
 
                                     }
-                                    for(String fn:userids)
-                                    {
-                                        attemptSearch(fn+"");}
+                                    //for(String fn:userids)
+//                                    {
+//                                        attemptSearch(fn+"");}
+                                    attemptAdd();
 
                                     finish();
                                 } else {
@@ -146,6 +146,12 @@ public class FacebookFriendsActivity extends FragmentActivity {
         builder.show();
     }
 
+    private void attemptAdd(){
+        for (String user:userids){
+            attemptSearch(user);
+        }
+    }
+
     private void finishActivity() {
         setResult(RESULT_OK, null);
         //add friends logic
@@ -181,14 +187,14 @@ public class FacebookFriendsActivity extends FragmentActivity {
     public class SearchFriendTask extends AsyncTask<Void, Void, Boolean> {
 
         String mMyEmail;
-        String mFriendMail;
+        String mFBId;
         JSONObject jsonSearch;
         Bitmap user_image;
 
         SearchFriendTask(String myMail, String fbid) {
 
             mMyEmail = myMail;
-            String mFBId = fbid;
+            mFBId = fbid;
         }
 
         @Override
