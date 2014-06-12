@@ -40,47 +40,53 @@ public class CreateAlarm extends Activity {
 
         final HashMap<String,String> alarm= new HashMap<String,String>();
 
+        final Calendar calendar = Calendar.getInstance();
 
 
         myTimePicker.setIs24HourView(true);
-
-
-
-
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        myDatePicker.init(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH),new DatePicker.OnDateChangedListener() {
             @Override
-            public void onClick(View view) {
-
-                alarm.put("alarm_name", name.getText().toString());
-                alarm.put("alarm_setted_time",myDatePicker.getYear()+
-                        "-"+
-                        (myDatePicker.getMonth()+1)+
-                        "-"+
-                        myDatePicker.getDayOfMonth()+
-                        " "+
-                        myTimePicker.getCurrentHour()+":"+myTimePicker.getCurrentMinute() );
-
-
-                
-
-
-
-
-
-                Intent AlarmChoice = new Intent(getApplicationContext(), AlarmChoiceActivity.class);
-                AlarmChoice.putExtra("extra", alarm);
-
-                AlarmChoice.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(AlarmChoice);
-
-                // Close Login Screen
-                finish();
-
-
+            public void onDateChanged(DatePicker datePicker, int i, int i2, int i3) {
 
             }
         });
+        myTimePicker.setCurrentHour(calendar.get(calendar.HOUR)+12);
+        myTimePicker.setCurrentMinute(myTimePicker.getCurrentMinute()+15);   // in futuro mezzora
+
+
+
+
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        alarm.put("alarm_name", name.getText().toString());
+                        alarm.put("alarm_setted_time", myDatePicker.getYear() +
+                                "-" +
+                                (myDatePicker.getMonth() + 1) +
+                                "-" +
+                                myDatePicker.getDayOfMonth() +
+                                " " +
+                                myTimePicker.getCurrentHour() + ":" + myTimePicker.getCurrentMinute());
+
+
+                        if (myTimePicker.getCurrentHour() > calendar.get(calendar.HOUR) && myTimePicker.getCurrentMinute()+15>calendar.get(calendar.MINUTE)) {
+                            Intent AlarmChoice = new Intent(getApplicationContext(), AlarmChoiceActivity.class);
+                            AlarmChoice.putExtra("extra", alarm);
+
+                            AlarmChoice.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(AlarmChoice);
+
+                            // Close Login Screen
+                            finish();
+                        }else {
+                            Toast.makeText(getApplicationContext(), "Too early!!", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+                });
 
 
 

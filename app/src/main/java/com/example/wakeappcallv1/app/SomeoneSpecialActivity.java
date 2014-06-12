@@ -30,8 +30,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -322,11 +326,36 @@ public class SomeoneSpecialActivity extends Activity {
                 Intent alarmIntent = new Intent(getApplication(), AlarmReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent);
+                Log.e("SETTED TIME",alarm.get("alarm_setted_time"));
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                String time = alarm.get("alarm_setted_time");
+
+                Date d = df.parse(time);
+                Log.e("DATE TIME",d.toString());
+                Calendar c = Calendar.getInstance();
+
+
+                Long t = d.getTime();
+                Log.e("DATE MILLIS",t.toString());
+                Log.e("NOW MILLIS", String.valueOf(c.getTimeInMillis()));
+
+                Long now = c.getTimeInMillis();
+                Long later = t;
+                Long when = later-now;
+
+
+
+
+//
+//                int h = alarm.get("alarm_setted_time");
+
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + when,5000, pendingIntent);
 
 
 
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
 
