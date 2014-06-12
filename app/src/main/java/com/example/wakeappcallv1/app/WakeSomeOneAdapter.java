@@ -193,6 +193,7 @@ public class WakeSomeOneAdapter extends BaseAdapter{
                         Intent Record = new Intent(context, RecordActivity.class);
                         Record.putExtra("fileName", fileName);
                         Record.putExtra("owner", alarmOwner);
+                        Record.putExtra("id",alarmId);
 
                         // Close all views before launching Dashboard
                         Record.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
