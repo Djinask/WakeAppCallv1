@@ -146,7 +146,8 @@ public class NotificationActivity extends Fragment {
             public void onClick(View view) {
                 if(notif_ids != null)
                     bar.setVisibility(View.VISIBLE);
-                new setNotificationNotActiveSeen(notif_ids).execute();
+                // true = delete all
+                new setNotificationNotActiveSeen(notif_ids, true).execute();
             }
         });
 
@@ -435,8 +436,9 @@ public class NotificationActivity extends Fragment {
     private class setNotificationNotActiveSeen extends AsyncTask {
 
         String[] id;
-        setNotificationNotActiveSeen(String[] id) {
-            this.id = id;
+        Boolean deleteAll;
+        setNotificationNotActiveSeen(String[] id, Boolean deleteAll) {
+            this.id = id; this.deleteAll = deleteAll;
         }
 
         @Override
@@ -453,7 +455,8 @@ public class NotificationActivity extends Fragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             // clear the GUI
-            clearLayout();
+            if(deleteAll)
+                clearLayout();
             // remove notification from Android bar
             NotificationManager nMgr = (NotificationManager) owner.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             for(int i=0;i<id.length;i++) {
@@ -538,7 +541,7 @@ public class NotificationActivity extends Fragment {
             // create array to pass to function
             String[] id_notif = new String[1];
             id_notif[0] = notif_id;
-            new setNotificationNotActiveSeen(id_notif).execute();
+            new setNotificationNotActiveSeen(id_notif, false).execute();
 
             return null;
         }
