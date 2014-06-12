@@ -582,10 +582,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
 
                 json = userFunction.checkUser_if_exist(mEmail);
-
+                Log.w("LOG W", "LOG W");
+                Log.wtf("LOG WTF", "LOG WTF");
 
                 //  check for login response
-                Log.e("USER EXIXSTS?", json.getString(KEY_SUCCESS));
+                Boolean Exists = Boolean.parseBoolean(json.getString(KEY_SUCCESS))?false:true;
+                Log.i("USER EXIXSTS?", Exists.toString());
                 if (json.getString(KEY_SUCCESS) != null) {
 
 
@@ -616,6 +618,24 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         // Store user details in SQLite Database
                         DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                         JSONObject json_user = json.getJSONObject("user");
+
+
+
+
+                        Bitmap user_image=null;
+
+                        URL fbAvatarUrl = new URL("http://graph.facebook.com/" + utente.getId() + "/picture?type=large");
+                        HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
+                        DefaultHttpClient httpclient = new DefaultHttpClient();
+                        HttpResponse response = httpclient.execute(httpRequest);
+                        HttpEntity entity = response.getEntity();
+                        BufferedHttpEntity bufHttpEntity = new BufferedHttpEntity(entity);
+                        user_image = BitmapFactory.decodeStream(bufHttpEntity.getContent());
+                        httpRequest.abort();
+
+                        String path =saveToInternalSorage(user_image,json.getString("uid"));
+                        Log.e("path dell'utente ", path);
+
 
                         // Clear all previous data in database
                         userFunction.logoutUser(getApplicationContext());
@@ -661,10 +681,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                                 utente.getId(),                                     //User Facebook Id
                                 "http://graph.facebook.com/" + utente.getId() + "/picture"  //User avatar path
                         );
-                         Log.e("REGISTERED:", json.getString(KEY_SUCCESS));
+                         Log.i("REGISTERED:", json.getString(KEY_SUCCESS));
 
                         if (json.getString(KEY_SUCCESS).equals("1")) {
-                            Log.e("JSON RESPONSE", json.toString());
                             DatabaseHandler db = new DatabaseHandler(getApplicationContext());
                             JSONObject json_user = json.getJSONObject("user");
                             // After registration add user on local db

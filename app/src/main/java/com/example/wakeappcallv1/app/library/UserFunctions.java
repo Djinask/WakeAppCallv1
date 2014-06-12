@@ -183,7 +183,11 @@ public class UserFunctions {
         JSONArray js=new JSONArray();
 
         try {
-            js = json.getJSONArray("alarm");
+            if (!json.getString("error").equals("1")){
+
+                js = json.getJSONArray("alarm");
+                if (js.isNull(0)) return null;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -259,7 +263,11 @@ public class UserFunctions {
         JSONArray jsArr = new JSONArray();
 
         try {
-            jsArr = json.getJSONArray("friendship");
+            if (!json.getString("error").equals("1")){
+
+                jsArr = json.getJSONArray("friendship");
+                if (jsArr.isNull(0)) return null;
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -296,8 +304,11 @@ public class UserFunctions {
         JSONArray jsArr = new JSONArray();
 
         try {
-            jsArr = json.getJSONArray("friends_details");
+            if (!json.getString("error").equals("1")){
 
+                jsArr = json.getJSONArray("friends_details");
+                if (jsArr.isNull(0)) return null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -318,8 +329,11 @@ public class UserFunctions {
         JSONArray jsArr = new JSONArray();
 
         try {
-            jsArr = json.getJSONArray("tasks");
+            if (!json.getString("error").equals("1")){
 
+                jsArr = json.getJSONArray("tasks");
+                if (jsArr.isNull(0)) return null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -328,32 +342,6 @@ public class UserFunctions {
     }
 
 
-    public JSONObject updateProfileImage(String url_image, String owner ){
-        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-
-//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//        image.compress(Bitmap.CompressFormat.PNG, 90, stream); //compress to which format you want.
-
-
-//
-//        byte [] byte_arr = stream.toByteArray();
-//        String image_str = Base64.encodeToString(byte_arr,Base64.DEFAULT);
-//
-//        Log.e("IMAGE ARRAY", image_str);
-//
-
-
-        ArrayList<NameValuePair> nameValuePairs = new  ArrayList<NameValuePair>();
-
-        params.add(new BasicNameValuePair("tag", update_img));
-        params.add(new BasicNameValuePair("owner", owner));
-        params.add(new BasicNameValuePair("image", url_image));
-
-        // getting JSON Object
-        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
-        // return json
-        return json;
-    }
 
 
     public JSONObject addNotification(String notif_from, String notif_to, String type) {
@@ -381,9 +369,11 @@ public class UserFunctions {
         JSONArray jsArr = new JSONArray();
 
         try {
+            if (!json.getString("error").equals("1")){
 
-            jsArr = json.getJSONArray("notification");
-            if(jsArr.isNull(0))return null;
+                jsArr = json.getJSONArray("notification");
+                if (jsArr.isNull(0)) return null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -415,9 +405,11 @@ public class UserFunctions {
         JSONArray jsArr = new JSONArray();
 
         try {
+            if (!json.getString("error").equals("1")){
 
-            jsArr = json.getJSONArray("notification");
-            if(jsArr.isNull(0))return null;
+                jsArr = json.getJSONArray("notification");
+            if (jsArr.isNull(0)) return null;
+        }
         } catch (JSONException e) {
             e.printStackTrace();
         }

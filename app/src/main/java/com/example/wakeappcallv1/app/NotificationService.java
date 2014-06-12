@@ -50,16 +50,16 @@ public class NotificationService extends Service {
 
             switch (msg.what) {
                 case register_client:
-                    Log.e("service", "register");
+                    Log.i("service", "register");
                     mClients = msg.replyTo;
                     break;
                 case unregister_client:
-                    Log.e("service", "unregister");
+                    Log.i("service", "unregister");
                     //mClients = null;
                     break;
                 case msg_service_ui:
                     // when the UI is created, check if there are notifications
-                    Log.e("service", String.valueOf(msg.arg1));
+                    Log.i("service", String.valueOf(msg.arg1));
                     if(msg.arg1 == 1)
                         new checkNewNotifications().execute();
                     break;
@@ -77,7 +77,7 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.e("MyService", "Service Created.");
+        Log.i("MyService", "Service Created.");
 
         int delay = 10000;  // ms
         // here the functions to repeat cyclically
@@ -107,9 +107,10 @@ public class NotificationService extends Service {
 
             // --- notification on the Android system bar
 
+
+
             JSONArray jsonNotif = userFunction.getNotificationUnseen(db.getUserDetails().get("uid"));
 
-            Log.e("############JSON ARRAY", String.valueOf(jsonNotif.isNull(0)));
 
             if(!jsonNotif.isNull(0)){
                 IDs = new String[jsonNotif.length()];
@@ -143,7 +144,6 @@ public class NotificationService extends Service {
                 notif_ids = null;
 
                 jsonNotif = userFunction.getNotificationActive(db.getUserDetails().get("uid"));
-            Log.e("############JSON ARRAY", String.valueOf(jsonNotif.isNull(0)));
 
             if (!jsonNotif.isNull(0)) {
                     IDs = new String[jsonNotif.length()];
@@ -232,7 +232,7 @@ public class NotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("MyService", "Received start id " + startId + ": " + intent);
+        Log.i("MyService", "Received start id " + startId + ": " + intent);
         //Toast.makeText(this,"Service Started "+ startId, Toast.LENGTH_LONG).show();
         return START_STICKY; // run until explicitly stopped.
     }
@@ -249,7 +249,7 @@ public class NotificationService extends Service {
             timer.cancel();
         }
         //nm.cancel(R.string.service_started); // Cancel the persistent notification.
-        Log.e("MyService", "Service Stopped.");
+        Log.i("MyService", "Service Stopped.");
         Toast.makeText(this,"Service Stopped ", Toast.LENGTH_LONG).show();
         isRunning = false;
     }

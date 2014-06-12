@@ -48,6 +48,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,6 +156,7 @@ public class NotificationActivity extends Fragment {
                     notif_ids = msg.getData().getStringArray("notif_ids");
                     if(IDs != null & IDs.length > 0) {
                         bar.setVisibility(View.VISIBLE);
+
                         // get user details
                         new getFriendsDetails(names, 1).execute();
                         createGUI(notif_ids, IDs, names);
@@ -612,9 +614,16 @@ public class NotificationActivity extends Fragment {
             if(code == 2)
             {
                 DatabaseHandler db = new DatabaseHandler(owner.getApplicationContext());
+                ArrayList<HashMap<String, String>> friends  = db.getFriendsDetails();
+                Boolean trovato = false;
+                for(int i=0;i<friends.size();i++){
+                    if(friends.get(i).get("email")==user.get("email"))trovato = true;
 
+                }
                 // adds friend details
+                if(!trovato) {
                 db.addOneFriendDetailsLocal(user);
+            }
             }
 
             bar.setVisibility(View.INVISIBLE);

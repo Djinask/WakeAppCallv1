@@ -67,34 +67,6 @@ public class ProfileActivity extends Fragment {
 
         return rootView;
     }
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode,resultCode,data);
-//
-//        if (requestCode == GALLERY && resultCode != 0) {
-//            Uri mImageUri = data.getData();
-//            try {
-//                image = MediaStore.Images.Media.getBitmap(owner.getContentResolver(), mImageUri);
-//                if (getOrientation(owner.getApplicationContext(), mImageUri) != 0) {
-//                    Matrix matrix = new Matrix();
-//                    matrix.postRotate(getOrientation(owner.getApplicationContext(), mImageUri));
-//                    if (rotateImage != null)
-//                        rotateImage.recycle();
-//                    rotateImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix,true);
-//
-//                    //Salva in locale
-//                    iconaUtente.setImageBitmap(rotateImage);
-//
-//                } else
-//
-//                    //Salva in locale
-//                    iconaUtente.setImageBitmap(image);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 
     @Override
@@ -110,16 +82,7 @@ public class ProfileActivity extends Fragment {
     }
 
 
-    public static int getOrientation(Context context, Uri photoUri) {
-        Cursor cursor = context.getContentResolver().query(photoUri,
-                new String[] { MediaStore.Images.ImageColumns.ORIENTATION },null, null, null);
 
-        if (cursor.getCount() != 1) {
-            return -1;
-        }
-        cursor.moveToFirst();
-        return cursor.getInt(0);
-    }
 
 
     @Override
@@ -332,47 +295,9 @@ public class ProfileActivity extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 
-
-
-//
-//    private void loadImageFromStorage(String path)
-//    {
-//
-//        try {
-//            File f=new File(path, "profile.jpg");
-//            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-//            ImageView img=(ImageView)findViewById(R.id.imgPicker);
-//            img.setImageBitmap(b);
-//        }
-//        catch (FileNotFoundException e)
-//        {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
 
 

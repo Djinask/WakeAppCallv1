@@ -85,7 +85,6 @@ public class FriendListAdapter extends BaseAdapter {
         final String uid = friends_details.get("UIDs").get(position);
         final String accepted = friends_details.get("accepted").get(position);
 
-        Log.e("************AMICO",name+","+mail+","+uid+"->"+accepted);
 
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -113,7 +112,7 @@ public class FriendListAdapter extends BaseAdapter {
         try {
             File f=new File("/data/data/com.example.wakeappcallv1.app/app_avatar_images/"+uid+".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            RoundedImageView avatar = (RoundedImageView) view.findViewById(R.id.profile_pic);
+            ImageView avatar = (ImageView) view.findViewById(R.id.profile_pic);
             avatar.setImageBitmap(b);
         }
         catch (FileNotFoundException e)

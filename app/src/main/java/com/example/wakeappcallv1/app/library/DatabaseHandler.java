@@ -354,8 +354,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<HashMap<String,String>> getAlarmsDetails(String owner){
         ArrayList<HashMap<String,String>> alarms = new ArrayList<HashMap<String, String>>();
         String selectQuery = "SELECT  * FROM " + TABLE_ALARM + " WHERE "+ KEY_ALARM_OWNER + " LIKE '"+owner+"'" ;
-        Log.e("owner", owner);
-        Log.e("query", selectQuery);
+        Log.i("query", selectQuery);
 
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -456,7 +455,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Log.e("QUERY", setQuery);
+        Log.i("query", setQuery);
 
         try {
 
@@ -475,6 +474,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
+
 
             db.execSQL("delete from " + TABLE_FRIENDSHIP);
 
@@ -506,8 +506,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public ArrayList<HashMap<String,String>> getFriendshipDetails(String owner){
         ArrayList<HashMap<String,String>> friendship = new ArrayList<HashMap<String, String>>();
         String selectQuery = "SELECT  * FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"'" ;
-        Log.e("owner", owner);
-        Log.e("query", selectQuery);
+        Log.i("query", selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -539,8 +538,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // delete friendship
         String delQuery = "DELETE FROM " + TABLE_FRIENDSHIP + " WHERE "+ KEY_FRIENDSHIP_OWNER + " LIKE '"+owner+"' AND "+ KEY_FRIENDSHIP_TO + " LIKE '"+to+"'" ;
-        Log.e("owner, to ", owner+" "+to);
-        Log.e("query", delQuery);
+        Log.i("owner, to ", owner+" "+to);
 
         try {
 
@@ -553,8 +551,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         // delete friends detail
         delQuery = "DELETE FROM " + TABLE_FRIENDS_DETAILS + " WHERE "+ KEY_UID + " LIKE '"+to+"'" ;
-        Log.e("owner, to ", owner+" "+to);
-        Log.e("query", delQuery);
+        Log.i("owner, to ", owner+" "+to);
 
         try {
 
@@ -604,7 +601,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addOneFriendDetailsLocal(Map<String,String> user) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Log.e("Entrato nella addOneFriendDetailLocal", user.toString());
 
         try {
             ContentValues values = new ContentValues();
@@ -634,7 +630,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<HashMap<String,String>> friendsDetails = new ArrayList<HashMap<String, String>>();
         // all rows in the table are actual friends of the current user (no need of owner uid)
         String selectQuery = "SELECT * FROM " + TABLE_FRIENDS_DETAILS;
-        Log.e("query", selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         try {
@@ -701,7 +696,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ArrayList<HashMap<String,String>> tasksDetails = new ArrayList<HashMap<String, String>>();
         // all rows in the table are actual friends of the current user (no need of owner uid)
         String selectQuery = "SELECT * FROM " + TABLE_TASKS;
-        Log.e("query", selectQuery);
+        Log.i("query", selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         try {

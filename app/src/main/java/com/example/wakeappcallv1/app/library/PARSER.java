@@ -42,7 +42,7 @@ public class PARSER {
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(url);
 
-            Log.e("Params", params.toString());
+            Log.d("PARSER->REQUEST", params.toString());
 
             httpPost.setEntity(new UrlEncodedFormEntity(params));
 
@@ -84,6 +84,7 @@ public class PARSER {
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(json);
+            Log.d("PARSER->RESPONSE",jObj.toString());
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }

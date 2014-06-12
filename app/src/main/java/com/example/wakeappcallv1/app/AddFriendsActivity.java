@@ -93,7 +93,7 @@ public class AddFriendsActivity extends Activity {
     EditText mail = null;
     ProgressBar bar = null;
 
-     String friendUid = null;
+    String friendUid = null;
 
     UserFunctions userFunction;
     DatabaseHandler db;
@@ -293,6 +293,11 @@ public class AddFriendsActivity extends Activity {
         String mFriendMail;
         JSONObject jsonSearch;
         Bitmap user_image;
+        int succ = 0;
+        String name = null;
+        String email = null;
+        String avatar_path = null;
+        BitmapDrawable icon = null;
 
         SearchFriendTask(String myMail, String friendMail) {
 
@@ -331,14 +336,7 @@ public class AddFriendsActivity extends Activity {
             mMyEmail = null;
             bar.setVisibility(View.INVISIBLE);
 
-            int succ = 0;
-            String name = null;
-            String email = null;
-            String avatar_path = null;
-            BitmapDrawable icon = null;
-
-            try
-            {
+            try {
                 succ = jsonSearch.getInt("success");
                 name = jsonSearch.getString("name");
                 email = jsonSearch.getString("email");
@@ -355,19 +353,17 @@ public class AddFriendsActivity extends Activity {
                 user.put("created_at", jsonSearch.getString("created_at"));
                 user.put("updated_at", jsonSearch.getString("updated_at"));
 
-            }
-            catch (JSONException err)
-            {
-                Log.e("JSON error: ", err.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            if(succ == 1)
-            {
+
+            if(succ==1){
 
 
 
                 // Create custom dialog object
-              final Dialog dialog = new Dialog(AddFriendsActivity.this,android.R.style.Theme_Holo_Dialog);
+                final Dialog dialog = new Dialog(AddFriendsActivity.this,android.R.style.Theme_Holo_Dialog);
                 // Include dialog.xml file
                 dialog.setContentView(R.layout.custom_dialog);
                 // Set dialog title
@@ -401,12 +397,7 @@ public class AddFriendsActivity extends Activity {
                 });
 
                 dialog.show();
-
-
-
-            }
-            else
-            {
+            }else{
                 new AlertDialog.Builder(new ContextThemeWrapper(AddFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
                         .setTitle("Search result")
                         .setMessage("Not found!")

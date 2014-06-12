@@ -12,7 +12,7 @@
         android:layout_height="@dimen/rowHeight"
         android:background="@android:color/background_dark">
 
-        <com.example.wakeappcallv1.app.Classes.RoundedImageView
+        <ImageView
 
             android:id="@+id/profile_pic"
             android:layout_width="fill_parent"
