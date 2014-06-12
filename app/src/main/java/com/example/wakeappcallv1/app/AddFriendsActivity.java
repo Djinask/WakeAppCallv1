@@ -91,7 +91,7 @@ public class AddFriendsActivity extends Activity {
     EditText mail = null;
     ProgressBar bar = null;
 
-    String friendUid = null;
+     String friendUid = null;
 
     UserFunctions userFunction;
     DatabaseHandler db;

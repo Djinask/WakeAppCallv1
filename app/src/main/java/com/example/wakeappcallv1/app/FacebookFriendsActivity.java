@@ -44,30 +44,32 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class FacebookFriendsActivity extends FragmentActivity {
 
     DatabaseHandler db;
 
-    SearchFriendTask mSearchTask;
-    AddFriendTask mAddTask;
+
 
     UserFunctions userFunction;
     ProgressBar bar = null;
     ArrayList<String> friendUids = null;
-
+    String mFBId = null;
     String friendUid = null;
 
-
+    SearchFriendTask mSearchTask;
+    AddFriendTask mAddTask;
 
     FriendPickerFragment friendPickerFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_facebook_friends   );
+        setContentView(R.layout.activity_facebook_friends);
         bar = (ProgressBar) this.findViewById(R.id.add_friends_progress);
 
             Bundle args = getIntent().getExtras();
@@ -100,11 +102,13 @@ public class FacebookFriendsActivity extends FragmentActivity {
                                     ArrayList<String> userids = new ArrayList<String>(users.size());
                                     for (GraphUser user:users){
                                         String fn = user.getId();
-                                        attemptSearch(fn+"");
+                                        userids.add(fn+"");
                                         Log.e("FB","Id of user  "+ user.getName()+ " " + fn);
 
                                     }
-
+                                    for(String fn:userids)
+                                    {
+                                        attemptSearch(fn+"");}
 
                                     finish();
                                 } else {
@@ -164,6 +168,7 @@ public class FacebookFriendsActivity extends FragmentActivity {
 
         final String myMail = db.getUserDetails().get("email");
 
+
         if (!TextUtils.isEmpty(myMail) && !TextUtils.isEmpty(fbid))
         {
             mSearchTask = new SearchFriendTask(myMail, fbid);
@@ -172,17 +177,18 @@ public class FacebookFriendsActivity extends FragmentActivity {
 
     }
 
+    // ASYNC TASK to SEARCH USER
     public class SearchFriendTask extends AsyncTask<Void, Void, Boolean> {
 
         String mMyEmail;
-        String mFbId;
+        String mFriendMail;
         JSONObject jsonSearch;
         Bitmap user_image;
 
         SearchFriendTask(String myMail, String fbid) {
 
             mMyEmail = myMail;
-            mFbId = fbid;
+            String mFBId = fbid;
         }
 
         @Override
@@ -192,7 +198,7 @@ public class FacebookFriendsActivity extends FragmentActivity {
 
             try
             {
-                jsonSearch = userFunction.lookupFB(mFbId);
+                jsonSearch = userFunction.lookupFB(mFBId);
 
 
                 URL fbAvatarUrl = new URL(jsonSearch.getString("image_path")+"?type=large");
@@ -229,16 +235,6 @@ public class FacebookFriendsActivity extends FragmentActivity {
                 email = jsonSearch.getString("email");
                 friendUid = jsonSearch.getString("unique_id");
 
-                /*user.put("uid",friendUid);
-                user.put("name",name);
-                user.put("email",email);
-                user.put("phone",jsonSearch.getString("phone"));
-                user.put("birth_date",jsonSearch.getString("birth_date"));
-                user.put("country",jsonSearch.getString("country"));
-                user.put("city",jsonSearch.getString("city"));
-                user.put("img_path", jsonSearch.getString("image_path"));
-                user.put("created_at", jsonSearch.getString("created_at"));
-                user.put("updated_at",jsonSearch.getString("updated_at"));*/
 
 
 
@@ -252,8 +248,12 @@ public class FacebookFriendsActivity extends FragmentActivity {
             {
 
 
+                        attemptAdd(user_image);
+                        bar.setVisibility(View.VISIBLE);
 
-            }
+                    }
+
+
             else
             {
                 new AlertDialog.Builder(new ContextThemeWrapper(FacebookFriendsActivity.this, android.R.style.Theme_Holo_Dialog))
@@ -276,8 +276,21 @@ public class FacebookFriendsActivity extends FragmentActivity {
         }
     }
 
+    public void attemptAdd(Bitmap user_image)
+    {
+        DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
+        final String myMail = db.getUserDetails().get("email");
+        final String owner = db.getUserDetails().get("uid");
+        // friendship_to = friendUid
 
+        if (!TextUtils.isEmpty(myMail) && !TextUtils.isEmpty(owner) && !TextUtils.isEmpty(friendUid))
+        {
+            mAddTask = new AddFriendTask(myMail, owner, friendUid, user_image);
+            mAddTask.execute((Void) null);
+        }
+
+    }
     public class AddFriendTask extends AsyncTask<Void, Void, Boolean> {
 
         String mMyEmail;
@@ -310,8 +323,29 @@ public class FacebookFriendsActivity extends FragmentActivity {
                 // adds friendship relationship
                 db.addOneFriendLocal(jsonAdd);
 
+                // add friends details locally
+                Map<String, String> user = new HashMap<String, String>();
+                JSONObject jsonSearch = userFunction.getUserDetails(toUid);
+                try {
+                    user.put("uid", jsonSearch.getString("uid"));
+                    user.put("name", jsonSearch.getString("name"));
+                    user.put("email", jsonSearch.getString("email"));
+                    user.put("phone", jsonSearch.getString("phone"));
+                    user.put("birth_date", jsonSearch.getString("birth_date"));
+                    user.put("country", jsonSearch.getString("country"));
+                    user.put("city", jsonSearch.getString("city"));
+                    user.put("image_path", "/data/data/com.example.wakeappcallv1.app/app_avatar_images/" + toUid + ".jpg");
+                    user.put("created_at", jsonSearch.getString("created_at"));
+                    user.put("updated_at", jsonSearch.getString("updated_at"));
+
+                } catch (JSONException err) {
+                    Log.e("JSON error: ", err.toString());
+                }
+
+                db.addOneFriendDetailsLocal(user);
+
                 // send notification
-                userFunction.addNotification(db.getUserDetails().get("uid"), friendUid, "1");
+                userFunction.addNotification(db.getUserDetails().get("uid"), toUid, "1");
             }
             catch (Exception e)
             {
@@ -339,7 +373,12 @@ public class FacebookFriendsActivity extends FragmentActivity {
             if(succ == 1)
             {
                 //save avatar in the internal storage device
-                final String fileName = friendUid;
+                final String fileName = toUid;
+
+
+
+
+
 
                 saveToInternalSorage(friend_avatar,fileName);
 
@@ -363,6 +402,8 @@ public class FacebookFriendsActivity extends FragmentActivity {
         }
     }
 
+
+
     private String saveToInternalSorage(Bitmap bitmapImage, String fileName){
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
@@ -384,5 +425,7 @@ public class FacebookFriendsActivity extends FragmentActivity {
         }
         return directory.getAbsolutePath();
     }
+
+
 
 }
