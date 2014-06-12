@@ -192,10 +192,8 @@ public class WakeSomeOneAdapter extends BaseAdapter{
                         String from = db.getUserDetails().get("uid");
                         //String fileName = alarmId+"."+from+"-"+alarmOwner;
 
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-                        String currentDateandTime = sdf.format(new Date());
 
-                        String fileName = from+"-"+alarmOwner+"-"+currentDateandTime;
+                        String fileName = from+"-"+alarmOwner+"-"+alarmSettedTime;
 
                         Intent Record = new Intent(context, RecordActivity.class);
                         Record.putExtra("fileName", fileName);

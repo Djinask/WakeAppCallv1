@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by lucamarconcini on 12/06/14.
@@ -44,6 +46,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     private play MTASK;
 
 
+   String owner, to, time;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -80,6 +83,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             }
         });
 
+        owner = intent.getStringExtra("owner");
+        to = intent.getStringExtra("to");
+        time = intent.getStringExtra("time");
+
     }
 
     class play extends AsyncTask
@@ -107,7 +114,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
                 int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
                 amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
-                String url="http://wakeappcall.net63.net/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
+                //String url="http://wakeappcall.net63.net/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
+                String url = "http://wakeappcall.net63.net/uploads/"+owner+"-"+to+"-"+time;
                 Uri uri =  Uri.parse(url);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
 
