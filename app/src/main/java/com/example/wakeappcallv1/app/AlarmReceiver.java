@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
@@ -30,7 +31,10 @@ import java.util.GregorianCalendar;
  * Created by lucamarconcini on 12/06/14.
  */
 public class AlarmReceiver extends BroadcastReceiver {
+    private static final String AUDIO_RECORDER_FILE_EXT_3GP = ".3gp";
     private static final String AUDIO_RECORDER_FILE_EXT_MP4 = ".mp4";
+    private static final String AUDIO_RECORDER_FILE_EXT_AAC = ".aac";    private int output_formats[] = { MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP, MediaRecorder.OutputFormat.AAC_ADTS };
+    private String file_exts[] = { AUDIO_RECORDER_FILE_EXT_MP4, AUDIO_RECORDER_FILE_EXT_3GP,AUDIO_RECORDER_FILE_EXT_AAC};
 
 
     @Override
@@ -60,11 +64,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     class play extends AsyncTask
 
     {
-        Context context;
+                   AudioManager amanager;
+
+            Context context;
 
 
         play(Context c) {
-            this.context=c;
+            this.amanager = (AudioManager) c.getSystemService(context.AUDIO_SERVICE);
 
 
         }
@@ -73,21 +79,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         protected Object doInBackground(Object... arg0) {
             MediaPlayer mediaPlayer= new MediaPlayer();
 
-            String url="http://wakeappcall.net63.net/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
+            String url="http://wakeappcall.net63.net:8080/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
             Uri uri =  Uri.parse(url);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
             try {
-                mediaPlayer.setDataSource(context, uri);
+
+                int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+                amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+
+
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
+
+                mediaPlayer.setDataSource(context,uri);
+                Log.e("PLAY", "looking for " + uri);
+
+                mediaPlayer.prepare();
+
+                mediaPlayer.start();
             } catch (IOException e) {
-                e.printStackTrace();
-                try {
-                    mediaPlayer.prepare();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
+                Log.e("PLAY", "prepare() failed");
             }
 
-            mediaPlayer.start();
             return null;
         }
 
