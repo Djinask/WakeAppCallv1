@@ -115,7 +115,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 int maxVolume = amanager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
                 amanager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
                 //String url="http://wakeappcall.net63.net/uploads/2.53978e65698350.87393046-53978e65698350.87393046.mp4"; // your URL here
-                String url = "http://wakeappcall.net63.net/uploads/"+owner+"-"+to+"-"+time;
+                String url = "http://wakeappcall.net63.net/uploads/"+owner+"-"+to+"-"+time+".mp4";
                 Uri uri =  Uri.parse(url);
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM); // this is important.
 
