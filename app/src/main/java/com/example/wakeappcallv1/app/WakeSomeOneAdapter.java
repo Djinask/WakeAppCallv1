@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +72,14 @@ public class WakeSomeOneAdapter extends BaseAdapter{
 
     }
 
-
+    public int getPosition(String value) {
+        for(int i=0;i<task_details.size();i++) {
+            if(task_details.get(KEY_TASK_ALARM_OWNER).get(i).equals(value)) {
+                return i;
+            }
+        }
+        return -1;  // not contained
+    }
 
     @Override
     public long getItemId(int position) {
@@ -93,7 +101,6 @@ public class WakeSomeOneAdapter extends BaseAdapter{
         final String alarmActive = task_details.get(KEY_TASK_ALARM_ACTIVE).get(position);
         final String alarmCreatedAt = task_details.get(KEY_TASK_CREATED_AT).get(position);
         Log.e("ALARM OWNER   ", alarmOwnerName);
-
 
 
         if (view == null) {
@@ -170,6 +177,7 @@ public class WakeSomeOneAdapter extends BaseAdapter{
 
                         Intent Record = new Intent(context, RecordActivity.class);
                         Record.putExtra("fileName", fileName);
+                        Record.putExtra("owner", alarmOwner);
 
                         // Close all views before launching Dashboard
                         Record.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -203,28 +211,53 @@ public class WakeSomeOneAdapter extends BaseAdapter{
         no.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-
-
-                // start normal thread due to no UI interaction
-                Runnable r = new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        UserFunctions userFunction = new UserFunctions();
-                        String code = String.valueOf(NotificationActivity.type_alarm_denial);
-                        JSONObject j = userFunction.addNotification(myUid, alarmOwner, code);
-                    }
-                };
-
-                Thread t = new Thread(r);
-                t.start();
+                new addNotif(myUid, alarmOwner).execute();
             }
         });
 
 
 
         return view;
+    }
+
+    private class addNotif extends AsyncTask {
+
+        String myUid, alarmOwner;
+        addNotif(String myUid, String alarmOwner) {
+            this.myUid = myUid;
+            this.alarmOwner = alarmOwner;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+
+            UserFunctions userFunction = new UserFunctions();
+            JSONObject j = userFunction.addNotification(myUid, alarmOwner, String.valueOf(NotificationActivity.type_alarm_denial));
+
+            // set starting notification seen/inactive
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+            int pos = getPosition(alarmOwner);
+
+            task_details.get(KEY_TASK_ID).remove(pos);
+            task_details.get(KEY_TASK_ALARM_NAME).remove(pos);
+            task_details.get(KEY_TASK_ALARM_OWNER).remove(pos);
+            task_details.get(KEY_TASK_ALARM_OWNER_NAME).remove(pos);
+            task_details.get(KEY_TASK_ALARM_OWNER_FB_ID).remove(pos);
+            task_details.get(KEY_TASK_ALARM_OWNER_MAIL).remove(pos);
+            task_details.get(KEY_TASK_ALARM_OWNER_PHONE).remove(pos);
+            task_details.get(KEY_TASK_SETTED_TIME).remove(pos);
+            task_details.get(KEY_TASK_ALARM_ACTIVE).remove(pos);
+            task_details.get(KEY_TASK_CREATED_AT).remove(pos);
+
+            notifyDataSetChanged();
+        }
     }
 
 }

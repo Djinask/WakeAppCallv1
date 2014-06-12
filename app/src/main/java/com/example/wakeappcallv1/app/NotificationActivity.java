@@ -522,6 +522,9 @@ public class NotificationActivity extends Fragment {
                     case type_alarm_request:
 
                         //userFunction.addNotification(from_id, to_id, String.valueOf(type_alarm_confirmation));
+                        String[] id_notif = new String[1];
+                        id_notif[0] = notif_id;
+                        new setNotificationNotActiveSeen(id_notif, false).execute();
 
                         Intent WakeSomeOne = new Intent(owner, WakeSomeOneActivity.class);
                         WakeSomeOne.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
