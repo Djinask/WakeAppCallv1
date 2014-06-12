@@ -1,5 +1,6 @@
 package com.example.wakeappcallv1.app;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -42,12 +43,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private play MTASK;
-
+    private Vibrator v;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
         Calendar now = GregorianCalendar.getInstance();
         int dayOfWeek = now.get(Calendar.DATE);
         if (dayOfWeek != 1 && dayOfWeek != 7) {
@@ -67,18 +67,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
         MTASK = new play(context);
         MTASK.execute();
-        new play(context).execute();
 
         // ShakeDetector initialization
-        mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mShakeDetector = new ShakeDetector(new ShakeDetector.OnShakeListener() {
-            @Override
-            public void onShake() {
-                MTASK.cancel(true);
-                Log.e("Shake", "");
-            }
-        });
+
+
 
     }
 
@@ -88,6 +80,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                    AudioManager amanager;
 
             Context context;
+        Intent intent;
 
 
         play(Context c) {
@@ -99,7 +92,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         @Override
         protected Object doInBackground(Object... arg0) {
-            MediaPlayer mediaPlayer= new MediaPlayer();
+            final MediaPlayer mediaPlayer= new MediaPlayer();
 
 
 
@@ -117,9 +110,29 @@ public class AlarmReceiver extends BroadcastReceiver {
                 mediaPlayer.prepare();
 
                 mediaPlayer.start();
-                Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
-                // Vibrate for 500 milliseconds
-                v.vibrate(10000);
+//                v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);
+//                // Vibrate for 500 milliseconds
+//                v.vibrate(1000);
+                mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+                mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                intent= new Intent(context,this.getClass());
+
+                mShakeDetector = new ShakeDetector(new ShakeDetector.OnShakeListener() {
+                    @Override
+                    public void onShake() {
+                        mediaPlayer.stop();
+                        v.vibrate(0);
+
+                        AlarmManager aManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+                        PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        aManager.cancel(pIntent);
+
+
+                        Log.e("Shake", "");
+                    }
+                });
+                mSensorManager.registerListener(mShakeDetector, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+
             } catch (IOException e) {
                 Log.e("PLAY", "prepare() failed");
             }
@@ -130,6 +143,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            this.cancel(true);
 
 
         }
