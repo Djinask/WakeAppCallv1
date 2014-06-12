@@ -65,6 +65,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ALARM_ACTIVE = "alarm_active";
     private static final String KEY_ALARM_SPECIAL = "alarm_special";
     private static final String KEY_ALARM_LIST = "alarm_list";
+    // allarm path
     private static final String KEY_ALARM_REPEAT = "alarm_repeat";
     private static final String KEY_ALARM_PLAY_AFTER = "alarm_play_after";
     private static final String KEY_ALARM_VOLUME = "alarm_volume";

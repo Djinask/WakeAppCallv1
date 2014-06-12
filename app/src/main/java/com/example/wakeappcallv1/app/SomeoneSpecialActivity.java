@@ -1,8 +1,12 @@
 package com.example.wakeappcallv1.app;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -300,6 +305,27 @@ public class SomeoneSpecialActivity extends Activity {
             try {
                 Log.e("alarm_name_:",json.getJSONObject("alarm").getString("alarm_name"));
                 db.addOneAlarmLocal(json);
+
+//                Intent intentsOpen = new Intent(getApplicationContext(), AlarmReceiver.class);
+//
+//                         PendingIntent pendingIntent;
+//                         AlarmManager alarmManager;
+//                intentsOpen.setAction("com.manish.alarm.ACTION");
+//                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),111, intentsOpen, 0);
+//                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//
+//
+//                        /**
+//                         * call broadcost reciver
+//                         */
+                Intent alarmIntent = new Intent(getApplication(), AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent);
+
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

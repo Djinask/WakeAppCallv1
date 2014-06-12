@@ -1,5 +1,6 @@
 package com.example.wakeappcallv1.app;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -21,6 +22,7 @@ import com.example.wakeappcallv1.app.library.UserFunctions;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,6 +34,7 @@ public class NotificationService extends Service {
     static final int register_client = 0;
     static final int unregister_client = 1;
     static final int msg_service_ui = 2;
+    static final int set_alarm = 9;
 
     private NotificationManager nm;
     private Timer timer = new Timer();
@@ -63,6 +66,9 @@ public class NotificationService extends Service {
                     if(msg.arg1 == 1)
                         new checkNewNotifications().execute();
                     break;
+                case set_alarm:// allarm code
+//
+
                 default:
                     super.handleMessage(msg);
             }

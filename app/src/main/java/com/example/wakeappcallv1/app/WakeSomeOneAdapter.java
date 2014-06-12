@@ -163,15 +163,29 @@ public class WakeSomeOneAdapter extends BaseAdapter{
                 catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+                    if(alarmOwnerPhone.isEmpty()){
+                        phone.setBackgroundResource(R.drawable.phone_grey);
 
-                    phone.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
+                        phone.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(context, "The user hasn't insered the phone number yet!", Toast.LENGTH_SHORT).show();
 
 
+                            }
+                        });
+                    }else{
+
+                        phone.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(context, "Start a timer!", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        });
                     }
-                });
+
                 record.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

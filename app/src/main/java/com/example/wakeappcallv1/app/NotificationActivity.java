@@ -48,6 +48,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -69,7 +70,11 @@ public class NotificationActivity extends Fragment {
             " accepted your friend request",
             " wants you to wake him/her up for the Alarm ",
             " has confirmed to wake you up for the Alarm ",
-            " can't wake you up for the Alarm "};
+            " can't wake you up for the Alarm ",
+            " alarm was rejected",
+            " task confirmed",
+            " call you friend in 10 minutes",
+            " just call!"};
 
     public static String[] titles = {"Friend request",
             "Friend accepted",
@@ -206,6 +211,7 @@ public class NotificationActivity extends Fragment {
     void doBindService() {
         owner.bindService(new Intent(owner, NotificationService.class), mConnection, Context.BIND_AUTO_CREATE);
         mIsBound = true;
+        sendMessageToService(9);
         Log.e("STATUS:", "Binding.");
     }
     void doUnbindService() {
@@ -229,6 +235,18 @@ public class NotificationActivity extends Fragment {
 
     // ---------------------- SEND MESSAGE FROM UI TO SERVICE ----------------------------------------
     private void sendMessageToService(int valueToSend) {
+        if (mIsBound) {
+            if (mService != null) {
+                try {
+                    Message msg = Message.obtain(null, NotificationService.msg_service_ui, valueToSend, 0);
+                    msg.replyTo = mMessenger;
+                    mService.send(msg);
+                } catch (RemoteException e) {
+                }
+            }
+        }
+    }
+    private void sendMessageToService(int valueToSend, Time t) {
         if (mIsBound) {
             if (mService != null) {
                 try {

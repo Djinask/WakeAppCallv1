@@ -65,5 +65,6 @@
     <string name="settings_share_text">I need someone to wake me up on time! If you want to help, download  Wake-App Call! (Coming soon!)</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_dialog_button_text">Ok</string>
+    <string name="title_activity_alarm_receiver">AlarmReceiverActivity</string>
 
 </resources>

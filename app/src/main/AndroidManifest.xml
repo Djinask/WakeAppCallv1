@@ -75,7 +75,6 @@
             android:name="com.example.wakeappcallv1.app.FacebookFriendsActivity"
             android:label="@string/title_activity_facebook_friends" >
         </activity>
-
         <activity
             android:name="com.example.wakeappcallv1.app.RecordActivity"
             android:label="@string/title_activity_record" >
@@ -88,6 +87,13 @@
             android:name="com.example.wakeappcallv1.app.WakeSomeOneActivity"
             android:label="WaKeSomeOneActivity" >
         </activity>
+        <activity
+            android:name="com.example.wakeappcallv1.app.AlarmReceiverActivity"
+            android:label="@string/title_activity_alarm_receiver" >
+        </activity>
+        <receiver
+            android:name="com.example.wakeappcallv1.app.AlarmReceiver"
+            android:process=":remote" />
     </application>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
@@ -100,5 +106,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
 </manifest>
