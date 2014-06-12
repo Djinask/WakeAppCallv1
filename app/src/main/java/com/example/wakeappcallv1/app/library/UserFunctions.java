@@ -219,6 +219,17 @@ public class UserFunctions {
         return json;
     }
 
+    public JSONObject lookupFB(String facebook_id){
+        // Building Parameters
+        ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("tag", "lookup_fb"));
+        params.add(new BasicNameValuePair("facebook_id", facebook_id));
+        // getting JSON Object
+        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        // return json
+        return json;
+    }
+
     public JSONObject addFriend(String email, String friend_owner, String friend_to) {
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();

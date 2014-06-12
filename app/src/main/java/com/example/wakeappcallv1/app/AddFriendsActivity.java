@@ -117,11 +117,6 @@ public class AddFriendsActivity extends Activity {
             public void onClick(View view) {
                 ensureOpenSession();
                 Intent intent = new Intent(AddFriendsActivity.this, FacebookFriendsActivity.class);
-                // Note: The following line is optional, as multi-select behavior is the default for
-                // FriendPickerFragment. It is here to demonstrate how parameters could be passed to the
-                // friend picker if single-select functionality was desired, or if a different user ID was
-                // desired (for instance, to see friends of a friend).
-                //FacebookFriendsActivity.populateParameters(intent, null, true, true);
                 startActivityForResult(intent, PICK_FRIENDS_ACTIVITY);
             }
         });
