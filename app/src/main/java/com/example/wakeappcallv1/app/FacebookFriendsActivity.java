@@ -206,6 +206,8 @@ public class FacebookFriendsActivity extends FragmentActivity {
             {
                 jsonSearch = userFunction.lookupFB(mFBId);
 
+                Log.e("&&&&&&&&&&&&&&&&&&&&&&&FACEBOOOOOOOK ", jsonSearch.toString());
+
 
                 URL fbAvatarUrl = new URL(jsonSearch.getString("image_path")+"?type=large");
                 HttpGet httpRequest = new HttpGet(fbAvatarUrl.toString());
@@ -240,6 +242,7 @@ public class FacebookFriendsActivity extends FragmentActivity {
                 name = jsonSearch.getString("name");
                 email = jsonSearch.getString("email");
                 friendUid = jsonSearch.getString("unique_id");
+
 
 
 

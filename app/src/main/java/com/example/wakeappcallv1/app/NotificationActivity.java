@@ -502,6 +502,12 @@ public class NotificationActivity extends Fragment {
             }
 
             userFunction.setNotificationNotActive(notif_id);
+            userFunction.setNotificationSeen(notif_id);
+
+            // create array to pass to function
+            String[] id_notif = new String[1];
+            id_notif[0] = notif_id;
+            new setNotificationNotActiveSeen(id_notif).execute();
 
             return null;
         }
