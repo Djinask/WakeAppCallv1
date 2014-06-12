@@ -223,7 +223,7 @@ public class UserFunctions {
         // Building Parameters
         ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("tag", "lookup_fb"));
-        Log.e("UF","I got called"+facebook_id);
+        Log.e("UF","I got called with id "+facebook_id);
         params.add(new BasicNameValuePair("facebook_id", ""+facebook_id));
         // getting JSON Object
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
